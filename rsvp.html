@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    font-family: Georgia;
+    background: #F5F1EA;
+    text-align: center;
+    padding: 20px;
+    color: #2C2C2C;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #C9B08A;
+}
+
+h1 { color: #8B6B3F; }
+
+.btn {
+    padding: 12px 20px;
+    margin: 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.yes { background: #8B6B3F; color: white; }
+.no { background: #2C2C2C; color: white; }
+.submit { background: #C9B08A; }
+
+.hidden { display:none; }
+
+select { padding:10px; margin:10px; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>In Loving Memory of</h2>
+<h1>Seelan “Seela” Moodley</h1>
+
+<p id="guestName"></p>
+
+<p>
+The Moodley family warmly invites you to join us in prayer and remembrance.
+</p>
+
+<p>
+📅 10 August <br>
+🕙 10:30 AM <br>
+📍 Cultural Centre, Lenasia
+</p>
+
+<hr>
+
+<h3>RSVP</h3>
+
+<button class="btn yes" onclick="attend(true)">Yes, We Will Attend</button>
+<button class="btn no" onclick="attend(false)">We Will Not Attend</button>
+
+<div id="guestSection" class="hidden">
+<p>Number of attendees:</p>
+<select id="guestCount">
+<option>1</option><option>2</option><option>3</option>
+<option>4</option><option>5+</option>
+</select>
+</div>
+
+<button class="btn submit" onclick="submitRSVP()">Submit</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const guest = params.get("guest");
+
+document.getElementById("guestName").innerHTML =
+"<strong>Dear " + guest + ",</strong>";
+
+let attending = null;
+
+function attend(val){
+    attending = val;
+    document.getElementById("guestSection")
+        .classList.toggle("hidden", !val);
+}
+
+function submitRSVP(){
+
+let guests = attending ? document.getElementById("guestCount").value : 0;
+
+fetch("YOUR_GOOGLE_SCRIPT_URL", {
+method:"POST",
+body: JSON.stringify({
+name: guest,
+attending: attending ? "Yes" : "No",
+guests: guests
+})
+});
+
+document.getElementById("msg").innerHTML =
+"Thank you for your response 🙏";
+
+}
+
+</script>
+
+</body>
+</html>
