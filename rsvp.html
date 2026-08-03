@@ -1,83 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seelan Moodley Invitation</title>
 
 <style>
 body {
-    font-family: Georgia, serif;
-    background: #F5F1EA;
-    text-align: center;
-    padding: 20px;
-    color: #2C2C2C;
+  font-family: 'Georgia', serif;
+  background: #f8f5ef;
+  text-align: center;
+  padding: 20px;
+  color: #2c2c2c;
 }
 
 .container {
-    max-width: 650px;
-    margin: auto;
-    background: #FFFFFF;
-    padding: 30px;
-    border-radius: 12px;
-    border: 1px solid #D6C3A3;
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
 h1 {
-    color: #8B6B3F;
-    margin-bottom: 5px;
+  color: #1e2a38;
 }
 
-h2 {
-    color: #2C2C2C;
-    margin-top: 0;
-}
-
-.divider {
-    margin: 25px 0;
-    border-top: 1px solid #D6C3A3;
-}
-
-.invite-text {
-    font-size: 15px;
-    line-height: 1.6;
-    margin: 15px 0;
-}
-
-.highlight {
-    color: #8B6B3F;
-    font-weight: bold;
+.name {
+  font-size: 20px;
+  margin: 20px 0;
+  font-weight: bold;
 }
 
 .details {
-    margin: 20px 0;
-    font-size: 15px;
+  margin: 15px 0;
 }
 
-.btn {
-    padding: 12px 18px;
-    margin: 10px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
+button {
+  padding: 12px 20px;
+  margin: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
-.yes { background: #8B6B3F; color: white; }
-.no { background: #2C2C2C; color: white; }
-.submit { background: #C9B08A; }
-
-.hidden { display:none; }
-
-select {
-    padding:10px;
-    margin-top:10px;
+.yes {
+  background: #8c6b3f;
+  color: white;
 }
 
-.footer {
-    margin-top: 20px;
-    font-size: 13px;
-    color: #555;
+.no {
+  background: #333;
+  color: white;
 }
 
+.submit {
+  background: #c7a86d;
+  color: white;
+}
+
+input {
+  padding: 10px;
+  width: 80px;
+  margin-top: 10px;
+}
+
+#msg {
+  margin-top: 20px;
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -85,94 +78,88 @@ select {
 
 <div class="container">
 
-<h2>In Loving Memory of</h2>
-<h1>Seelan “Seela” Moodley</h1>
+<h1>In Loving Memory of</h1>
+<h2>Seelan “Seela” Moodley</h2>
 
-<p id="guestName" class="highlight"></p>
+<div class="name" id="guestName"></div>
 
-<p class="invite-text">
-The Moodley family warmly invites you to join us as we gather in prayer and remembrance
-to honour the life and cherished memory of our beloved
-<span class="highlight">Seelan “Seela” Moodley</span> on his 16th Day Ceremony.
-</p>
-
-<p class="invite-text">
-Your presence and prayers will be deeply appreciated.
-</p>
+<p>The Moodley family warmly invites you to join us in prayer and remembrance.</p>
 
 <div class="details">
-📅 <strong>10 August</strong><br>
-🕙 <strong>10:30 AM</strong><br>
+📅 10 August<br>
+🕒 10:30 AM<br>
 📍 Cultural Centre, Lenasia
 </div>
 
-<p><em>Lunch will be served thereafter</em></p>
+<hr>
 
-<div class="divider"></div>
+<h3>RSVP</h3>
 
-<h3>Confirm Attendance</h3>
+<button class="yes" onclick="selectResponse(true)">Yes, We Will Attend</button>
+<button class="no" onclick="selectResponse(false)">We Will Not Attend</button>
 
-<button class="btn yes" onclick="attend(true)">Yes, We Will Attend</button>
-<button class="btn no" onclick="attend(false)">We Will Not Attend</button>
-
-<div id="guestSection" class="hidden">
-<p>Number of attendees:</p>
-<select id="guestCount">
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5+</option>
-</select>
+<div id="guestInput" style="display:none;">
+  <p>Number of Guests:</p>
+  <input type="number" id="guestCount" min="1" value="1">
 </div>
 
 <br>
 
-<button class="btn submit" onclick="submitRSVP()">Submit RSVP</button>
+<button class="submit" onclick="submitRSVP()">Submit</button>
 
-<p id="msg"></p>
-
-<div class="footer">
-<p><strong>Om Shanti</strong></p>
-<p>"May his soul continue its eternal journey in peace."</p>
-</div>
+<div id="msg"></div>
 
 </div>
 
 <script>
-
-const params = new URLSearchParams(window.location.search);
-const guest = params.get("guest");
-
-document.getElementById("guestName").innerHTML =
-"Dear " + guest + ",";
-
 let attending = null;
 
-function attend(val){
-    attending = val;
-    document.getElementById("guestSection")
-        .classList.toggle("hidden", !val);
+// 👉 GET NAME FROM URL
+const params = new URLSearchParams(window.location.search);
+let guest = params.get("name") || "Guest";
+
+// 👉 AUTO ADD "& Family"
+if (!guest.toLowerCase().includes("family")) {
+  guest = guest + " & Family";
 }
 
-function submitRSVP(){
+// 👉 DISPLAY NAME
+document.getElementById("guestName").innerText = "Dear " + guest + ",";
 
-let guests = attending ? document.getElementById("guestCount").value : 0;
-
-fetch("YOUR_GOOGLE_SCRIPT_URL", {
-method:"POST",
-body: JSON.stringify({
-name: guest,
-attending: attending ? "Yes" : "No",
-guests: guests
-})
-});
-
-document.getElementById("msg").innerHTML =
-"Thank you for your response 🙏";
-
+function selectResponse(response) {
+  attending = response;
+  
+  if (response) {
+    document.getElementById("guestInput").style.display = "block";
+  } else {
+    document.getElementById("guestInput").style.display = "none";
+  }
 }
 
+function submitRSVP() {
+  if (attending === null) {
+    alert("Please select Yes or No");
+    return;
+  }
+
+  let guests = attending ? document.getElementById("guestCount").value : 0;
+
+  fetch("https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      name: guest,
+      attending: attending ? "Yes" : "No",
+      guests: guests
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("msg").innerHTML = "Thank you for your response 🙏";
+  })
+  .catch(err => {
+    document.getElementById("msg").innerHTML = "Error submitting RSVP";
+  });
+}
 </script>
 
 </body>
