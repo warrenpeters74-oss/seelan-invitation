@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font-family: Arial; background:#F5F1EA; padding:20px; }
+.card {
+    background:white;
+    padding:15px;
+    margin:10px;
+    border-radius:10px;
+    display:inline-block;
+    border:1px solid #C9B08A;
+}
+button {
+    background:#8B6B3F;
+    color:white;
+    padding:10px;
+    border:none;
+    border-radius:5px;
+}
+table { width:100%; margin-top:20px; }
+td,th { padding:10px; border-bottom:1px solid #ddd; }
+th { background:#8B6B3F; color:white; }
+</style>
+</head>
+
+<body>
+
+<h2>Seelan Moodley – Control Panel</h2>
+
+<input type="text" id="searchBox" placeholder="Search..." onkeyup="searchGuest()">
+
+<br><br>
+
+<button onclick="filterStatus('ALL')">All</button>
+<button onclick="filterStatus('Pending')">Pending</button>
+<button onclick="filterStatus('Yes')">Attending</button>
+<button onclick="filterStatus('No')">Declined</button>
+
+<button onclick="remindAllPending()">Remind All Pending</button>
+<button onclick="toggleCheckInMode()">Check-In Mode</button>
+
+<br><br>
+
+<div class="card">Expected <h2 id="expected">0</h2></div>
+<div class="card">Checked In <h2 id="checkedin">0</h2></div>
+<div class="card">Outstanding <h2 id="outstanding">0</h2></div>
+
+<table>
+<thead>
+<tr>
+<th>Name</th><th>Status</th><th>Guests</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="guestTable"></tbody>
+</table>
+
+<script>
+
+let fullData = [];
+let checkInMode = false;
+
+function renderTable(data){
+
+let table = document.getElementById("guestTable");
+table.innerHTML = "";
+
+data.forEach(row=>{
+
+let btn = checkInMode
+? `<button onclick="checkIn('${row["Display Name"]}')">Check In</button>`
+: `<button onclick="sendReminder('${row.Phone}','${row["Display Name"]}','${row.Link}')">Remind</button>`;
+
+table.innerHTML += `
+<tr>
+<td>${row["Display Name"]}</td>
+<td>${row.Status || "Pending"}</td>
+<td>${row.Guests || 0}</td>
+<td>${btn}</td>
+</tr>`;
+});
+
+updateSummary(data);
+}
+
+function searchGuest(){
+let val = document.getElementById("searchBox").value.toLowerCase();
+renderTable(fullData.filter(r=>r["Display Name"].toLowerCase().includes(val)));
+}
+
+function filterStatus(type){
+if(type==="ALL"){ renderTable(fullData); return; }
+renderTable(fullData.filter(r=>type==="Pending"?!r.Status:r.Status===type));
+}
+
+function sendReminder(phone,name,link){
+let msg = `Dear ${name},
+
+Kindly confirm your attendance 🙏
+${link}`;
+
+window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
+}
+
+function remindAllPending(){
+fullData.filter(r=>!r.Status).forEach(r=>{
+sendReminder(r.Phone,r["Display Name"],r.Link);
+});
+}
+
+function toggleCheckInMode(){
+checkInMode = !checkInMode;
+renderTable(fullData);
+}
+
+function checkIn(name){
+fetch("YOUR_GOOGLE_SCRIPT_URL",{
+method:"POST",
+body: JSON.stringify({action:"checkin",name:name})
+});
+alert(name+" checked in");
+}
+
+</script>
+
+</body>
+</html>
