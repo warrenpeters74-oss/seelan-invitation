@@ -1,123 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
 
 <style>
-body {
-    font-family: Georgia, serif;
-    background:#F5F1EA;
-    padding:20px;
-    color:#2C2C2C;
-}
-
-h2 {
-    color:#8B6B3F;
-}
-
-.card {
-    background:white;
-    padding:15px;
-    margin:10px;
-    border-radius:10px;
-    display:inline-block;
-    border:1px solid #D6C3A3;
-    min-width:150px;
-    text-align:center;
-}
-
-.controls {
-    margin:15px 0;
-}
-
-button {
-    background:#8B6B3F;
-    color:white;
-    padding:10px 12px;
-    border:none;
-    border-radius:6px;
-    margin:5px;
-    cursor:pointer;
-    font-size:13px;
-}
-
-button.secondary {
-    background:#2C2C2C;
-}
-
-button.danger {
-    background:#C62828;
-}
-
-input {
-    padding:10px;
-    width:100%;
-    margin-bottom:10px;
-}
-
-table {
-    width:100%;
-    margin-top:20px;
-    border-collapse: collapse;
-    background:white;
-    border-radius:10px;
-    overflow:hidden;
-}
-
-td,th {
-    padding:10px;
-    border-bottom:1px solid #eee;
-    text-align:left;
-}
-
-th {
-    background:#8B6B3F;
-    color:white;
-}
-
-tr:hover {
-    background:#f9f6f2;
-}
+body { font-family: Arial; padding:20px; background:#f5f5f5; }
+.card { background:white; padding:20px; margin:10px; display:inline-block; width:200px; border-radius:8px; }
+button { padding:8px 12px; margin:5px; }
+input { padding:8px; margin:10px 0; width:300px; }
 </style>
 </head>
 
 <body>
 
-<h2>Seelan Moodley – Control Panel</h2>
+<h2>Seelan RSVP Dashboard</h2>
 
-<input type="text" id="searchBox" placeholder="Search guest..." onkeyup="searchGuest()">
+<div class="card">Total Guests<br><h2 id="total">0</h2></div>
+<div class="card">Attending<br><h2 id="yes">0</h2></div>
+<div class="card">Declined<br><h2 id="no">0</h2></div>
+<div class="card">Total Count<br><h2 id="count">0</h2></div>
 
-<div class="controls">
+<br><br>
 
-<button onclick="filterStatus('ALL')">All</button>
-<button onclick="filterStatus('Pending')">Pending</button>
-<button onclick="filterStatus('Yes')">Attending</button>
-<button onclick="filterStatus('No')">Declined</button>
+<input type="text" id="search" placeholder="Search guest..." onkeyup="filterGuests()">
 
-<button class="danger" onclick="remindAllPending()">Remind Pending</button>
+<br>
 
-<button class="secondary" onclick="toggleCheckInMode()">Check-In Mode</button>
+<button onclick="loadData()">Refresh Data</button>
+<button onclick="sendBulk()">Send All Invites</button>
+<button onclick="sendReminders()">Remind Pending</button>
 
-</div>
+<br><br>
 
-<div>
-<div class="card">
-<h4>Expected</h4>
-<h2 id="expected">0</h2>
-</div>
-
-<div class="card">
-<h4>Checked In</h4>
-<h2 id="checkedin">0</h2>
-</div>
-
-<div class="card">
-<h4>Outstanding</h4>
-<h2 id="outstanding">0</h2>
-</div>
-</div>
-
-<table>
+<table border="1" cellpadding="8" id="table">
 <thead>
 <tr>
 <th>Name</th>
@@ -126,99 +42,89 @@ tr:hover {
 <th>Action</th>
 </tr>
 </thead>
-<tbody id="guestTable"></tbody>
+<tbody></tbody>
 </table>
 
 <script>
 
-let fullData = [];
-let checkInMode = false;
+const baseURL = "https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?name=";
 
-function renderTable(data){
+// 👉 SAMPLE DATA (REPLACE LATER WITH GOOGLE SHEET API)
+let data = [];
 
-let table = document.getElementById("guestTable");
-table.innerHTML = "";
+function loadData() {
 
-data.forEach(row=>{
+fetch("https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec")
+.then(res => res.json())
+.then(res => {
 
-let color =
-    row["Checked In"] === "Yes" ? "#d4edda" :
-    row.Status === "Yes" ? "#e3f2fd" :
-    row.Status === "No" ? "#f8d7da" :
-    "#fff3cd";
+data = res;
 
-let button = checkInMode
-? `<button onclick="checkIn('${row["Display Name"]}')">Check In</button>`
-: `<button onclick="sendReminder('${row.Phone}','${row["Display Name"]}','${row.Link}')">Remind</button>`;
+let tbody = document.querySelector("#table tbody");
+tbody.innerHTML = "";
 
-table.innerHTML += `
-<tr style="background:${color}">
-<td>${row["Display Name"]}</td>
-<td>${row.Status || "Pending"}</td>
-<td>${row.Guests || 0}</td>
-<td>${button}</td>
-</tr>`;
+let total = 0, yes = 0, no = 0, count = 0;
+
+res.forEach(r => {
+
+total++;
+
+if (r.attending === "Yes") {
+  yes++;
+  count += Number(r.guests);
+} else if (r.attending === "No") {
+  no++;
+}
+
+let row = `
+<tr>
+<td>${r.name}</td>
+<td>${r.attending || "Pending"}</td>
+<td>${r.guests || 0}</td>
+<td>
+<button onclick="sendInvite('${r.name}')">Invite</button>
+<button onclick="sendReminder('${r.name}')">Remind</button>
+</td>
+</tr>
+`;
+
+tbody.innerHTML += row;
+
 });
 
-updateSummary(data);
-}
+document.getElementById("total").innerText = total;
+document.getElementById("yes").innerText = yes;
+document.getElementById("no").innerText = no;
+document.getElementById("count").innerText = count;
 
-function searchGuest(){
-let val = document.getElementById("searchBox").value.toLowerCase();
-renderTable(fullData.filter(r=>r["Display Name"].toLowerCase().includes(val)));
-}
-
-function filterStatus(type){
-if(type==="ALL"){ renderTable(fullData); return; }
-renderTable(fullData.filter(r=>type==="Pending"?!r.Status:r.Status===type));
-}
-
-function sendReminder(phone,name,link){
-let msg = `Dear ${name},
-
-Kindly confirm your attendance 🙏
-${link}`;
-
-window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
-}
-
-function remindAllPending(){
-fullData.filter(r=>!r.Status).forEach(r=>{
-sendReminder(r.Phone,r["Display Name"],r.Link);
 });
 }
 
-function toggleCheckInMode(){
-checkInMode = !checkInMode;
-alert(checkInMode ? "Check-In Mode ON" : "Check-In Mode OFF");
-renderTable(fullData);
+function sendInvite(name) {
+let link = baseURL + encodeURIComponent(name);
+window.open(`https://wa.me/?text=Dear ${name}, you are invited. RSVP here: ${link}`);
 }
 
-function checkIn(name){
-fetch("YOUR_GOOGLE_SCRIPT_URL",{
-method:"POST",
-body: JSON.stringify({action:"checkin",name:name})
+function sendReminder(name) {
+let link = baseURL + encodeURIComponent(name);
+window.open(`https://wa.me/?text=Reminder: Please RSVP here ${link}`);
+}
+
+function sendBulk() {
+alert("Send manually for now or we automate next");
+}
+
+function sendReminders() {
+alert("Next step: automate pending only");
+}
+
+function filterGuests() {
+let search = document.getElementById("search").value.toLowerCase();
+let rows = document.querySelectorAll("tbody tr");
+
+rows.forEach(row => {
+row.style.display = row.innerText.toLowerCase().includes(search) ? "" : "none";
 });
-alert(name+" checked in");
-}
-
-function updateSummary(data){
-
-let expected = 0;
-let checkedIn = 0;
-
-data.forEach(row=>{
-if(row.Status==="Yes"){
-expected += Number(row.Guests || 1);
-}
-if(row["Checked In"]==="Yes"){
-checkedIn += Number(row.Guests || 1);
-}
-});
-
-document.getElementById("expected").innerText = expected;
-document.getElementById("checkedin").innerText = checkedIn;
-document.getElementById("outstanding").innerText = expected - checkedIn;
 }
 
 </script>
