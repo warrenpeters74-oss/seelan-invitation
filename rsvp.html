@@ -5,7 +5,7 @@
 
 <style>
 body {
-    font-family: Georgia;
+    font-family: Georgia, serif;
     background: #F5F1EA;
     text-align: center;
     padding: 20px;
@@ -13,22 +13,52 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 650px;
     margin: auto;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    border: 1px solid #C9B08A;
+    background: #FFFFFF;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #D6C3A3;
 }
 
-h1 { color: #8B6B3F; }
+h1 {
+    color: #8B6B3F;
+    margin-bottom: 5px;
+}
+
+h2 {
+    color: #2C2C2C;
+    margin-top: 0;
+}
+
+.divider {
+    margin: 25px 0;
+    border-top: 1px solid #D6C3A3;
+}
+
+.invite-text {
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.highlight {
+    color: #8B6B3F;
+    font-weight: bold;
+}
+
+.details {
+    margin: 20px 0;
+    font-size: 15px;
+}
 
 .btn {
-    padding: 12px 20px;
+    padding: 12px 18px;
     margin: 10px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .yes { background: #8B6B3F; color: white; }
@@ -37,7 +67,17 @@ h1 { color: #8B6B3F; }
 
 .hidden { display:none; }
 
-select { padding:10px; margin:10px; }
+select {
+    padding:10px;
+    margin-top:10px;
+}
+
+.footer {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #555;
+}
+
 </style>
 </head>
 
@@ -48,21 +88,29 @@ select { padding:10px; margin:10px; }
 <h2>In Loving Memory of</h2>
 <h1>Seelan “Seela” Moodley</h1>
 
-<p id="guestName"></p>
+<p id="guestName" class="highlight"></p>
 
-<p>
-The Moodley family warmly invites you to join us in prayer and remembrance.
+<p class="invite-text">
+The Moodley family warmly invites you to join us as we gather in prayer and remembrance
+to honour the life and cherished memory of our beloved
+<span class="highlight">Seelan “Seela” Moodley</span> on his 16th Day Ceremony.
 </p>
 
-<p>
-📅 10 August <br>
-🕙 10:30 AM <br>
+<p class="invite-text">
+Your presence and prayers will be deeply appreciated.
+</p>
+
+<div class="details">
+📅 <strong>10 August</strong><br>
+🕙 <strong>10:30 AM</strong><br>
 📍 Cultural Centre, Lenasia
-</p>
+</div>
 
-<hr>
+<p><em>Lunch will be served thereafter</em></p>
 
-<h3>RSVP</h3>
+<div class="divider"></div>
+
+<h3>Confirm Attendance</h3>
 
 <button class="btn yes" onclick="attend(true)">Yes, We Will Attend</button>
 <button class="btn no" onclick="attend(false)">We Will Not Attend</button>
@@ -70,14 +118,24 @@ The Moodley family warmly invites you to join us in prayer and remembrance.
 <div id="guestSection" class="hidden">
 <p>Number of attendees:</p>
 <select id="guestCount">
-<option>1</option><option>2</option><option>3</option>
-<option>4</option><option>5+</option>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5+</option>
 </select>
 </div>
 
-<button class="btn submit" onclick="submitRSVP()">Submit</button>
+<br>
+
+<button class="btn submit" onclick="submitRSVP()">Submit RSVP</button>
 
 <p id="msg"></p>
+
+<div class="footer">
+<p><strong>Om Shanti</strong></p>
+<p>"May his soul continue its eternal journey in peace."</p>
+</div>
 
 </div>
 
@@ -87,7 +145,7 @@ const params = new URLSearchParams(window.location.search);
 const guest = params.get("guest");
 
 document.getElementById("guestName").innerHTML =
-"<strong>Dear " + guest + ",</strong>";
+"Dear " + guest + ",";
 
 let attending = null;
 
