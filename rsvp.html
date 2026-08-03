@@ -1,38 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#f6f0e5"
+  >
+
+  <title>Seelan Moodley — 16th Day Prayer</title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --navy: #13254a;
+      --navy-soft: #273b61;
+      --gold: #ad7b20;
+      --gold-light: #d9bd78;
+      --cream: #f6f0e5;
+      --cream-light: #fffdf8;
+      --cream-dark: #ece2cf;
+      --text: #2f291f;
+      --muted: #786c5d;
+      --success: #2f755b;
+      --danger: #9b4b4b;
+      --shadow: 0 18px 50px rgba(67, 49, 21, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(255, 255, 255, 0.95),
+          rgba(246, 240, 229, 0.92) 42%,
+          rgba(236, 226, 207, 0.96)
+        );
+      font-family: "Cormorant Garamond", Georgia, serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .page-shell {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 24px 18px 70px;
+    }
+
+    .invitation-frame {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 10px;
+      background: var(--cream-light);
+      border: 1px solid rgba(173, 123, 32, 0.35);
+      box-shadow: var(--shadow);
+    }
+
+    .invitation-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .rsvp-section {
+      width: min(100%, 760px);
+      margin: 28px auto 0;
+      padding: 42px 34px;
+      text-align: center;
+      background: rgba(255, 253, 248, 0.98);
+      border: 1px solid rgba(173, 123, 32, 0.38);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rsvp-section::before,
+    .rsvp-section::after {
+      content: "✦";
+      position: absolute;
+      color: var(--gold-light);
+      font-size: 24px;
+      opacity: 0.75;
+    }
+
+    .rsvp-section::before {
+      top: 14px;
+      left: 18px;
+    }
+
+    .rsvp-section::after {
+      right: 18px;
+      bottom: 14px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-family: "Cinzel", serif;
+      font-size: 0.79rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--navy);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(2.2rem, 6vw, 3.6rem);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px auto;
+      color: var(--gold);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      width: 90px;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        var(--gold-light)
+      );
+    }
+
+    .divider::after {
+      background: linear-gradient(
+        to left,
+        transparent,
+        var(--gold-light)
+      );
+    }
+
+    .personal-greeting {
+      margin: 0 auto 8px;
+      color: var(--navy);
+      font-size: clamp(1.6rem, 4.8vw, 2.35rem);
+      font-weight: 600;
+      line-height: 1.15;
+    }
+
+    .intro-copy {
+      max-width: 600px;
+      margin: 12px auto 26px;
+      color: var(--muted);
+      font-size: 1.18rem;
+      line-height: 1.5;
+    }
+
+    .loading-panel,
+    .error-panel {
+      padding: 28px 20px;
+      border: 1px solid var(--cream-dark);
+      background: var(--cream);
+    }
+
+    .error-panel {
+      color: var(--danger);
+    }
+
+    .response-panel {
+      display: none;
+    }
+
+    .existing-response {
+      display: none;
+      margin: 0 auto 24px;
+      padding: 15px 18px;
+      color: var(--navy);
+      background: rgba(217, 189, 120, 0.17);
+      border: 1px solid rgba(173, 123, 32, 0.28);
+      font-size: 1.08rem;
+      line-height: 1.4;
+    }
+
+    .question-label {
+      display: block;
+      margin: 0 0 14px;
+      color: var(--navy);
+      font-family: "Cinzel", serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .attendance-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .choice-button {
+      min-height: 62px;
+      padding: 14px 18px;
+      cursor: pointer;
+      color: var(--navy);
+      background: var(--cream-light);
+      border: 1px solid var(--gold-light);
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease;
+    }
+
+    .choice-button:hover {
+      transform: translateY(-2px);
+      border-color: var(--gold);
+    }
+
+    .choice-button.selected {
+      color: #ffffff;
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+
+    .guest-count-panel {
+      display: none;
+      margin: 5px auto 24px;
+      padding: 22px;
+      background: var(--cream);
+      border: 1px solid var(--cream-dark);
+    }
+
+    .count-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .count-button {
+      width: 46px;
+      height: 46px;
+      cursor: pointer;
+      color: var(--navy);
+      background: var(--cream-light);
+      border: 1px solid var(--gold-light);
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .count-button:hover {
+      border-color: var(--gold);
+    }
+
+    .count-value {
+      min-width: 72px;
+      color: var(--navy);
+      font-family: "Cinzel", serif;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .count-help {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .notes-field {
+      margin: 0 0 24px;
+      text-align: left;
+    }
+
+    .notes-field label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--navy);
+      font-family: "Cinzel", serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .notes-field textarea {
+      width: 100%;
+      min-height: 100px;
+      resize: vertical;
+      padding: 14px 15px;
+      color: var(--text);
+      background: #ffffff;
+      border: 1px solid var(--cream-dark);
+      outline: none;
+    }
+
+    .notes-field textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(173, 123, 32, 0.1);
+    }
+
+    .submit-button {
+      width: 100%;
+      min-height: 60px;
+      padding: 15px 24px;
+      cursor: pointer;
+      color: #ffffff;
+      background: linear-gradient(
+        135deg,
+        #b6872c,
+        #8f651c
+      );
+      border: 0;
+      font-family: "Cinzel", serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+      box-shadow: 0 12px 26px rgba(143, 101, 28, 0.22);
+    }
+
+    .submit-button:hover {
+      filter: brightness(1.04);
+    }
+
+    .submit-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .form-message {
+      min-height: 24px;
+      margin: 18px 0 0;
+      font-size: 1.05rem;
+      line-height: 1.4;
+    }
+
+    .form-message.error {
+      color: var(--danger);
+    }
+
+    .success-panel {
+      display: none;
+      padding: 34px 20px;
+      background: rgba(47, 117, 91, 0.08);
+      border: 1px solid rgba(47, 117, 91, 0.28);
+    }
+
+    .success-panel h2 {
+      margin: 0 0 12px;
+      color: var(--success);
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .success-panel p {
+      max-width: 540px;
+      margin: 0 auto;
+      color: var(--text);
+      font-size: 1.15rem;
+      line-height: 1.5;
+    }
+
+    .contact-note {
+      width: min(100%, 760px);
+      margin: 24px auto 0;
+      padding: 18px 20px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 1.05rem;
+      line-height: 1.45;
+    }
+
+    .contact-note strong {
+      color: var(--navy);
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        padding: 0 0 42px;
+      }
+
+      .invitation-frame {
+        width: 100%;
+        padding: 0;
+        border-left: 0;
+        border-right: 0;
+        box-shadow: none;
+      }
+
+      .rsvp-section {
+        width: calc(100% - 24px);
+        margin-top: 18px;
+        padding: 36px 20px;
+      }
+
+      .attendance-options {
+        grid-template-columns: 1fr;
+      }
+
+      .intro-copy {
+        font-size: 1.08rem;
+      }
+
+      .contact-note {
+        padding-inline: 28px;
+      }
+    }
+  </style>
+</head>
+
 <body>
+  <main class="page-shell">
 
-<div class="container">
+    <section
+      class="invitation-frame"
+      aria-label="Memorial invitation"
+    >
+      <img
+        src="seelan-invitation.jpg"
+        alt="Invitation to the 16th Day Prayer in loving memory of Seelan Seela Moodley"
+      >
+    </section>
 
-<h2>In Loving Memory of</h2>
-<h1 style="color:#8c6b3f;">Seelan “Seela” Moodley</h1>
+    <section
+      class="rsvp-section"
+      id="rsvpSection"
+    >
+      <p class="eyebrow">Confirm Attendance</p>
 
-<p id="guestName" style="font-size:18px; margin-top:20px;"></p>
+      <h1>RSVP</h1>
 
-<p>The Moodley family warmly invites you to join us in prayer and remembrance.</p>
+      <div
+        class="divider"
+        aria-hidden="true"
+      >
+        ◆
+      </div>
 
-<div style="margin:20px 0;">
-📅 <b>10 August</b><br>
-🕒 <b>10:30 AM</b><br>
-📍 Cultural Centre, Lenasia
-</div>
+      <div
+        class="loading-panel"
+        id="loadingPanel"
+      >
+        Loading your personalised invitation…
+      </div>
 
-<hr>
+      <div
+        class="error-panel"
+        id="errorPanel"
+        hidden
+      >
+        This invitation link could not be opened.
+      </div>
 
-<h3>RSVP</h3>
+      <div
+        class="response-panel"
+        id="responsePanel"
+      >
+        <h2
+          class="personal-greeting"
+          id="personalGreeting"
+        >
+          Dear Guest
+        </h2>
 
-<button class="yes" onclick="selectResponse(true)">Yes, We Will Attend</button>
-<button class="no" onclick="selectResponse(false)">We Will Not Attend</button>
+        <p class="intro-copy">
+          Kindly confirm whether you will be joining the
+          Moodley family in prayer and remembrance.
+        </p>
 
-<div id="guestInput" style="display:none;">
-  <p>Number of Guests:</p>
-  <input type="number" id="guestCount" min="1" value="1">
-</div>
+        <div
+          class="existing-response"
+          id="existingResponse"
+        ></div>
 
-<br>
+        <span class="question-label">
+          Will you be attending?
+        </span>
 
-<button class="submit" onclick="submitRSVP()">Submit</button>
+        <div class="attendance-options">
+          <button
+            class="choice-button"
+            id="yesButton"
+            type="button"
+            onclick="selectAttendance('Yes')"
+          >
+            Yes, we will attend
+          </button>
 
-<div id="msg"></div>
+          <button
+            class="choice-button"
+            id="noButton"
+            type="button"
+            onclick="selectAttendance('No')"
+          >
+            We will not attend
+          </button>
+        </div>
 
-</div>
+        <div
+          class="guest-count-panel"
+          id="guestCountPanel"
+        >
+          <span class="question-label">
+            Number attending
+          </span>
 
+          <div class="count-control">
+            <button
+              class="count-button"
+              type="button"
+              aria-label="Reduce attendee count"
+              onclick="changeGuestCount(-1)"
+            >
+              −
+            </button>
+
+            <span
+              class="count-value"
+              id="guestCountValue"
+            >
+              1
+            </span>
+
+            <button
+              class="count-button"
+              type="button"
+              aria-label="Increase attendee count"
+              onclick="changeGuestCount(1)"
+            >
+              +
+            </button>
+          </div>
+
+          <p class="count-help">
+            Please include everyone attending under this
+            invitation.
+          </p>
+        </div>
+
+        <div class="notes-field">
+          <label for="notes">
+            Optional message
+          </label>
+
+          <textarea
+            id="notes"
+            maxlength="500"
+            placeholder="Add a short note for the family…"
+          ></textarea>
+        </div>
+
+        <button
+          class="submit-button"
+          id="submitButton"
+          type="button"
+          onclick="submitRsvp()"
+        >
+          Send My RSVP
+        </button>
+
+        <p
+          class="form-message"
+          id="formMessage"
+          aria-live="polite"
+        ></p>
+      </div>
+
+      <div
+        class="success-panel"
+        id="successPanel"
+      >
+        <h2>Thank you</h2>
+
+        <p id="successMessage">
+          Your response has been recorded.
+        </p>
+      </div>
+    </section>
+
+    <aside class="contact-note">
+      For assistance with the invitation, please contact
+      <strong>Shai on +27 76 588 2192</strong>.
+    </aside>
+  </main>
+
+  <script>
+    "use strict";
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec";
+
+    let currentGuest = null;
+    let selectedAttendance = "";
+    let guestCount = 1;
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialiseInvitation
+    );
+
+    async function initialiseInvitation() {
+      const parameters =
+        new URLSearchParams(window.location.search);
+
+      const guestId =
+        String(parameters.get("id") || "")
+          .trim()
+          .toUpperCase();
+
+      if (!guestId) {
+        showLoadError(
+          "This invitation link is incomplete. " +
+          "Please request the personalised link from the organiser."
+        );
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          API_URL +
+          "?action=guest&id=" +
+          encodeURIComponent(guestId) +
+          "&v=" +
+          Date.now()
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "The invitation service could not be reached."
+          );
+        }
+
+        const payload = await response.json();
+
+        if (
+          !payload.success ||
+          !payload.guest
+        ) {
+          throw new Error(
+            payload.message ||
+            "The guest record could not be found."
+          );
+        }
+
+        currentGuest = payload.guest;
+
+        displayGuestInvitation();
+      } catch (error) {
+        console.error(error);
+
+        showLoadError(
+          "We could not open this personalised invitation. " +
+          "Please try again or contact Shai."
+        );
+      }
+    }
+
+    function displayGuestInvitation() {
+      const loadingPanel =
+        document.getElementById("loadingPanel");
+
+      const responsePanel =
+        document.getElementById("responsePanel");
+
+      const greeting =
+        document.getElementById("personalGreeting");
+
+      loadingPanel.style.display = "none";
+      responsePanel.style.display = "block";
+
+      greeting.textContent =
+        "Dear " + currentGuest.name;
+
+      prefillExistingResponse();
+    }
+
+    function prefillExistingResponse() {
+      const status =
+        String(currentGuest.rsvpStatus || "Pending");
+
+      const existingResponse =
+        document.getElementById("existingResponse");
+
+      const existingCount =
+        Number(currentGuest.confirmedGuests || 0);
+
+      if (status === "Yes") {
+        selectedAttendance = "Yes";
+        guestCount = Math.max(1, existingCount);
+
+        existingResponse.textContent =
+          "A previous response of Attending was recorded" +
+          (guestCount
+            ? " for " + guestCount +
+              (guestCount === 1
+                ? " person."
+                : " people.")
+            : ".");
+
+        existingResponse.style.display = "block";
+        applyAttendanceSelection();
+      } else if (status === "No") {
+        selectedAttendance = "No";
+
+        existingResponse.textContent =
+          "A previous response of Not Attending was recorded.";
+
+        existingResponse.style.display = "block";
+        applyAttendanceSelection();
+      }
+    }
+
+    function selectAttendance(status) {
+      selectedAttendance = status;
+
+      if (
+        selectedAttendance === "Yes" &&
+        guestCount < 1
+      ) {
+        guestCount = 1;
+      }
+
+      applyAttendanceSelection();
+
+      clearFormMessage();
+    }
+
+    function applyAttendanceSelection() {
+      const yesButton =
+        document.getElementById("yesButton");
+
+      const noButton =
+        document.getElementById("noButton");
+
+      const guestCountPanel =
+        document.getElementById("guestCountPanel");
+
+      yesButton.classList.toggle(
+        "selected",
+        selectedAttendance === "Yes"
+      );
+
+      noButton.classList.toggle(
+        "selected",
+        selectedAttendance === "No"
+      );
+
+      guestCountPanel.style.display =
+        selectedAttendance === "Yes"
+          ? "block"
+          : "none";
+
+      updateGuestCountDisplay();
+    }
+
+    function changeGuestCount(change) {
+      guestCount = Math.min(
+        20,
+        Math.max(1, guestCount + change)
+      );
+
+      updateGuestCountDisplay();
+    }
+
+    function updateGuestCountDisplay() {
+      document.getElementById(
+        "guestCountValue"
+      ).textContent = guestCount;
+    }
+
+    async function submitRsvp() {
+      if (!currentGuest) {
+        showFormMessage(
+          "The guest record has not loaded.",
+          true
+        );
+        return;
+      }
+
+      if (
+        selectedAttendance !== "Yes" &&
+        selectedAttendance !== "No"
+      ) {
+        showFormMessage(
+          "Please select whether you will be attending.",
+          true
+        );
+        return;
+      }
+
+      const submitButton =
+        document.getElementById("submitButton");
+
+      const notes =
+        document.getElementById("notes").value.trim();
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Recording Response…";
+
+      clearFormMessage();
+
+      const requestPayload = {
+        action: "rsvp",
+        guestId: currentGuest.guestId,
+        rsvpStatus: selectedAttendance,
+        confirmedGuests:
+          selectedAttendance === "Yes"
+            ? guestCount
+            : 0,
+        notes: notes
+      };
+
+      try {
+        const response = await fetch(
+          API_URL,
+          {
+            method: "POST",
+            body: JSON.stringify(requestPayload)
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "The response could not be submitted."
+          );
+        }
+
+        const payload = await response.json();
+
+        if (!payload.success) {
+          throw new Error(
+            payload.message ||
+            "The response could not be recorded."
+          );
+        }
+
+        showSuccessConfirmation();
+      } catch (error) {
+        console.error(error);
+
+        showFormMessage(
+          "We could not record your response. " +
+          "Please try again or contact Shai.",
+          true
+        );
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Send My RSVP";
+      }
+    }
+
+    function showSuccessConfirmation() {
+      const responsePanel =
+        document.getElementById("responsePanel");
+
+      const successPanel =
+        document.getElementById("successPanel");
+
+      const successMessage =
+        document.getElementById("successMessage");
+
+      responsePanel.style.display = "none";
+      successPanel.style.display = "block";
+
+      if (selectedAttendance === "Yes") {
+        successMessage.textContent =
+          "Thank you, " +
+          currentGuest.name +
+          ". Your attendance has been confirmed for " +
+          guestCount +
+          (guestCount === 1
+            ? " person."
+            : " people.") +
+          " Your presence and prayers are deeply appreciated.";
+      } else {
+        successMessage.textContent =
+          "Thank you, " +
+          currentGuest.name +
+          ". Your response has been recorded. " +
+          "The Moodley family appreciates your thoughts and prayers.";
+      }
+
+      successPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function showLoadError(message) {
+      const loadingPanel =
+        document.getElementById("loadingPanel");
+
+      const errorPanel =
+        document.getElementById("errorPanel");
+
+      loadingPanel.style.display = "none";
+      errorPanel.hidden = false;
+      errorPanel.textContent = message;
+    }
+
+    function showFormMessage(message, isError) {
+      const formMessage =
+        document.getElementById("formMessage");
+
+      formMessage.textContent = message;
+
+      formMessage.classList.toggle(
+        "error",
+        Boolean(isError)
+      );
+    }
+
+    function clearFormMessage() {
+      showFormMessage("", false);
+    }
+  </script>
 </body>
+</html>
