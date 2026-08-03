@@ -4,25 +4,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body { font-family: Arial; background:#F5F1EA; padding:20px; }
+body {
+    font-family: Georgia, serif;
+    background:#F5F1EA;
+    padding:20px;
+    color:#2C2C2C;
+}
+
+h2 {
+    color:#8B6B3F;
+}
+
 .card {
     background:white;
     padding:15px;
     margin:10px;
     border-radius:10px;
     display:inline-block;
-    border:1px solid #C9B08A;
+    border:1px solid #D6C3A3;
+    min-width:150px;
+    text-align:center;
 }
+
+.controls {
+    margin:15px 0;
+}
+
 button {
     background:#8B6B3F;
     color:white;
-    padding:10px;
+    padding:10px 12px;
     border:none;
-    border-radius:5px;
+    border-radius:6px;
+    margin:5px;
+    cursor:pointer;
+    font-size:13px;
 }
-table { width:100%; margin-top:20px; }
-td,th { padding:10px; border-bottom:1px solid #ddd; }
-th { background:#8B6B3F; color:white; }
+
+button.secondary {
+    background:#2C2C2C;
+}
+
+button.danger {
+    background:#C62828;
+}
+
+input {
+    padding:10px;
+    width:100%;
+    margin-bottom:10px;
+}
+
+table {
+    width:100%;
+    margin-top:20px;
+    border-collapse: collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+td,th {
+    padding:10px;
+    border-bottom:1px solid #eee;
+    text-align:left;
+}
+
+th {
+    background:#8B6B3F;
+    color:white;
+}
+
+tr:hover {
+    background:#f9f6f2;
+}
 </style>
 </head>
 
@@ -30,28 +85,45 @@ th { background:#8B6B3F; color:white; }
 
 <h2>Seelan Moodley – Control Panel</h2>
 
-<input type="text" id="searchBox" placeholder="Search..." onkeyup="searchGuest()">
+<input type="text" id="searchBox" placeholder="Search guest..." onkeyup="searchGuest()">
 
-<br><br>
+<div class="controls">
 
 <button onclick="filterStatus('ALL')">All</button>
 <button onclick="filterStatus('Pending')">Pending</button>
 <button onclick="filterStatus('Yes')">Attending</button>
 <button onclick="filterStatus('No')">Declined</button>
 
-<button onclick="remindAllPending()">Remind All Pending</button>
-<button onclick="toggleCheckInMode()">Check-In Mode</button>
+<button class="danger" onclick="remindAllPending()">Remind Pending</button>
 
-<br><br>
+<button class="secondary" onclick="toggleCheckInMode()">Check-In Mode</button>
 
-<div class="card">Expected <h2 id="expected">0</h2></div>
-<div class="card">Checked In <h2 id="checkedin">0</h2></div>
-<div class="card">Outstanding <h2 id="outstanding">0</h2></div>
+</div>
+
+<div>
+<div class="card">
+<h4>Expected</h4>
+<h2 id="expected">0</h2>
+</div>
+
+<div class="card">
+<h4>Checked In</h4>
+<h2 id="checkedin">0</h2>
+</div>
+
+<div class="card">
+<h4>Outstanding</h4>
+<h2 id="outstanding">0</h2>
+</div>
+</div>
 
 <table>
 <thead>
 <tr>
-<th>Name</th><th>Status</th><th>Guests</th><th>Action</th>
+<th>Name</th>
+<th>Status</th>
+<th>Guests</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody id="guestTable"></tbody>
@@ -69,16 +141,22 @@ table.innerHTML = "";
 
 data.forEach(row=>{
 
-let btn = checkInMode
+let color =
+    row["Checked In"] === "Yes" ? "#d4edda" :
+    row.Status === "Yes" ? "#e3f2fd" :
+    row.Status === "No" ? "#f8d7da" :
+    "#fff3cd";
+
+let button = checkInMode
 ? `<button onclick="checkIn('${row["Display Name"]}')">Check In</button>`
 : `<button onclick="sendReminder('${row.Phone}','${row["Display Name"]}','${row.Link}')">Remind</button>`;
 
 table.innerHTML += `
-<tr>
+<tr style="background:${color}">
 <td>${row["Display Name"]}</td>
 <td>${row.Status || "Pending"}</td>
 <td>${row.Guests || 0}</td>
-<td>${btn}</td>
+<td>${button}</td>
 </tr>`;
 });
 
@@ -112,6 +190,7 @@ sendReminder(r.Phone,r["Display Name"],r.Link);
 
 function toggleCheckInMode(){
 checkInMode = !checkInMode;
+alert(checkInMode ? "Check-In Mode ON" : "Check-In Mode OFF");
 renderTable(fullData);
 }
 
@@ -121,6 +200,25 @@ method:"POST",
 body: JSON.stringify({action:"checkin",name:name})
 });
 alert(name+" checked in");
+}
+
+function updateSummary(data){
+
+let expected = 0;
+let checkedIn = 0;
+
+data.forEach(row=>{
+if(row.Status==="Yes"){
+expected += Number(row.Guests || 1);
+}
+if(row["Checked In"]==="Yes"){
+checkedIn += Number(row.Guests || 1);
+}
+});
+
+document.getElementById("expected").innerText = expected;
+document.getElementById("checkedin").innerText = checkedIn;
+document.getElementById("outstanding").innerText = expected - checkedIn;
 }
 
 </script>
