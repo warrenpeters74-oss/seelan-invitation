@@ -1,133 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Admin Dashboard</title>
+  <title>Seelan RSVP Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f5f5;
+      padding: 20px;
+    }
 
-<style>
-body { font-family: Arial; padding:20px; background:#f5f5f5; }
-.card { background:white; padding:20px; margin:10px; display:inline-block; width:200px; border-radius:8px; }
-button { padding:8px 12px; margin:5px; }
-input { padding:8px; margin:10px 0; width:300px; }
-</style>
+    h2 {
+      color: #2C3E50;
+    }
+
+    .card {
+      display: inline-block;
+      padding: 15px;
+      margin: 10px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      min-width: 150px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background: #2C3E50;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Seelan RSVP Dashboard</h2>
+  <h2>RSVP Dashboard</h2>
 
-<div class="card">Total Guests<br><h2 id="total">0</h2></div>
-<div class="card">Attending<br><h2 id="yes">0</h2></div>
-<div class="card">Declined<br><h2 id="no">0</h2></div>
-<div class="card">Total Count<br><h2 id="count">0</h2></div>
+  <!-- SUMMARY CARDS -->
+  <div class="card">Total<br><b id="total">0</b></div>
+  <div class="card">Attending<br><b id="yes">0</b></div>
+  <div class="card">Declined<br><b id="no">0</b></div>
+  <div class="card">Pending<br><b id="pending">0</b></div>
 
-<br><br>
+  <!-- TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Guests</th>
+        <th>Checked In</th>
+      </tr>
+    </thead>
+    <tbody id="guestList"></tbody>
+  </table>
 
-<input type="text" id="search" placeholder="Search guest..." onkeyup="filterGuests()">
+  <script>
 
-<br>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec";
 
-<button onclick="loadData()">Refresh Data</button>
-<button onclick="sendBulk()">Send All Invites</button>
-<button onclick="sendReminders()">Remind Pending</button>
+    async function loadDashboard() {
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
 
-<br><br>
+      let total = data.length;
+      let yes = data.filter(x => x.attending === "Yes").length;
+      let no = data.filter(x => x.attending === "No").length;
+      let pending = total - (yes + no);
 
-<table border="1" cellpadding="8" id="table">
-<thead>
-<tr>
-<th>Name</th>
-<th>Status</th>
-<th>Guests</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+      document.getElementById("total").innerText = total;
+      document.getElementById("yes").innerText = yes;
+      document.getElementById("no").innerText = no;
+      document.getElementById("pending").innerText = pending;
 
-<script>
+      let table = document.getElementById("guestList");
+      table.innerHTML = "";
 
-const baseURL = "https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?name=";
+      data.forEach(g => {
+        table.innerHTML += `
+          <tr>
+            <td>${g.name}</td>
+            <td>${g.attending}</td>
+            <td>${g.guests}</td>
+            <td>${g.checkedIn || ""}</td>
+          </tr>
+        `;
+      });
+    }
 
-// 👉 SAMPLE DATA (REPLACE LATER WITH GOOGLE SHEET API)
-let data = [];
+    window.onload = loadDashboard;
 
-function loadData() {
-
-fetch("https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec")
-.then(res => res.json())
-.then(res => {
-
-data = res;
-
-let tbody = document.querySelector("#table tbody");
-tbody.innerHTML = "";
-
-let total = 0, yes = 0, no = 0, count = 0;
-
-res.forEach(r => {
-
-total++;
-
-if (r.attending === "Yes") {
-  yes++;
-  count += Number(r.guests);
-} else if (r.attending === "No") {
-  no++;
-}
-
-let row = `
-<tr>
-<td>${r.name}</td>
-<td>${r.attending || "Pending"}</td>
-<td>${r.guests || 0}</td>
-<td>
-<button onclick="sendInvite('${r.name}')">Invite</button>
-<button onclick="sendReminder('${r.name}')">Remind</button>
-</td>
-</tr>
-`;
-
-tbody.innerHTML += row;
-
-});
-
-document.getElementById("total").innerText = total;
-document.getElementById("yes").innerText = yes;
-document.getElementById("no").innerText = no;
-document.getElementById("count").innerText = count;
-
-});
-}
-
-function sendInvite(name) {
-let link = baseURL + encodeURIComponent(name);
-window.open(`https://wa.me/?text=Dear ${name}, you are invited. RSVP here: ${link}`);
-}
-
-function sendReminder(name) {
-let link = baseURL + encodeURIComponent(name);
-window.open(`https://wa.me/?text=Reminder: Please RSVP here ${link}`);
-}
-
-function sendBulk() {
-alert("Send manually for now or we automate next");
-}
-
-function sendReminders() {
-alert("Next step: automate pending only");
-}
-
-function filterGuests() {
-let search = document.getElementById("search").value.toLowerCase();
-let rows = document.querySelectorAll("tbody tr");
-
-rows.forEach(row => {
-row.style.display = row.innerText.toLowerCase().includes(search) ? "" : "none";
-});
-}
-
-</script>
+  </script>
 
 </body>
 </html>
