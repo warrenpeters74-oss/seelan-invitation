@@ -1,93 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seelan Moodley Invitation</title>
-
-<style>
-body {
-  font-family: 'Georgia', serif;
-  background: #f8f5ef;
-  text-align: center;
-  padding: 20px;
-  color: #2c2c2c;
-}
-
-.container {
-  max-width: 600px;
-  margin: auto;
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-h1 {
-  color: #1e2a38;
-}
-
-.name {
-  font-size: 20px;
-  margin: 20px 0;
-  font-weight: bold;
-}
-
-.details {
-  margin: 15px 0;
-}
-
-button {
-  padding: 12px 20px;
-  margin: 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.yes {
-  background: #8c6b3f;
-  color: white;
-}
-
-.no {
-  background: #333;
-  color: white;
-}
-
-.submit {
-  background: #c7a86d;
-  color: white;
-}
-
-input {
-  padding: 10px;
-  width: 80px;
-  margin-top: 10px;
-}
-
-#msg {
-  margin-top: 20px;
-  font-weight: bold;
-}
-</style>
-</head>
-
 <body>
 
 <div class="container">
 
-<h1>In Loving Memory of</h1>
-<h2>Seelan “Seela” Moodley</h2>
+<h2>In Loving Memory of</h2>
+<h1 style="color:#8c6b3f;">Seelan “Seela” Moodley</h1>
 
-<div class="name" id="guestName"></div>
+<p id="guestName" style="font-size:18px; margin-top:20px;"></p>
 
 <p>The Moodley family warmly invites you to join us in prayer and remembrance.</p>
 
-<div class="details">
-📅 10 August<br>
-🕒 10:30 AM<br>
+<div style="margin:20px 0;">
+📅 <b>10 August</b><br>
+🕒 <b>10:30 AM</b><br>
 📍 Cultural Centre, Lenasia
 </div>
 
@@ -111,56 +35,4 @@ input {
 
 </div>
 
-<script>
-let attending = null;
-
-// 👉 GET NAME FROM URL
-const params = new URLSearchParams(window.location.search);
-let guest = params.get("name") || "Guest";
-
-// 👉 AUTO ADD "& Family"
-if (!guest.toLowerCase().includes("family")) {
-  guest = guest + " & Family";
-}
-
-// 👉 DISPLAY NAME
-document.getElementById("guestName").innerText = "Dear " + guest + ",";
-
-function selectResponse(response) {
-  attending = response;
-  
-  if (response) {
-    document.getElementById("guestInput").style.display = "block";
-  } else {
-    document.getElementById("guestInput").style.display = "none";
-  }
-}
-
-function submitRSVP() {
-  if (attending === null) {
-    alert("Please select Yes or No");
-    return;
-  }
-
-  let guests = attending ? document.getElementById("guestCount").value : 0;
-
-  fetch("https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec", {
-    method: "POST",
-    body: JSON.stringify({
-      name: guest,
-      attending: attending ? "Yes" : "No",
-      guests: guests
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("msg").innerHTML = "Thank you for your response 🙏";
-  })
-  .catch(err => {
-    document.getElementById("msg").innerHTML = "Error submitting RSVP";
-  });
-}
-</script>
-
 </body>
-</html>
