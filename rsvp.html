@@ -46,7 +46,7 @@
       width: 100%;
       margin-top: 12px;
       aspect-ratio: 2 / 3;
-      background: url("rsvp-page-approved.png") center / 100% 100% no-repeat;
+      background: url("rsvp_page_clean_v3.png") center / 100% 100% no-repeat;
       border: 1px solid var(--gold);
       box-shadow: 0 8px 22px rgba(57, 38, 8, 0.14);
       overflow: hidden;
@@ -55,18 +55,14 @@
     /* Cover the static sample greeting and replace it with live guest name. */
     .live-greeting {
       position: absolute;
-      left: 39.3%;
-      top: 22.55%;
-      width: 55.2%;
-      min-height: 5.4%;
+      left: 40.8%;
+      top: 23.25%;
+      width: 52.5%;
+      min-height: 4.8%;
       display: flex;
       align-items: center;
-      padding: 0.25% 1.4%;
-      background: linear-gradient(90deg,
-        rgba(250,246,238,0) 0%,
-        rgba(250,246,238,0.98) 5%,
-        rgba(250,246,238,0.98) 95%,
-        rgba(250,246,238,0) 100%);
+      padding: 0;
+      background: transparent;
       color: var(--navy);
       font-size: clamp(16px, 3.7vw, 38px);
       font-weight: 600;
@@ -111,24 +107,12 @@
 
     .counter-cover {
       position: absolute;
-      left: 8.55%;
-      top: 64.35%;
-      width: 83.0%;
-      height: 10.25%;
-      background: #fbf7ef;
+      left: 8.2%;
+      top: 64.2%;
+      width: 83.7%;
+      height: 10.9%;
+      background: transparent;
       border: 0;
-      z-index: 1;
-    }
-
-    .message-cover {
-      position: absolute;
-      left: 8.45%;
-      top: 79.6%;
-      width: 83.1%;
-      height: 8.15%;
-      background: #fbf7ef;
-      border: 0;
-      z-index: 1;
       pointer-events: none;
     }
 
@@ -142,7 +126,6 @@
       grid-template-columns: 1fr 1.4fr 1fr;
       align-items: center;
       text-align: center;
-      z-index: 2;
     }
 
     .counter button {
@@ -170,22 +153,21 @@
     .counter-note {
       position: absolute;
       left: 12%;
-      top: 72.6%;
+      top: 72.1%;
       width: 76%;
       margin: 0;
       color: var(--navy);
       text-align: center;
       font-size: clamp(9px, 2.4vw, 18px);
       font-weight: 500;
-      z-index: 2;
     }
 
     #message {
       position: absolute;
-      left: 8.45%;
-      top: 79.6%;
-      width: 83.1%;
-      height: 8.15%;
+      left: 8.1%;
+      top: 79.2%;
+      width: 83.8%;
+      height: 8.9%;
       resize: none;
       border: 0;
       background: transparent;
@@ -198,7 +180,7 @@
     }
 
     #message:focus {
-      box-shadow: none;
+      box-shadow: 0 0 0 3px rgba(167, 109, 16, 0.18);
     }
 
     #submitButton {
@@ -208,7 +190,7 @@
       width: 83.8%;
       height: 5.8%;
       cursor: pointer;
-      border: 0;
+      border: 1px solid #81510a;
       background: transparent;
       color: transparent;
     }
@@ -294,7 +276,6 @@
 
       <p class="counter-note">Please include everyone attending under this invitation.</p>
 
-      <div class="message-cover" aria-hidden="true"></div>
       <textarea id="message" maxlength="500" placeholder="Add a short note for the family..."></textarea>
 
       <button id="submitButton" type="button" aria-label="Send my RSVP"></button>
