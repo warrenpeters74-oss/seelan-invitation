@@ -55,14 +55,18 @@
     /* Cover the static sample greeting and replace it with live guest name. */
     .live-greeting {
       position: absolute;
-      left: 39.9%;
+      left: 39.3%;
       top: 22.55%;
-      width: 54.1%;
-      min-height: 5.5%;
+      width: 55.2%;
+      min-height: 5.4%;
       display: flex;
       align-items: center;
-      padding: 0.35% 1.2%;
-      background: rgba(255, 253, 248, 1);
+      padding: 0.25% 1.4%;
+      background: linear-gradient(90deg,
+        rgba(250,246,238,0) 0%,
+        rgba(250,246,238,0.98) 5%,
+        rgba(250,246,238,0.98) 95%,
+        rgba(250,246,238,0) 100%);
       color: var(--navy);
       font-size: clamp(16px, 3.7vw, 38px);
       font-weight: 600;
@@ -107,23 +111,23 @@
 
     .counter-cover {
       position: absolute;
-      left: 8.15%;
-      top: 64.0%;
-      width: 83.8%;
-      height: 11.1%;
-      background: rgba(255, 253, 248, 1);
-      border: 1px solid rgba(167, 109, 16, 0.48);
+      left: 8.55%;
+      top: 64.35%;
+      width: 83.0%;
+      height: 10.25%;
+      background: #fbf7ef;
+      border: 0;
       z-index: 1;
     }
 
     .message-cover {
       position: absolute;
-      left: 8.1%;
-      top: 79.2%;
-      width: 83.8%;
-      height: 8.9%;
-      background: rgba(255,253,248,1);
-      border: 1px solid rgba(167, 109, 16, 0.7);
+      left: 8.45%;
+      top: 79.6%;
+      width: 83.1%;
+      height: 8.15%;
+      background: #fbf7ef;
+      border: 0;
       z-index: 1;
       pointer-events: none;
     }
@@ -178,12 +182,12 @@
 
     #message {
       position: absolute;
-      left: 8.1%;
-      top: 79.2%;
-      width: 83.8%;
-      height: 8.9%;
+      left: 8.45%;
+      top: 79.6%;
+      width: 83.1%;
+      height: 8.15%;
       resize: none;
-      border: 1px solid rgba(167, 109, 16, 0.7);
+      border: 0;
       background: transparent;
       color: var(--navy);
       padding: 1.4%;
@@ -194,7 +198,7 @@
     }
 
     #message:focus {
-      box-shadow: 0 0 0 3px rgba(167, 109, 16, 0.18);
+      box-shadow: none;
     }
 
     #submitButton {
@@ -204,7 +208,7 @@
       width: 83.8%;
       height: 5.8%;
       cursor: pointer;
-      border: 1px solid #81510a;
+      border: 0;
       background: transparent;
       color: transparent;
     }
