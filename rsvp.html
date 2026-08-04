@@ -69,18 +69,18 @@
     /* Live personalised greeting — the template image must be blank here. */
     .live-greeting {
       position: absolute;
-      left: 41.0%;
-      top: 23.15%;
-      width: 53.5%;
-      min-height: 4.8%;
+      left: 40.4%;
+      top: 23.4%;
+      width: 54.2%;
+      min-height: 4.4%;
       display: flex;
       align-items: center;
       padding: 0;
-      background: transparent;
+      background: transparent !important;
       color: var(--navy);
-      font-size: clamp(14px, 3.05vw, 32px);
+      font-size: clamp(13px, 2.65vw, 27px);
       font-weight: 600;
-      line-height: 1.05;
+      line-height: 1;
       white-space: nowrap;
       overflow: hidden;
       visibility: hidden;
@@ -98,8 +98,8 @@
     }
 
     .hit-button:focus-visible {
-      outline: 3px solid rgba(167, 109, 16, 0.55);
-      outline-offset: 2px;
+      outline: none;
+      box-shadow: none;
     }
 
     .hit-button.active {
@@ -124,30 +124,32 @@
     .counter {
       position: absolute;
       left: 27.0%;
-      top: 67.55%;
+      top: 67.35%;
       width: 46.0%;
-      height: 7.2%;
-      display: grid;
-      grid-template-columns: 1fr 1.4fr 1fr;
-      align-items: center;
-      text-align: center;
+      height: 7.1%;
       z-index: 4;
+      pointer-events: none;
     }
 
     .counter button {
-      width: clamp(30px, 7.6vw, 60px);
-      aspect-ratio: 1;
-      justify-self: center;
+      position: absolute;
+      top: 8%;
+      width: 27%;
+      height: 72%;
       border: 0;
       border-radius: 50%;
       background: transparent;
       color: transparent;
       cursor: pointer;
+      pointer-events: auto;
     }
 
+    #minusButton { left: 0; }
+    #plusButton { right: 0; }
+
     .counter button:focus-visible {
-      outline: 3px solid rgba(167, 109, 16, 0.5);
-      outline-offset: 2px;
+      outline: none;
+      box-shadow: none;
     }
 
     .counter button:disabled {
@@ -156,11 +158,17 @@
     }
 
     .counter output {
+      position: absolute;
+      left: 50%;
+      top: 43%;
+      transform: translate(-50%, -50%);
+      width: 34%;
       color: var(--navy);
-      font-size: clamp(26px, 7.2vw, 60px);
+      text-align: center;
+      font-size: clamp(23px, 5.7vw, 48px);
       font-weight: 600;
       line-height: 1;
-      transform: translateY(-8%);
+      pointer-events: none;
     }
 
     #message {
@@ -170,20 +178,34 @@
       width: 72.5%;
       height: 7.8%;
       resize: none;
-      border: 0;
-      background: #fffdf8;
+      border: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
       color: var(--navy);
+      -webkit-text-fill-color: var(--navy);
       padding: 1.1% 1.3%;
-      font-size: clamp(12px, 2.55vw, 19px);
+      font-size: clamp(12px, 2.45vw, 18px);
       line-height: 1.3;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
+      outline: none !important;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      box-shadow: none !important;
+      opacity: 1;
       z-index: 4;
     }
 
-    #message::placeholder { color: transparent; }
-    #message:focus { box-shadow: none; }
+    #message::placeholder {
+      color: rgba(7, 31, 74, 0.72);
+      -webkit-text-fill-color: rgba(7, 31, 74, 0.72);
+      font-style: italic;
+      opacity: 1;
+    }
+    #message:focus {
+      background: transparent !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
 
     #submitButton {
       position: absolute;
@@ -282,7 +304,7 @@
         <button id="plusButton" type="button" aria-label="Increase number attending">+</button>
       </div>
 
-      <textarea id="message" maxlength="500" placeholder="Add a short note for the family..." aria-label="Optional message"></textarea>
+      <textarea id="message" maxlength="500" placeholder="Add a short note for the family..." aria-label="Optional message" spellcheck="true"></textarea>
 
       <button id="submitButton" type="button" aria-label="Send my RSVP"></button>
 
