@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>16th Day Prayer RSVP</title>
 
   <style>
@@ -279,7 +282,7 @@
     <section class="page-two" aria-label="Personalised RSVP form">
       <img
         class="page-two-artwork"
-        src="rsvp-page-template-v2.png"
+        src="rsvp-page-v2-final-20260804.png?v=20260804-1845"
         alt="RSVP confirmation page"
       >
 
@@ -474,11 +477,9 @@
           guestCount = 0;
         }
 
-        const rawSavedMessage = String(guestRecord.notes || guestRecord.message || "").trim();
-        const compactSavedMessage = rawSavedMessage.replace(/\s+/g, "");
-        const isTestFiller = compactSavedMessage.length >= 8 && /^[xw]+$/i.test(compactSavedMessage);
-        const savedMessage = isTestFiller ? "" : rawSavedMessage;
-        messageField.textContent = savedMessage;
+        // Start every invitation with a clean optional-message field.
+        // Existing test data in the Sheet must not be displayed to guests.
+        messageField.textContent = "";
         render();
         showSite();
       } catch (error) {
