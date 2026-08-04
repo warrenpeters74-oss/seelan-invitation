@@ -17,14 +17,14 @@
 
     :root {
       --navy: #071f4a;
-      --gold: #a86f12;
-      --gold-dark: #82520c;
-      --gold-light: #d6b16a;
+      --gold: #a76d10;
+      --gold-dark: #83520a;
+      --gold-light: #d8b66a;
       --cream: #fffdf8;
       --cream-soft: #fffaf0;
       --text: #142746;
-      --border: rgba(168, 111, 18, 0.7);
-      --shadow: rgba(56, 38, 10, 0.14);
+      --border: rgba(167, 109, 16, 0.70);
+      --shadow: rgba(54, 36, 8, 0.14);
     }
 
     * {
@@ -37,9 +37,18 @@
 
     body {
       margin: 0;
+      padding: 0;
+      background:
+        linear-gradient(
+          180deg,
+          #fffdf9 0%,
+          #faf5eb 100%
+        );
       color: var(--text);
-      background: #f9f5ec;
-      font-family: "Cormorant Garamond", Georgia, serif;
+      font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
     }
 
     button,
@@ -52,12 +61,14 @@
     }
 
     .site {
-      width: min(100%, 920px);
+      width: min(100%, 900px);
       margin: 0 auto;
-      padding: 16px 14px 44px;
+      padding: 14px 12px 40px;
     }
 
-    /* LOCKED PAGE 1 */
+    /* =========================================================
+       PAGE 1 — LOCKED INVITATION
+       ========================================================= */
 
     .invitation-page {
       width: 100%;
@@ -72,19 +83,21 @@
       box-shadow: 0 10px 28px var(--shadow);
     }
 
-    /* APPROVED PAGE 2 */
+    /* =========================================================
+       PAGE 2 — APPROVED RSVP DESIGN
+       ========================================================= */
 
     .rsvp-page {
       position: relative;
       overflow: hidden;
       width: 100%;
-      padding: 42px 52px 38px;
+      padding: 48px 46px 38px;
       background:
         radial-gradient(
-          circle at 50% 20%,
+          circle at 50% 15%,
           #ffffff 0%,
-          #fffdf8 55%,
-          #fff9ee 100%
+          #fffdf8 56%,
+          #fff8eb 100%
         );
       border: 2px solid var(--gold);
       box-shadow: 0 10px 28px var(--shadow);
@@ -92,39 +105,39 @@
 
     .inner-border {
       position: absolute;
-      inset: 12px;
+      inset: 11px;
       pointer-events: none;
-      border: 1px solid rgba(168, 111, 18, 0.58);
+      border: 1px solid rgba(167, 109, 16, 0.56);
     }
 
     .corner {
       position: absolute;
       z-index: 1;
       color: var(--gold);
-      font-size: 52px;
+      font-size: 48px;
       line-height: 1;
     }
 
     .corner.top-left {
-      top: 10px;
-      left: 14px;
+      top: 7px;
+      left: 10px;
     }
 
     .corner.top-right {
-      top: 10px;
-      right: 14px;
+      top: 7px;
+      right: 10px;
       transform: scaleX(-1);
     }
 
     .corner.bottom-left {
-      bottom: 10px;
-      left: 14px;
+      bottom: 7px;
+      left: 10px;
       transform: scaleY(-1);
     }
 
     .corner.bottom-right {
-      right: 14px;
-      bottom: 10px;
+      right: 10px;
+      bottom: 7px;
       transform: scale(-1);
     }
 
@@ -133,12 +146,14 @@
       z-index: 2;
     }
 
+    /* Heading */
+
     .confirm-title {
       margin: 0;
       color: var(--navy);
-      font-size: clamp(48px, 7vw, 76px);
+      font-size: clamp(44px, 7vw, 72px);
       font-weight: 500;
-      line-height: 0.95;
+      line-height: 0.96;
       text-align: center;
       letter-spacing: -1px;
     }
@@ -148,13 +163,13 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
-      margin: 5px 0 13px;
+      margin: 4px 0 4px;
     }
 
     .rsvp-title-row::before,
     .rsvp-title-row::after {
       content: "";
-      width: min(150px, 19vw);
+      width: min(140px, 18vw);
       height: 1px;
       background: var(--gold);
     }
@@ -162,53 +177,64 @@
     .rsvp-title {
       margin: 0;
       color: var(--gold);
-      font-family: "Great Vibes", "Brush Script MT", cursive;
-      font-size: clamp(66px, 10vw, 105px);
+      font-family:
+        "Great Vibes",
+        "Brush Script MT",
+        cursive;
+      font-size: clamp(68px, 11vw, 108px);
       font-weight: 400;
-      line-height: 0.9;
-    }
-
-    .small-ornament {
-      margin: 4px auto 25px;
-      color: var(--gold);
-      font-size: 26px;
+      line-height: 0.94;
       text-align: center;
     }
 
+    .heading-ornament {
+      margin: 0 auto 26px;
+      color: var(--gold);
+      font-size: 25px;
+      text-align: center;
+    }
+
+    /* Welcome block */
+
     .welcome-layout {
       display: grid;
-      grid-template-columns: 275px minmax(0, 1fr);
-      gap: 38px;
+      grid-template-columns:
+        minmax(210px, 31%)
+        minmax(0, 69%);
+      gap: 34px;
       align-items: center;
-      margin: 0 22px 30px;
+      margin: 0 12px 28px;
     }
 
     .lamp-panel {
       position: relative;
-      min-height: 260px;
+      width: 100%;
+      min-height: 235px;
     }
 
     .lamp-image {
       display: block;
       width: 100%;
-      height: 260px;
+      height: 235px;
       object-fit: cover;
       object-position: center;
+      border: 0;
       border-radius: 0;
-      box-shadow: none;
-      mask-image:
-        radial-gradient(
-          ellipse at center,
-          black 48%,
-          rgba(0, 0, 0, 0.95) 60%,
-          transparent 78%
-        );
+
       -webkit-mask-image:
         radial-gradient(
           ellipse at center,
-          black 48%,
-          rgba(0, 0, 0, 0.95) 60%,
-          transparent 78%
+          black 47%,
+          rgba(0, 0, 0, 0.98) 58%,
+          transparent 82%
+        );
+
+      mask-image:
+        radial-gradient(
+          ellipse at center,
+          black 47%,
+          rgba(0, 0, 0, 0.98) 58%,
+          transparent 82%
         );
     }
 
@@ -217,9 +243,9 @@
     }
 
     .guest-name {
-      margin: 0 0 13px;
+      margin: 0 0 12px;
       color: var(--navy);
-      font-size: clamp(30px, 4.5vw, 46px);
+      font-size: clamp(28px, 4vw, 43px);
       font-weight: 600;
       line-height: 1.05;
     }
@@ -227,7 +253,7 @@
     .invitation-message {
       margin: 0;
       color: var(--text);
-      font-size: clamp(20px, 2.8vw, 27px);
+      font-size: clamp(18px, 2.6vw, 25px);
       line-height: 1.34;
     }
 
@@ -235,13 +261,15 @@
       font-weight: 700;
     }
 
+    /* Section headings */
+
     .section-heading {
       display: flex;
       align-items: center;
       gap: 18px;
-      margin: 27px 0 18px;
+      margin: 25px 0 17px;
       color: var(--gold-dark);
-      font-size: clamp(19px, 2.8vw, 26px);
+      font-size: clamp(18px, 2.6vw, 25px);
       font-weight: 700;
       text-align: center;
       text-transform: uppercase;
@@ -256,29 +284,34 @@
       background: var(--gold);
     }
 
+    /* Attendance buttons */
+
     .attendance-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 34px;
-      margin: 0 22px;
+      margin: 0 10px;
     }
 
     .attendance-button {
-      min-height: 74px;
-      padding: 15px 20px;
+      min-height: 72px;
+      padding: 14px 18px;
       cursor: pointer;
       border: 1px solid var(--gold);
-      background: rgba(255, 255, 255, 0.68);
+      background: rgba(255, 255, 255, 0.72);
       color: var(--navy);
-      font-size: clamp(17px, 2.4vw, 23px);
+      font-size: clamp(16px, 2.3vw, 22px);
       font-weight: 700;
       text-transform: uppercase;
-      transition: 0.18s ease;
+      transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        background 0.16s ease;
     }
 
     .attendance-button:hover {
       transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(45, 31, 8, 0.12);
+      box-shadow: 0 7px 17px rgba(45, 31, 8, 0.12);
     }
 
     .attendance-button.active-yes {
@@ -293,44 +326,46 @@
       color: #ffffff;
     }
 
+    /* Counter */
+
     .counter-panel {
-      margin: 0 22px;
-      padding: 17px 20px 15px;
-      border: 1px solid rgba(168, 111, 18, 0.58);
-      background: rgba(255, 252, 244, 0.7);
+      margin: 0 10px;
+      padding: 17px 18px 14px;
+      border: 1px solid rgba(167, 109, 16, 0.55);
+      background: rgba(255, 252, 245, 0.72);
       text-align: center;
     }
 
     .counter-controls {
       display: grid;
-      grid-template-columns: 68px 130px 68px;
-      gap: 28px;
+      grid-template-columns: 64px 135px 64px;
+      gap: 27px;
       align-items: center;
       justify-content: center;
     }
 
     .counter-button {
       display: grid;
-      width: 62px;
-      height: 62px;
+      width: 60px;
+      height: 60px;
       place-items: center;
       cursor: pointer;
       border: 2px solid var(--gold);
       border-radius: 50%;
       background: #fffdf8;
       color: var(--gold-dark);
-      font-size: 38px;
+      font-size: 37px;
       line-height: 1;
     }
 
     .counter-button:disabled {
       cursor: not-allowed;
-      opacity: 0.36;
+      opacity: 0.35;
     }
 
     .guest-count {
       color: var(--navy);
-      font-size: 67px;
+      font-size: 66px;
       font-weight: 600;
       line-height: 1;
     }
@@ -342,9 +377,11 @@
       line-height: 1.25;
     }
 
+    /* Message */
+
     .message-label {
       display: block;
-      margin: 24px 22px 8px;
+      margin: 23px 10px 8px;
       color: var(--gold-dark);
       font-size: 19px;
       font-weight: 700;
@@ -354,12 +391,12 @@
 
     .message-field {
       display: block;
-      width: calc(100% - 44px);
-      min-height: 120px;
-      margin: 0 22px;
-      padding: 17px;
+      width: calc(100% - 20px);
+      min-height: 118px;
+      margin: 0 10px;
+      padding: 16px;
       resize: vertical;
-      border: 1px solid rgba(168, 111, 18, 0.65);
+      border: 1px solid rgba(167, 109, 16, 0.65);
       outline: none;
       background: rgba(255, 255, 255, 0.78);
       color: var(--navy);
@@ -368,49 +405,53 @@
     }
 
     .message-field::placeholder {
-      color: rgba(20, 39, 70, 0.7);
+      color: rgba(20, 39, 70, 0.70);
       font-style: italic;
     }
 
     .message-field:focus {
       border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(168, 111, 18, 0.11);
+      box-shadow: 0 0 0 3px rgba(167, 109, 16, 0.10);
     }
+
+    /* Submit */
 
     .submit-button {
       display: block;
-      width: calc(100% - 44px);
-      min-height: 68px;
-      margin: 17px 22px 0;
-      padding: 15px 20px;
+      width: calc(100% - 20px);
+      min-height: 66px;
+      margin: 17px 10px 0;
+      padding: 14px 18px;
       cursor: pointer;
       border: 1px solid var(--gold-dark);
       background:
         linear-gradient(
           90deg,
-          #a5690b,
-          #c28b25,
-          #a5690b
+          #a46609,
+          #c58b21,
+          #a46609
         );
       color: #ffffff;
-      font-size: clamp(21px, 3vw, 29px);
+      font-size: clamp(20px, 3vw, 28px);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 3px;
-      box-shadow: 0 7px 15px rgba(72, 47, 6, 0.17);
+      box-shadow: 0 7px 15px rgba(72, 47, 6, 0.16);
     }
 
     .submit-button:disabled {
       cursor: wait;
-      opacity: 0.65;
+      opacity: 0.64;
     }
+
+    /* Status */
 
     .status-box {
       display: none;
-      margin: 17px 22px 0;
-      padding: 14px 17px;
+      margin: 16px 10px 0;
+      padding: 13px 15px;
       border: 1px solid;
-      font-size: 19px;
+      font-size: 18px;
       line-height: 1.35;
       text-align: center;
     }
@@ -431,7 +472,7 @@
       color: #832f2f;
     }
 
-    /* LOADING */
+    /* Loading */
 
     .loading-screen {
       position: fixed;
@@ -444,11 +485,11 @@
     }
 
     .loading-card {
-      width: min(92vw, 440px);
-      padding: 32px;
+      width: min(92vw, 430px);
+      padding: 32px 25px;
       border: 1px solid var(--gold);
-      color: var(--navy);
       background: #fffdf8;
+      color: var(--navy);
       text-align: center;
       box-shadow: 0 15px 35px rgba(54, 36, 8, 0.15);
     }
@@ -460,7 +501,8 @@
 
     .loading-title {
       margin: 8px 0 4px;
-      font-size: 30px;
+      font-size: 29px;
+      font-weight: 600;
     }
 
     .loading-message {
@@ -472,115 +514,165 @@
       display: none !important;
     }
 
-    /* MOBILE */
+    /* =========================================================
+       MOBILE — RETAIN APPROVED COMPOSITION
+       ========================================================= */
 
     @media (max-width: 680px) {
       .site {
-        padding: 7px 7px 28px;
+        padding: 7px 6px 28px;
       }
 
       .rsvp-page {
-        padding: 32px 18px 28px;
+        padding: 32px 17px 28px;
       }
 
       .confirm-title {
-        font-size: clamp(36px, 11vw, 54px);
+        font-size: clamp(36px, 10.5vw, 54px);
       }
 
       .rsvp-title {
-        font-size: clamp(62px, 18vw, 90px);
+        font-size: clamp(65px, 17vw, 90px);
       }
 
+      .rsvp-title-row {
+        gap: 9px;
+      }
+
+      .rsvp-title-row::before,
+      .rsvp-title-row::after {
+        width: 18vw;
+      }
+
+      /*
+        Important:
+        Keep lamp and wording side-by-side on mobile,
+        matching the approved reference.
+      */
       .welcome-layout {
-        grid-template-columns: 115px minmax(0, 1fr);
-        gap: 16px;
-        margin: 5px 4px 22px;
-        align-items: center;
+        grid-template-columns:
+          minmax(105px, 33%)
+          minmax(0, 67%);
+        gap: 13px;
+        margin: 0 0 20px;
       }
 
       .lamp-panel {
-        min-height: 150px;
+        min-height: 155px;
       }
 
       .lamp-image {
-        height: 150px;
+        height: 155px;
       }
 
       .guest-name {
-        font-size: clamp(24px, 7vw, 34px);
+        margin-bottom: 7px;
+        font-size: clamp(21px, 6.2vw, 31px);
       }
 
       .invitation-message {
-        font-size: clamp(15px, 4.3vw, 20px);
+        font-size: clamp(13px, 3.8vw, 18px);
+        line-height: 1.28;
       }
 
       .section-heading {
         gap: 8px;
+        margin: 20px 0 12px;
+        font-size: clamp(14px, 4vw, 18px);
         letter-spacing: 2px;
       }
 
       .attendance-buttons {
-        gap: 10px;
+        gap: 9px;
         margin: 0;
       }
 
       .attendance-button {
-        min-height: 57px;
-        padding: 10px 8px;
-        font-size: 13px;
+        min-height: 56px;
+        padding: 9px 6px;
+        font-size: 12px;
       }
 
       .counter-panel {
         margin: 0;
+        padding: 13px 9px 11px;
       }
 
       .counter-controls {
-        grid-template-columns: 48px 80px 48px;
-        gap: 15px;
+        grid-template-columns: 46px 80px 46px;
+        gap: 12px;
       }
 
       .counter-button {
-        width: 46px;
-        height: 46px;
-        font-size: 29px;
+        width: 44px;
+        height: 44px;
+        font-size: 28px;
       }
 
       .guest-count {
         font-size: 48px;
       }
 
+      .counter-note {
+        font-size: 13px;
+      }
+
       .message-label {
         margin-left: 0;
         margin-right: 0;
+        font-size: 14px;
       }
 
-      .message-field,
-      .submit-button {
+      .message-field {
         width: 100%;
+        min-height: 90px;
         margin-left: 0;
         margin-right: 0;
+        padding: 12px;
+        font-size: 16px;
+      }
+
+      .submit-button {
+        width: 100%;
+        min-height: 56px;
+        margin-left: 0;
+        margin-right: 0;
+        font-size: 17px;
       }
 
       .status-box {
         margin-left: 0;
         margin-right: 0;
       }
+
+      .corner {
+        font-size: 34px;
+      }
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 380px) {
+      .rsvp-page {
+        padding-left: 13px;
+        padding-right: 13px;
+      }
+
       .welcome-layout {
-        grid-template-columns: 1fr;
-        text-align: center;
+        grid-template-columns:
+          minmax(90px, 32%)
+          minmax(0, 68%);
+        gap: 9px;
       }
 
       .lamp-panel {
-        width: 160px;
-        min-height: 150px;
-        margin: 0 auto;
+        min-height: 135px;
       }
 
       .lamp-image {
-        height: 150px;
+        height: 135px;
+      }
+
+      .invitation-message {
+        font-size: 12px;
       }
     }
   </style>
@@ -590,7 +682,11 @@
   <div id="loadingScreen" class="loading-screen">
     <div class="loading-card">
       <div class="loading-symbol">❦</div>
-      <h2 class="loading-title">Loading your invitation</h2>
+
+      <h2 class="loading-title">
+        Loading your invitation
+      </h2>
+
       <p id="loadingMessage" class="loading-message">
         Please wait while we retrieve your personalised details.
       </p>
@@ -599,8 +695,11 @@
 
   <main id="site" class="site hidden">
 
-    <!-- PAGE 1 REMAINS LOCKED -->
-    <section class="invitation-page">
+    <!-- PAGE 1: LOCKED AND UNCHANGED -->
+    <section
+      class="invitation-page"
+      aria-label="Memorial invitation"
+    >
       <img
         class="invitation-image"
         src="seelan-invitation.jpg"
@@ -608,8 +707,11 @@
       >
     </section>
 
-    <!-- APPROVED PAGE 2 -->
-    <section class="rsvp-page">
+    <!-- PAGE 2: APPROVED FUNCTIONAL DESIGN -->
+    <section
+      class="rsvp-page"
+      aria-label="RSVP form"
+    >
       <div class="inner-border"></div>
 
       <span class="corner top-left">❦</span>
@@ -619,13 +721,19 @@
 
       <div class="rsvp-content">
 
-        <h1 class="confirm-title">Confirm Attendance</h1>
+        <h1 class="confirm-title">
+          Confirm Attendance
+        </h1>
 
         <div class="rsvp-title-row">
-          <div class="rsvp-title">RSVP</div>
+          <div class="rsvp-title">
+            RSVP
+          </div>
         </div>
 
-        <div class="small-ornament">❦</div>
+        <div class="heading-ornament">
+          ❦
+        </div>
 
         <div class="welcome-layout">
           <div class="lamp-panel">
@@ -638,17 +746,20 @@
           </div>
 
           <div class="guest-panel">
-            <h2 id="guestGreeting" class="guest-name">
+            <h2
+              id="guestGreeting"
+              class="guest-name"
+            >
               Dear Guest &amp; Family
             </h2>
 
             <p class="invitation-message">
-              The Moodley Family warmly invites you to join us as we
-              gather in prayer and remembrance to honour the life and
-              cherished memory of our beloved
-              <strong>Seelan “Seela” Moodley</strong> on his 16th Day
-              Ceremony. Your presence and prayers will be deeply
-              appreciated.
+              The Moodley Family warmly invites you to join us
+              as we gather in prayer and remembrance to honour
+              the life and cherished memory of our beloved
+              <strong>Seelan “Seela” Moodley</strong> on his
+              16th Day Ceremony. Your presence and prayers will
+              be deeply appreciated.
             </p>
           </div>
         </div>
@@ -687,11 +798,16 @@
               id="minusButton"
               class="counter-button"
               type="button"
+              aria-label="Reduce number attending"
             >
               −
             </button>
 
-            <output id="guestCount" class="guest-count">
+            <output
+              id="guestCount"
+              class="guest-count"
+              aria-live="polite"
+            >
               1
             </output>
 
@@ -699,6 +815,7 @@
               id="plusButton"
               class="counter-button"
               type="button"
+              aria-label="Increase number attending"
             >
               +
             </button>
@@ -709,7 +826,10 @@
           </p>
         </div>
 
-        <label class="message-label" for="message">
+        <label
+          class="message-label"
+          for="message"
+        >
           Optional message
         </label>
 
@@ -720,7 +840,11 @@
           placeholder="Add a short note for the family..."
         ></textarea>
 
-        <button id="submitButton" class="submit-button" type="button">
+        <button
+          id="submitButton"
+          class="submit-button"
+          type="button"
+        >
           Send My RSVP
         </button>
 
@@ -742,11 +866,12 @@
       "AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_" +
       "wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec";
 
-    const params = new URLSearchParams(window.location.search);
+    const urlParameters =
+      new URLSearchParams(window.location.search);
 
     const guestId = String(
-      params.get("id") ||
-      params.get("guestId") ||
+      urlParameters.get("id") ||
+      urlParameters.get("guestId") ||
       ""
     )
       .trim()
@@ -799,23 +924,23 @@
     }
 
     function normaliseStatus(value) {
-      const valueText = String(value || "")
+      const status = String(value || "")
         .trim()
         .toLowerCase();
 
       if (
-        valueText === "yes" ||
-        valueText === "accepted" ||
-        valueText === "attending" ||
-        valueText === "confirmed"
+        status === "yes" ||
+        status === "accepted" ||
+        status === "attending" ||
+        status === "confirmed"
       ) {
         return "Yes";
       }
 
       if (
-        valueText === "no" ||
-        valueText === "declined" ||
-        valueText === "not attending"
+        status === "no" ||
+        status === "declined" ||
+        status === "not attending"
       ) {
         return "No";
       }
@@ -823,21 +948,23 @@
       return "Pending";
     }
 
-    function cleanGuestName(name) {
-      const cleaned = String(name || "Guest").trim();
+    function formatGuestName(name) {
+      const cleanedName =
+        String(name || "Guest").trim();
 
-      if (/&\s*family$/i.test(cleaned)) {
-        return cleaned;
+      if (/&\s*family$/i.test(cleanedName)) {
+        return cleanedName;
       }
 
-      return `${cleaned} & Family`;
+      return `${cleanedName} & Family`;
     }
 
     function safeInteger(value, fallback = 0) {
-      const number = Number.parseInt(value, 10);
+      const parsedValue =
+        Number.parseInt(value, 10);
 
-      return Number.isFinite(number)
-        ? number
+      return Number.isFinite(parsedValue)
+        ? parsedValue
         : fallback;
     }
 
@@ -867,7 +994,8 @@
     }
 
     function renderCounter() {
-      guestCountOutput.textContent = String(guestCount);
+      guestCountOutput.textContent =
+        String(guestCount);
 
       minusButton.disabled =
         attendanceChoice !== "Yes" ||
@@ -925,12 +1053,16 @@
         );
       }
 
-      const text = await response.text();
+      const responseText =
+        await response.text();
 
       try {
-        return JSON.parse(text);
+        return JSON.parse(responseText);
       } catch (error) {
-        console.error(text);
+        console.error(
+          "Invalid response:",
+          responseText
+        );
 
         throw new Error(
           "The server returned an invalid response."
@@ -938,7 +1070,7 @@
       }
     }
 
-    function findGuest(records) {
+    function findGuestInList(records) {
       if (!Array.isArray(records)) {
         return null;
       }
@@ -960,20 +1092,23 @@
         return null;
       }
 
-      if (data.guest && typeof data.guest === "object") {
+      if (
+        data.guest &&
+        typeof data.guest === "object"
+      ) {
         return data.guest;
       }
 
       if (Array.isArray(data)) {
-        return findGuest(data);
+        return findGuestInList(data);
       }
 
       if (Array.isArray(data.guests)) {
-        return findGuest(data.guests);
+        return findGuestInList(data.guests);
       }
 
       if (Array.isArray(data.data)) {
-        return findGuest(data.data);
+        return findGuestInList(data.data);
       }
 
       if (
@@ -985,7 +1120,8 @@
       }
 
       const directId = normaliseId(
-        data.guestId || data.id
+        data.guestId ||
+        data.id
       );
 
       if (
@@ -998,12 +1134,17 @@
       return null;
     }
 
-    async function lookup(url) {
+    async function attemptLookup(url) {
       try {
         const data = await fetchJson(url);
         return extractGuest(data);
       } catch (error) {
-        console.warn(error);
+        console.warn(
+          "Lookup failed:",
+          url,
+          error
+        );
+
         return null;
       }
     }
@@ -1020,16 +1161,29 @@
       try {
         const timestamp = Date.now();
 
-        const urls = [
-          `${SCRIPT_URL}?action=getGuest&guestId=${encodeURIComponent(guestId)}&_=${timestamp}`,
-          `${SCRIPT_URL}?action=getGuest&id=${encodeURIComponent(guestId)}&_=${timestamp}`,
-          `${SCRIPT_URL}?guestId=${encodeURIComponent(guestId)}&_=${timestamp}`,
-          `${SCRIPT_URL}?id=${encodeURIComponent(guestId)}&_=${timestamp}`,
+        const lookupUrls = [
+          `${SCRIPT_URL}?action=getGuest&guestId=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`,
+
+          `${SCRIPT_URL}?action=getGuest&id=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`,
+
+          `${SCRIPT_URL}?guestId=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`,
+
+          `${SCRIPT_URL}?id=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`,
+
           `${SCRIPT_URL}?_=${timestamp}`
         ];
 
-        for (const url of urls) {
-          guestRecord = await lookup(url);
+        for (const url of lookupUrls) {
+          guestRecord =
+            await attemptLookup(url);
 
           if (guestRecord) {
             break;
@@ -1043,13 +1197,14 @@
         }
 
         guestGreeting.textContent =
-          `Dear ${cleanGuestName(guestRecord.name)}`;
+          `Dear ${formatGuestName(guestRecord.name)}`;
 
-        const savedStatus = normaliseStatus(
-          guestRecord.rsvpStatus ||
-          guestRecord.attending ||
-          guestRecord.status
-        );
+        const savedStatus =
+          normaliseStatus(
+            guestRecord.rsvpStatus ||
+            guestRecord.attending ||
+            guestRecord.status
+          );
 
         if (savedStatus === "Yes") {
           attendanceChoice = "Yes";
@@ -1123,63 +1278,79 @@
       }
 
       submitButton.disabled = true;
-      submitButton.textContent = "Submitting RSVP…";
+      submitButton.textContent =
+        "Submitting RSVP…";
 
       const confirmedGuests =
         attendanceChoice === "Yes"
           ? guestCount
           : 0;
 
-      const note =
+      const message =
         messageField.value.trim();
 
-      const body = new URLSearchParams({
-        action: "submitRSVP",
-        guestId,
-        id: guestId,
-        rsvpStatus: attendanceChoice,
-        attending: attendanceChoice,
-        status: attendanceChoice,
-        confirmedGuests: String(confirmedGuests),
-        guests: String(confirmedGuests),
-        notes: note,
-        message: note
-      });
+      const requestBody =
+        new URLSearchParams({
+          action: "submitRSVP",
+          guestId: guestId,
+          id: guestId,
+          rsvpStatus: attendanceChoice,
+          attending: attendanceChoice,
+          status: attendanceChoice,
+          confirmedGuests:
+            String(confirmedGuests),
+          guests:
+            String(confirmedGuests),
+          numberAttending:
+            String(confirmedGuests),
+          notes: message,
+          message: message
+        });
 
       try {
-        const data = await fetchJson(
-          SCRIPT_URL,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/x-www-form-urlencoded;charset=UTF-8"
-            },
-            body: body.toString()
-          }
-        );
+        const responseData =
+          await fetchJson(
+            SCRIPT_URL,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded;charset=UTF-8"
+              },
+              body: requestBody.toString()
+            }
+          );
 
-        if (data && data.success === false) {
+        if (
+          responseData &&
+          responseData.success === false
+        ) {
           throw new Error(
-            data.message ||
+            responseData.message ||
             "The RSVP could not be saved."
           );
         }
 
         showStatus(
           attendanceChoice === "Yes"
-            ? `Thank you. Attendance has been confirmed for ${guestCount} ${
-                guestCount === 1 ? "person" : "people"
+            ? `Thank you. Attendance has been confirmed for ${
+                guestCount
+              } ${
+                guestCount === 1
+                  ? "person"
+                  : "people"
               }.`
             : "Thank you. Your response has been recorded.",
           "success"
         );
 
-        submitButton.textContent = "RSVP Submitted";
+        submitButton.textContent =
+          "RSVP Submitted";
 
         window.setTimeout(() => {
           submitButton.disabled = false;
-          submitButton.textContent = "Update My RSVP";
+          submitButton.textContent =
+            "Update My RSVP";
         }, 1600);
 
       } catch (error) {
@@ -1193,38 +1364,51 @@
         );
 
         submitButton.disabled = false;
-        submitButton.textContent = "Send My RSVP";
+        submitButton.textContent =
+          "Send My RSVP";
       }
     }
 
-    yesButton.addEventListener("click", () => {
-      attendanceChoice = "Yes";
-      clearStatus();
-      renderAttendance();
-    });
-
-    noButton.addEventListener("click", () => {
-      attendanceChoice = "No";
-      clearStatus();
-      renderAttendance();
-    });
-
-    minusButton.addEventListener("click", () => {
-      if (
-        attendanceChoice === "Yes" &&
-        guestCount > 1
-      ) {
-        guestCount -= 1;
-        renderCounter();
+    yesButton.addEventListener(
+      "click",
+      () => {
+        attendanceChoice = "Yes";
+        clearStatus();
+        renderAttendance();
       }
-    });
+    );
 
-    plusButton.addEventListener("click", () => {
-      if (attendanceChoice === "Yes") {
-        guestCount += 1;
-        renderCounter();
+    noButton.addEventListener(
+      "click",
+      () => {
+        attendanceChoice = "No";
+        clearStatus();
+        renderAttendance();
       }
-    });
+    );
+
+    minusButton.addEventListener(
+      "click",
+      () => {
+        if (
+          attendanceChoice === "Yes" &&
+          guestCount > 1
+        ) {
+          guestCount -= 1;
+          renderCounter();
+        }
+      }
+    );
+
+    plusButton.addEventListener(
+      "click",
+      () => {
+        if (attendanceChoice === "Yes") {
+          guestCount += 1;
+          renderCounter();
+        }
+      }
+    );
 
     submitButton.addEventListener(
       "click",
