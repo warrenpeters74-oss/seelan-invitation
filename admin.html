@@ -53,18 +53,22 @@
       align-items: center;
       gap: 18px;
       padding: 18px 22px;
-      background: linear-gradient(90deg, #061a3b 0%, #0a2a5f 58%, #071f4a 100%);
+      background: linear-gradient(90deg, #6F4615 0%, #966A24 58%, #B07B2C 100%);
       color: #fff8e9;
-      border-bottom: 3px solid var(--gold-2);
+      border-bottom: 3px solid #D5B66B;
       box-shadow: 0 8px 24px rgba(33, 21, 8, 0.18);
     }
 
     .brand {
       margin-right: auto;
+      padding: 5px 14px;
       font-family: "Cormorant Garamond", Georgia, serif;
       font-size: 31px;
       font-style: italic;
-      color: #f5d78f;
+      font-weight: 700;
+      color: #071f4a;
+      background: rgba(255, 253, 248, 0.88);
+      border-radius: 2px;
       white-space: nowrap;
     }
 
@@ -78,7 +82,7 @@
       padding: 11px 14px;
       border: 1px solid transparent;
       background: transparent;
-      color: #f7e7bb;
+      color: #FFF4D6;
       text-transform: uppercase;
       letter-spacing: 1.6px;
       font-size: 12px;
@@ -86,8 +90,8 @@
     }
 
     .nav button.active {
-      background: rgba(199, 151, 50, 0.16);
-      border-color: var(--gold-2);
+      background: rgba(255, 245, 214, 0.16);
+      border-color: #F0D28C;
       color: #fff;
     }
 
@@ -144,35 +148,55 @@
     }
 
     .memorial-portrait {
+      position: relative;
+      min-height: 215px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
       text-align: center;
     }
 
     .memorial-portrait-frame {
-      width: 152px;
-      height: 152px;
-      margin: 0 auto;
+      width: 190px;
+      height: 200px;
       overflow: hidden;
-      border: 4px solid #fff;
-      outline: 2px solid var(--gold);
-      border-radius: 50%;
-      background: var(--cream);
-      box-shadow: 0 10px 24px rgba(7,31,74,0.18);
+      background: transparent;
+      border: 0;
+      outline: 0;
+      border-radius: 0;
+      box-shadow: none;
+      -webkit-mask-image:
+        linear-gradient(
+          to bottom,
+          rgba(0,0,0,1) 0%,
+          rgba(0,0,0,1) 66%,
+          rgba(0,0,0,0) 100%
+        );
+      mask-image:
+        linear-gradient(
+          to bottom,
+          rgba(0,0,0,1) 0%,
+          rgba(0,0,0,1) 66%,
+          rgba(0,0,0,0) 100%
+        );
     }
 
     .memorial-portrait-frame img {
-      width: 310%;
-      height: 310%;
+      width: 325%;
+      height: 325%;
       object-fit: cover;
-      object-position: 82% 13%;
-      transform: translate(-59%, -5%);
+      object-position: 82% 12%;
+      transform: translate(-60%, -4%);
       display: block;
+      filter: saturate(0.98) contrast(0.98);
     }
 
     .memorial-name {
-      margin-top: 12px;
+      margin-top: -12px;
       color: var(--navy);
       font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 700;
       line-height: 1.05;
     }
@@ -184,6 +208,20 @@
       font-weight: 700;
       letter-spacing: 1.6px;
       text-transform: uppercase;
+    }
+
+
+    .hero h1 {
+      color: var(--navy);
+    }
+
+    .hero p {
+      color: #6F4615;
+    }
+
+    .panel h2,
+    .panel h3 {
+      color: var(--navy);
     }
 
     .toolbar {
@@ -570,6 +608,25 @@
     .portal-link { padding: 16px; border: 1px solid var(--line); background: rgba(255,255,255,.72); }
     .portal-link code { display:block; margin: 8px 0 12px; overflow-wrap:anywhere; color: var(--navy); }
 
+    .portal-link p {
+      margin: 8px 0 4px;
+      color: #65728a;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .portal-link .actions {
+      margin-top: 10px;
+    }
+
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+
     @media (max-width: 960px) {
       .stats { grid-template-columns: repeat(3, 1fr); }
       .filters { grid-template-columns: 1fr 1fr; }
@@ -617,14 +674,15 @@
     <nav class="nav" aria-label="Admin navigation">
       <button class="active" data-view="dashboard">Dashboard</button>
       <button data-view="invitations">Send Invites</button>
-      <button data-view="reminders">Reminders</button>
       <button data-view="guests">Guest Management</button>
-      <button data-view="rollout">Rollout Schedule</button>
+      <button data-view="reminders">Reminders</button>
       <button data-view="testplan">Test Plan</button>
+      <button data-view="rollout">Rollout Schedule</button>
       <button id="exitButton">Exit to RSVP Form</button>
     </nav>
   </header>
 
+  <!-- This file changes the Admin portal only. The guest-facing rsvp.html is not modified. -->
   <main class="shell">
     <section class="hero">
       <h1 id="pageTitle">RSVP Dashboard</h1>
@@ -724,6 +782,11 @@
       </div>
     </section>
 
+
+
+
+
+
     <section id="invitations" class="view">
       <div class="stats">
         <article class="stat"><strong id="inviteTotal">0</strong><span>Total guests</span></article>
@@ -766,40 +829,6 @@ Thank you.</textarea>
         </div>
       </div>
     </section>
-
-    <section id="reminders" class="view">
-      <div class="stats">
-        <article class="stat purple"><strong id="reminderPending">0</strong><span>Still pending</span></article>
-        <article class="stat green"><strong id="reminderResponded">0</strong><span>Responded</span></article>
-        <article class="stat gold"><strong id="remindersSent">0</strong><span>Reminders sent</span></article>
-      </div>
-
-      <div class="two-col">
-        <div class="panel">
-          <h2>Reminder Message</h2>
-          <label for="reminderTemplate">WhatsApp reminder template</label>
-          <textarea id="reminderTemplate">Dear {{name}} & Family,
-
-A gentle reminder to please confirm your attendance for Seelan “Seela” Moodley’s 16th Day Prayer.
-
-Your personalised RSVP link:
-{{link}}
-
-Thank you.</textarea>
-          <div class="toolbar">
-            <button id="copyReminderTemplate" class="btn">Copy template</button>
-            <button id="openNextReminder" class="btn green">Open next reminder</button>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h2>Pending Guests</h2>
-          <input id="reminderSearch" placeholder="Search pending guest">
-          <div id="reminderQueue" class="queue"></div>
-        </div>
-      </div>
-    </section>
-
     <section id="guests" class="view">
       <div class="two-col">
         <div class="panel">
@@ -889,36 +918,38 @@ Thank you.</textarea>
         </div>
       </div>
     </section>
-
-
-    <section id="rollout" class="view">
-      <div class="panel">
-        <h2>Invitation & Follow-up Rollout Schedule</h2>
-        <p>This operating schedule provides a controlled sequence for final testing, issuing invitations, reminders and event-day reconciliation.</p>
+    <section id="reminders" class="view">
+      <div class="stats">
+        <article class="stat purple"><strong id="reminderPending">0</strong><span>Still pending</span></article>
+        <article class="stat green"><strong id="reminderResponded">0</strong><span>Responded</span></article>
+        <article class="stat gold"><strong id="remindersSent">0</strong><span>Reminders sent</span></article>
       </div>
 
-      <div class="panel">
-        <h3>Portal Addresses</h3>
-        <div class="portal-links">
-          <div class="portal-link"><strong>Guest Invitation Portal</strong><code>https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID</code><button class="btn" data-copy-static="https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID">Copy address format</button></div>
-          <div class="portal-link"><strong>Administration Portal</strong><code>https://warrenpeters74-oss.github.io/seelan-invitation/admin.html</code><button class="btn" data-copy-static="https://warrenpeters74-oss.github.io/seelan-invitation/admin.html">Copy Admin address</button></div>
+      <div class="two-col">
+        <div class="panel">
+          <h2>Reminder Message</h2>
+          <label for="reminderTemplate">WhatsApp reminder template</label>
+          <textarea id="reminderTemplate">Dear {{name}} & Family,
+
+A gentle reminder to please confirm your attendance for Seelan “Seela” Moodley’s 16th Day Prayer.
+
+Your personalised RSVP link:
+{{link}}
+
+Thank you.</textarea>
+          <div class="toolbar">
+            <button id="copyReminderTemplate" class="btn">Copy template</button>
+            <button id="openNextReminder" class="btn green">Open next reminder</button>
+          </div>
         </div>
-      </div>
 
-      <div class="panel">
-        <h3>Operational Schedule</h3>
-        <div class="timeline">
-          <div class="timeline-row"><strong>Stage 1</strong><span><b>Final technical testing:</b> Complete all test-plan scenarios using G077, G081 and one temporary test guest. Correct all failures before release.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 2</strong><span><b>Guest-list freeze:</b> Validate names, mobile numbers, household grouping and expected guest counts. Remove duplicate or obsolete records.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 3</strong><span><b>Initial invitation issue:</b> Send personalised WhatsApp invitations in controlled batches. Mark each invitation sent immediately after sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 4</strong><span><b>First reconciliation:</b> Review delivery issues, incorrect numbers and early responses. Manually capture telephone confirmations or declines.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 5</strong><span><b>First reminder:</b> Send reminders only to guests still marked Pending. Review reminder count before sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 6</strong><span><b>Final reminder and catering count:</b> Contact remaining priority guests and lock the confirmed guest count for catering.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 7</strong><span><b>Event-day control:</b> Use the Admin portal for final guest lookup and optional check-in recording. Export a final backup before the event.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+        <div class="panel">
+          <h2>Pending Guests</h2>
+          <input id="reminderSearch" placeholder="Search pending guest">
+          <div id="reminderQueue" class="queue"></div>
         </div>
       </div>
     </section>
-
     <section id="testplan" class="view">
       <div class="panel">
         <h2>End-to-End Test Plan Guide</h2>
@@ -951,6 +982,88 @@ Thank you.</textarea>
             <label class="check-item"><input type="checkbox" data-test="reminder"><span><strong>10. Reminder tracking</strong><small>Send one test reminder and confirm Reminder Count increments and Last Reminder records a date/time.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="mobile"><span><strong>11. Browser and mobile validation</strong><small>Test Chrome desktop, Android/iPhone view, WhatsApp opening and return navigation.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
           </div>
+        </div>
+      </div>
+    </section>
+    <section id="rollout" class="view">
+      <div class="panel" style="border-left:5px solid #966A24;">
+        <h3>Custom Portal Names</h3>
+        <p><strong>Yes — the visible names are now customised</strong> as “Guest Invitation & RSVP Portal”, “RSVP Administration Portal” and “RSVP Master Tracker”. The browser addresses can also be shortened or branded later through a custom domain. Renaming the current GitHub repository or HTML files now would change existing links, so the safer approach is to retain the technical addresses until final testing is complete.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Invitation & Follow-up Rollout Schedule</h2>
+        <p>This operating schedule provides a controlled sequence for final testing, issuing invitations, reminders and event-day reconciliation.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Portal Directory & System Links</h3>
+        <p>Use these named links during testing, distribution and administration. The display names are customised for clarity; the technical addresses remain unchanged.</p>
+
+        <div class="portal-links">
+          <div class="portal-link">
+            <strong>Guest Invitation & RSVP Portal</strong>
+            <p>Personalised guest-facing invitation. Replace <b>GUEST_ID</b> with the guest’s unique ID, for example G077.</p>
+            <code>https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID</code>
+            <div class="actions">
+              <a class="btn navy" href="https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=G077" target="_blank" rel="noopener">Open test guest</a>
+              <button class="btn" data-copy-static="https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID">Copy address format</button>
+            </div>
+          </div>
+
+          <div class="portal-link">
+            <strong>RSVP Administration Portal</strong>
+            <p>Live organiser dashboard for guest records, invitations, reminders, manual updates, testing and rollout control.</p>
+            <code>https://warrenpeters74-oss.github.io/seelan-invitation/admin.html</code>
+            <div class="actions">
+              <a class="btn navy" href="https://warrenpeters74-oss.github.io/seelan-invitation/admin.html" target="_blank" rel="noopener">Open Admin portal</a>
+              <button class="btn" data-copy-static="https://warrenpeters74-oss.github.io/seelan-invitation/admin.html">Copy Admin address</button>
+            </div>
+          </div>
+
+          <div class="portal-link">
+            <strong>RSVP Master Tracker — Google Sheet</strong>
+            <p>Master guest list and source of truth for invitation status, responses, reminders, confirmed numbers and notes.</p>
+            <code>https://docs.google.com/spreadsheets/d/1mZVATsVBPSeN-ChzErzJPvPiRYpEW7QVF0IYvyIpPOQ/edit</code>
+            <div class="actions">
+              <a class="btn navy" href="https://docs.google.com/spreadsheets/d/1mZVATsVBPSeN-ChzErzJPvPiRYpEW7QVF0IYvyIpPOQ/edit" target="_blank" rel="noopener">Open tracker</a>
+              <button class="btn" data-copy-static="https://docs.google.com/spreadsheets/d/1mZVATsVBPSeN-ChzErzJPvPiRYpEW7QVF0IYvyIpPOQ/edit">Copy Sheet address</button>
+            </div>
+          </div>
+
+          <div class="portal-link">
+            <strong>Google Apps Script Web App</strong>
+            <p>Backend service connecting the RSVP and Admin portals to the Google Sheet. Opening it directly displays the underlying JSON data.</p>
+            <code>https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec</code>
+            <div class="actions">
+              <a class="btn navy" href="https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec" target="_blank" rel="noopener">Open backend</a>
+              <button class="btn" data-copy-static="https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec">Copy backend address</button>
+            </div>
+          </div>
+
+          <div class="portal-link">
+            <strong>GitHub Source Repository</strong>
+            <p>Technical source files for the live invitation and Admin portal, including HTML and approved image assets.</p>
+            <code>https://github.com/warrenpeters74-oss/seelan-invitation</code>
+            <div class="actions">
+              <a class="btn navy" href="https://github.com/warrenpeters74-oss/seelan-invitation" target="_blank" rel="noopener">Open repository</a>
+              <button class="btn" data-copy-static="https://github.com/warrenpeters74-oss/seelan-invitation">Copy repository address</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="panel">
+        <h3>Operational Schedule</h3>
+        <div class="timeline">
+          <div class="timeline-row"><strong>Stage 1</strong><span><b>Final technical testing:</b> Complete all test-plan scenarios using G077, G081 and one temporary test guest. Correct all failures before release.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 2</strong><span><b>Guest-list freeze:</b> Validate names, mobile numbers, household grouping and expected guest counts. Remove duplicate or obsolete records.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 3</strong><span><b>Initial invitation issue:</b> Send personalised WhatsApp invitations in controlled batches. Mark each invitation sent immediately after sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 4</strong><span><b>First reconciliation:</b> Review delivery issues, incorrect numbers and early responses. Manually capture telephone confirmations or declines.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 5</strong><span><b>First reminder:</b> Send reminders only to guests still marked Pending. Review reminder count before sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 6</strong><span><b>Final reminder and catering count:</b> Contact remaining priority guests and lock the confirmed guest count for catering.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 7</strong><span><b>Event-day control:</b> Use the Admin portal for final guest lookup and optional check-in recording. Export a final backup before the event.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
         </div>
       </div>
     </section>
@@ -1353,10 +1466,10 @@ Thank you.</textarea>
       const titles = {
         dashboard: "RSVP Dashboard",
         invitations: "Send Personalised Invites",
-        reminders: "Reminders & Follow-ups",
         guests: "Guest Management",
-        rollout: "Invitation Rollout Schedule",
-        testplan: "Test Plan & Quality Assurance"
+        reminders: "Reminders & Follow-ups",
+        testplan: "Test Plan & Quality Assurance",
+        rollout: "Invitation Rollout Schedule"
       };
 
       $("pageTitle").textContent = titles[viewId] || "RSVP Organiser Panel";
