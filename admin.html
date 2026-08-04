@@ -672,7 +672,7 @@
       <button data-view="reminders">Reminders</button>
       <button data-view="testplan">Test Plan</button>
       <button data-view="rollout">Rollout Schedule</button>
-      <button id="exitButton">Open RSVP Test Form</button>
+      <button id="exitButton">Exit to RSVP Form</button>
     </nav>
   </header>
 
@@ -780,6 +780,29 @@
 
 
     <section id="invitations" class="view">
+
+        <div class="panel" style="border-left:5px solid var(--gold);">
+          <h2>Invitation Deadline & Send Control</h2>
+          <p><strong>Response deadline:</strong> Thursday, 6 August 2026 at 10:00.</p>
+          <p><strong>Today’s priority:</strong> Send every outstanding invitation before close of business today, then confirm that the <em>Not yet sent</em> total is zero.</p>
+          <div class="timeline">
+            <div class="timeline-row">
+              <strong>4 August</strong>
+              <span><b>Initial distribution:</b> Send all personalised invitations and mark each guest as sent.</span>
+              <select><option>Not started</option><option>In progress</option><option>Complete</option></select>
+            </div>
+            <div class="timeline-row">
+              <strong>5 August</strong>
+              <span><b>Daily reminder 1:</b> Contact only guests still marked Pending and record each reminder.</span>
+              <select><option>Not started</option><option>In progress</option><option>Complete</option></select>
+            </div>
+            <div class="timeline-row">
+              <strong>6 August</strong>
+              <span><b>Final reminder:</b> Send the final follow-up early in the morning and close responses at 10:00.</span>
+              <select><option>Not started</option><option>In progress</option><option>Complete</option></select>
+            </div>
+          </div>
+        </div>
       <div class="stats">
         <article class="stat"><strong id="inviteTotal">0</strong><span>Total guests</span></article>
         <article class="stat green"><strong id="inviteSent">0</strong><span>Invitations sent</span></article>
@@ -792,13 +815,13 @@
           <label for="inviteTemplate">WhatsApp message template</label>
           <textarea id="inviteTemplate">Dear {{name}} & Family,
 
-Please find your personalised invitation to Seelan “Seela” Moodley’s 16th Day Prayer at the link below:
+You are warmly invited to Seelan “Seela” Moodley’s 16th Day Prayer.
+
+Please open your personalised invitation and confirm your attendance by Thursday, 6 August 2026 at 10:00:
 
 {{link}}
 
-Kindly confirm whether you will be attending by completing the RSVP details on the invitation page.
-
-For any questions, please contact Shai on 076 588 2192.
+For assistance, please contact Shai on 076 588 2192.
 
 Thank you.</textarea>
           <div class="toolbar">
@@ -1053,8 +1076,8 @@ Thank you.</textarea>
           <div class="timeline-row"><strong>Stage 2</strong><span><b>Guest-list freeze:</b> Validate names, mobile numbers, household grouping and expected guest counts. Remove duplicate or obsolete records.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
           <div class="timeline-row"><strong>Stage 3</strong><span><b>Initial invitation issue:</b> Send personalised WhatsApp invitations in controlled batches. Mark each invitation sent immediately after sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
           <div class="timeline-row"><strong>Stage 4</strong><span><b>First reconciliation:</b> Review delivery issues, incorrect numbers and early responses. Manually capture telephone confirmations or declines.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 5</strong><span><b>First reminder:</b> Send reminders only to guests still marked Pending. Review reminder count before sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
-          <div class="timeline-row"><strong>Stage 6</strong><span><b>Final reminder and catering count:</b> Contact remaining priority guests and lock the confirmed guest count for catering.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>5 August</strong><span><b>Daily reminder 1:</b> Send reminders only to guests still marked Pending and record each reminder in the tracker.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>6 August</strong><span><b>Final deadline reminder:</b> Contact all remaining Pending guests before 10:00, then lock the confirmed guest count for catering.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
           <div class="timeline-row"><strong>Stage 7</strong><span><b>Event-day control:</b> Use the Admin portal for final guest lookup and optional check-in recording. Export a final backup before the event.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
         </div>
       </div>
@@ -1472,7 +1495,7 @@ Thank you.</textarea>
     });
 
     $("exitButton").addEventListener("click", () => {
-      window.location.href = "https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=G077&v=13";
+      window.location.href = "rsvp.html?id=G077";
     });
 
     $("refreshButton").addEventListener("click", () => loadData());
