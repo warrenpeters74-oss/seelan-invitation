@@ -125,7 +125,7 @@
     .counter {
       position: absolute;
       left: 26.0%;
-      top: 69.6%;
+      top: 68.85%;
       width: 48.0%;
       height: 7.0%;
       display: grid;
@@ -474,7 +474,10 @@
           guestCount = 0;
         }
 
-        const savedMessage = String(guestRecord.notes || guestRecord.message || "").trim();
+        const rawSavedMessage = String(guestRecord.notes || guestRecord.message || "").trim();
+        const compactSavedMessage = rawSavedMessage.replace(/\s+/g, "");
+        const isTestFiller = compactSavedMessage.length >= 8 && /^[xw]+$/i.test(compactSavedMessage);
+        const savedMessage = isTestFiller ? "" : rawSavedMessage;
         messageField.textContent = savedMessage;
         render();
         showSite();
