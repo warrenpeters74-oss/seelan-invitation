@@ -91,16 +91,17 @@
 
     .response-deadline {
       position: absolute;
-      left: 39.5%;
-      top: 47.0%;
-      width: 55.0%;
-      color: var(--gold);
+      left: 38.0%;
+      top: 46.85%;
+      width: 57.0%;
+      color: #9a6308;
       text-align: center;
-      font-size: clamp(9px, 1.85vw, 15px);
+      font-size: clamp(10px, 2.0vw, 17px);
       font-weight: 700;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.075em;
       line-height: 1.15;
       text-transform: uppercase;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.75);
       z-index: 4;
       pointer-events: none;
     }
@@ -186,6 +187,18 @@
       transform: translateY(-14%);
     }
 
+
+    .message-prompt-mask {
+      position: absolute;
+      left: 8.7%;
+      top: 83.15%;
+      width: 42%;
+      height: 2.3%;
+      background: rgba(255, 253, 248, 0.96);
+      z-index: 3;
+      pointer-events: none;
+    }
+
     #message {
       position: absolute;
       left: 8.35%;
@@ -198,8 +211,8 @@
       background-color: transparent !important;
       box-shadow: none !important;
       color: var(--navy);
-      padding: 1.1% 1.3%;
-      font-size: clamp(12px, 2.55vw, 19px);
+      padding: 0.9% 1.3%;
+      font-size: clamp(12px, 2.45vw, 18px);
       line-height: 1.3;
       outline: none;
       white-space: pre-wrap;
@@ -222,7 +235,9 @@
       border: 0;
       background: transparent;
       color: transparent;
-      z-index: 4;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      z-index: 5;
     }
 
     #submitButton:focus-visible {
@@ -313,12 +328,13 @@
         <button id="plusButton" type="button" aria-label="Increase number attending">+</button>
       </div>
 
+      <div class="message-prompt-mask" aria-hidden="true"></div>
+
       <div id="message"
            contenteditable="true"
            role="textbox"
            aria-multiline="true"
            aria-label="Optional message"
-           aria-placeholder="Add a short note for the family..."
            spellcheck="false"></div>
 
       <button id="submitButton" type="button" aria-label="Send my RSVP"></button>
@@ -343,6 +359,7 @@
     let guestRecord = null;
     let attendanceChoice = "";
     let guestCount = 0;
+    let isSubmitting = false;
 
     const loading = document.getElementById("loading");
     const loadingText = document.getElementById("loadingText");
@@ -504,6 +521,7 @@
     }
 
     async function submitRsvp() {
+      if (isSubmitting) return;
       clearStatus();
 
       if (!attendanceChoice) {
@@ -514,7 +532,9 @@
       const confirmedGuests = attendanceChoice === "Yes" ? guestCount : 0;
       const note = messageField.textContent.trim();
 
+      isSubmitting = true;
       submitButton.disabled = true;
+      showStatus("Submitting your RSVP…", "success");
 
       const body = new URLSearchParams({
         action: "submitRSVP",
@@ -556,6 +576,7 @@
           "error"
         );
       } finally {
+        isSubmitting = false;
         submitButton.disabled = false;
       }
     }
