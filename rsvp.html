@@ -124,32 +124,30 @@
     .counter {
       position: absolute;
       left: 27.0%;
-      top: 67.4%;
+      top: 67.55%;
       width: 46.0%;
       height: 7.2%;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      align-items: center;
+      text-align: center;
       z-index: 4;
-      pointer-events: none;
     }
 
     .counter button {
-      position: absolute;
-      top: 7%;
-      width: 28%;
-      height: 72%;
+      width: clamp(30px, 7.6vw, 60px);
+      aspect-ratio: 1;
+      justify-self: center;
       border: 0;
       border-radius: 50%;
       background: transparent;
       color: transparent;
       cursor: pointer;
-      pointer-events: auto;
     }
 
-    #minusButton { left: 0; }
-    #plusButton { right: 0; }
-
     .counter button:focus-visible {
-      outline: none;
-      box-shadow: none;
+      outline: 3px solid rgba(167, 109, 16, 0.5);
+      outline-offset: 2px;
     }
 
     .counter button:disabled {
@@ -158,19 +156,11 @@
     }
 
     .counter output {
-      position: absolute;
-      left: 50%;
-      top: 46%;
-      transform: translate(-50%, -50%);
-      display: block;
-      width: 34%;
-      margin: 0;
       color: var(--navy);
-      text-align: center;
-      font-size: clamp(24px, 6.1vw, 50px);
+      font-size: clamp(26px, 7.2vw, 60px);
       font-weight: 600;
       line-height: 1;
-      pointer-events: none;
+      transform: translateY(-8%);
     }
 
     #message {
@@ -374,8 +364,8 @@
       if (attendanceChoice === "Yes" && guestCount < 1) guestCount = 1;
 
       guestCountOutput.textContent = String(guestCount);
-      minusButton.disabled = attendanceChoice !== "Yes" || guestCount <= 1;
-      plusButton.disabled = attendanceChoice !== "Yes";
+      minusButton.disabled = guestCount <= 0;
+      plusButton.disabled = false;
     }
 
     async function fetchJson(url, options = {}) {
@@ -536,17 +526,19 @@
     });
 
     minusButton.addEventListener("click", () => {
-      if (attendanceChoice === "Yes" && guestCount > 1) {
+      if (guestCount > 0) {
         guestCount -= 1;
+        if (guestCount === 0) attendanceChoice = "";
+        clearStatus();
         render();
       }
     });
 
     plusButton.addEventListener("click", () => {
-      if (attendanceChoice === "Yes") {
-        guestCount += 1;
-        render();
-      }
+      attendanceChoice = "Yes";
+      guestCount += 1;
+      clearStatus();
+      render();
     });
 
     submitButton.addEventListener("click", submitRsvp);
