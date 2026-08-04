@@ -124,30 +124,32 @@
     .counter {
       position: absolute;
       left: 27.0%;
-      top: 68.15%;
+      top: 67.4%;
       width: 46.0%;
-      height: 5.9%;
-      display: grid;
-      grid-template-columns: 1fr 1.4fr 1fr;
-      align-items: center;
-      text-align: center;
+      height: 7.2%;
       z-index: 4;
+      pointer-events: none;
     }
 
     .counter button {
-      width: clamp(30px, 7.6vw, 60px);
-      aspect-ratio: 1;
-      justify-self: center;
+      position: absolute;
+      top: 7%;
+      width: 28%;
+      height: 72%;
       border: 0;
       border-radius: 50%;
       background: transparent;
       color: transparent;
       cursor: pointer;
+      pointer-events: auto;
     }
 
+    #minusButton { left: 0; }
+    #plusButton { right: 0; }
+
     .counter button:focus-visible {
-      outline: 3px solid rgba(167, 109, 16, 0.5);
-      outline-offset: 2px;
+      outline: none;
+      box-shadow: none;
     }
 
     .counter button:disabled {
@@ -156,18 +158,19 @@
     }
 
     .counter output {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      align-self: center;
-      justify-self: center;
-      min-width: 1.4em;
-      height: 100%;
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      transform: translate(-50%, -50%);
+      display: block;
+      width: 34%;
+      margin: 0;
       color: var(--navy);
-      font-size: clamp(24px, 6.4vw, 54px);
+      text-align: center;
+      font-size: clamp(24px, 6.1vw, 50px);
       font-weight: 600;
       line-height: 1;
-      transform: none;
+      pointer-events: none;
     }
 
     #message {
@@ -189,12 +192,7 @@
       z-index: 4;
     }
 
-    #message::placeholder {
-      color: rgba(7, 31, 74, 0.72);
-      font-style: italic;
-      opacity: 1;
-    }
-
+    #message::placeholder { color: transparent; }
     #message:focus { box-shadow: none; }
 
     #submitButton {
@@ -456,7 +454,8 @@
           guestCount = 0;
         }
 
-        messageField.value = String(guestRecord.notes || guestRecord.message || "");
+        const savedMessage = String(guestRecord.notes || guestRecord.message || "").trim();
+        messageField.value = savedMessage;
         render();
         showSite();
       } catch (error) {
