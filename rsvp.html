@@ -71,14 +71,14 @@
       position: absolute;
       left: 41.0%;
       top: 23.15%;
-      width: 53.5%;
+      width: 52.2%;
       min-height: 4.8%;
       display: flex;
       align-items: center;
       padding: 0;
       background: transparent;
       color: var(--navy);
-      font-size: clamp(14px, 3.05vw, 32px);
+      font-size: 30px;
       font-weight: 600;
       line-height: 1.05;
       white-space: nowrap;
@@ -97,14 +97,16 @@
       z-index: 4;
     }
 
-    .hit-button:focus-visible {
-      outline: 3px solid rgba(167, 109, 16, 0.55);
-      outline-offset: 2px;
-    }
-
+    .hit-button,
+    .hit-button:hover,
+    .hit-button:focus,
+    .hit-button:focus-visible,
     .hit-button.active {
-      border-color: transparent;
-      box-shadow: none;
+      border-color: transparent !important;
+      outline: none !important;
+      box-shadow: none !important;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     #yesButton {
@@ -124,9 +126,9 @@
     .counter {
       position: absolute;
       left: 27.0%;
-      top: 67.55%;
+      top: 66.15%;
       width: 46.0%;
-      height: 7.2%;
+      height: 5.8%;
       display: grid;
       grid-template-columns: 1fr 1.4fr 1fr;
       align-items: center;
@@ -145,9 +147,14 @@
       cursor: pointer;
     }
 
+    .counter button,
+    .counter button:hover,
+    .counter button:focus,
     .counter button:focus-visible {
-      outline: 3px solid rgba(167, 109, 16, 0.5);
-      outline-offset: 2px;
+      outline: none !important;
+      box-shadow: none !important;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
     .counter button:disabled {
@@ -157,25 +164,37 @@
 
     .counter output {
       color: var(--navy);
-      font-size: clamp(26px, 7.2vw, 60px);
+      font-size: clamp(23px, 5.8vw, 48px);
       font-weight: 600;
       line-height: 1;
-      transform: translateY(-8%);
+      transform: translateY(-12%);
+    }
+
+    .message-cover {
+      position: absolute;
+      left: 8.05%;
+      top: 81.75%;
+      width: 75.8%;
+      height: 7.35%;
+      background: var(--cream);
+      border: 0;
+      z-index: 3;
+      pointer-events: none;
     }
 
     #message {
       position: absolute;
-      left: 8.35%;
-      top: 82.65%;
-      width: 72.5%;
-      height: 7.8%;
+      left: 8.55%;
+      top: 82.05%;
+      width: 73.4%;
+      height: 6.7%;
       resize: none;
       border: 0;
-      background: #fffdf8;
+      background: transparent;
       color: var(--navy);
-      padding: 1.1% 1.3%;
-      font-size: clamp(12px, 2.55vw, 19px);
-      line-height: 1.3;
+      padding: 0.7% 0.9%;
+      font-size: clamp(12px, 2.45vw, 18px);
+      line-height: 1.25;
       outline: none;
       appearance: none;
       -webkit-appearance: none;
@@ -282,6 +301,7 @@
         <button id="plusButton" type="button" aria-label="Increase number attending">+</button>
       </div>
 
+      <div class="message-cover" aria-hidden="true"></div>
       <textarea id="message" maxlength="500" placeholder="" aria-label="Optional message"></textarea>
 
       <button id="submitButton" type="button" aria-label="Send my RSVP"></button>
@@ -335,6 +355,18 @@
     function safeInt(value, fallback = 0) {
       const parsed = Number.parseInt(value, 10);
       return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
+    function fitGreeting() {
+      const maxSize = Math.max(20, Math.min(32, window.innerWidth * 0.03));
+      const minSize = 14;
+      let size = maxSize;
+      guestGreeting.style.fontSize = `${size}px`;
+
+      while (guestGreeting.scrollWidth > guestGreeting.clientWidth && size > minSize) {
+        size -= 0.5;
+        guestGreeting.style.fontSize = `${size}px`;
+      }
     }
 
     function showSite() {
@@ -419,6 +451,7 @@
         }
 
         guestGreeting.textContent = `Dear ${displayName(guestRecord.name)}`;
+        fitGreeting();
         guestGreeting.style.visibility = "visible";
 
         const savedStatus = normaliseStatus(
@@ -539,6 +572,7 @@
     });
 
     submitButton.addEventListener("click", submitRsvp);
+    window.addEventListener("resize", fitGreeting);
 
     loadGuest();
   </script>
