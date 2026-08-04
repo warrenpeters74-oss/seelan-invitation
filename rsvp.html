@@ -192,7 +192,7 @@
       top: 82.65%;
       width: 72.5%;
       height: 7.8%;
-      resize: none;
+      overflow-y: auto;
       border: 0;
       background: transparent !important;
       background-color: transparent !important;
@@ -202,17 +202,22 @@
       font-size: clamp(12px, 2.55vw, 19px);
       line-height: 1.3;
       outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      caret-color: var(--navy);
+      white-space: pre-wrap;
+      word-break: break-word;
       z-index: 4;
     }
 
-    #message::placeholder {
-      color: rgba(7, 31, 74, 0.48);
+    #message:empty::before {
+      content: attr(data-placeholder);
+      color: rgba(7, 31, 74, 0.55);
       font-style: italic;
+      pointer-events: none;
     }
-    #message:focus { box-shadow: none; }
+
+    #message:focus {
+      background: transparent !important;
+      box-shadow: none !important;
+    }
 
     #submitButton {
       position: absolute;
@@ -315,7 +320,13 @@
         <button id="plusButton" type="button" aria-label="Increase number attending">+</button>
       </div>
 
-      <textarea id="message" maxlength="500" placeholder="Add a short note for the family..." aria-label="Optional message" spellcheck="false"></textarea>
+      <div id="message"
+           contenteditable="true"
+           role="textbox"
+           aria-multiline="true"
+           aria-label="Optional message"
+           data-placeholder="Add a short note for the family..."
+           spellcheck="false"></div>
 
       <button id="submitButton" type="button" aria-label="Send my RSVP"></button>
 
@@ -490,7 +501,7 @@
         }
 
         const savedMessage = String(guestRecord.notes || guestRecord.message || "").trim();
-        messageField.value = savedMessage;
+        messageField.textContent = savedMessage;
         render();
         showSite();
       } catch (error) {
@@ -508,7 +519,7 @@
       }
 
       const confirmedGuests = attendanceChoice === "Yes" ? guestCount : 0;
-      const note = messageField.value.trim();
+      const note = messageField.textContent.trim();
 
       submitButton.disabled = true;
 
@@ -584,6 +595,19 @@
       guestCount += 1;
       clearStatus();
       render();
+    });
+
+    messageField.addEventListener("input", () => {
+      const maxLength = 500;
+      if (messageField.textContent.length > maxLength) {
+        messageField.textContent = messageField.textContent.slice(0, maxLength);
+        const range = document.createRange();
+        range.selectNodeContents(messageField);
+        range.collapse(false);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     });
 
     submitButton.addEventListener("click", submitRsvp);
