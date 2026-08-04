@@ -26,12 +26,8 @@
       --gold: #aa7417;
       --gold-dark: #85560d;
       --gold-light: #d8b96c;
-
-      /* Lighter background aligned with the locked invitation */
       --cream: #fffdf8;
       --cream-soft: #fffaf0;
-      --cream-panel: rgba(255, 253, 247, 0.96);
-
       --text: #16294a;
       --border: rgba(170, 116, 23, 0.63);
       --shadow: rgba(56, 38, 10, 0.14);
@@ -75,9 +71,7 @@
       padding: 14px 12px 42px;
     }
 
-    /* ---------------------------------------------------------
-       PAGE 1 — LOCKED INVITATION
-       --------------------------------------------------------- */
+    /* PAGE 1 — LOCKED INVITATION */
 
     .invitation-page {
       width: 100%;
@@ -92,9 +86,7 @@
       box-shadow: 0 10px 30px var(--shadow);
     }
 
-    /* ---------------------------------------------------------
-       PAGE 2 — RSVP FORM
-       --------------------------------------------------------- */
+    /* PAGE 2 — RSVP FORM */
 
     .rsvp-page {
       position: relative;
@@ -174,6 +166,7 @@
       line-height: 0.95;
       text-align: center;
       letter-spacing: -1px;
+      text-transform: capitalize;
     }
 
     .rsvp-script-title {
@@ -209,11 +202,11 @@
     }
 
     .lamp-image {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
-      display: block;
       border-radius: 50%;
       filter: saturate(1.04) contrast(1.02);
     }
@@ -438,7 +431,7 @@
       display: grid;
       place-items: center;
       padding: 25px;
-      background: rgba(255, 252, 244, 0.96);
+      background: rgba(255, 252, 244, 0.97);
     }
 
     .loading-card {
@@ -533,7 +526,11 @@
   <div id="loadingScreen" class="loading-screen">
     <div class="loading-card">
       <div class="loading-symbol">❦</div>
-      <h2 class="loading-title">Loading your invitation</h2>
+
+      <h2 class="loading-title">
+        Loading your invitation
+      </h2>
+
       <p id="loadingMessage" class="loading-message">
         Please wait while we retrieve your personalised details.
       </p>
@@ -542,7 +539,7 @@
 
   <main id="site" class="site hidden">
 
-    <!-- PAGE 1: LOCKED IMAGE. DO NOT REBUILD IN HTML. -->
+    <!-- PAGE 1 — LOCKED INVITATION -->
     <section class="invitation-page" aria-label="Memorial invitation">
       <img
         class="invitation-image"
@@ -551,13 +548,18 @@
       >
     </section>
 
-    <!-- PAGE 2: FUNCTIONAL RSVP FORM -->
+    <!-- PAGE 2 — FUNCTIONAL RSVP PAGE -->
     <section id="rsvpForm" class="rsvp-page" aria-label="RSVP form">
       <div class="inner-border"></div>
 
       <div class="rsvp-content">
-        <h1 class="confirm-title">Confirm Attendance</h1>
-        <div class="rsvp-script-title">RSVP</div>
+        <h1 class="confirm-title">
+          Confirm Attendance
+        </h1>
+
+        <div class="rsvp-script-title">
+          RSVP
+        </div>
 
         <div class="ornament" aria-hidden="true">
           <span>❦</span>
@@ -662,7 +664,11 @@
           placeholder="Add a short note for the family..."
         ></textarea>
 
-        <button id="submitButton" class="submit-button" type="button">
+        <button
+          id="submitButton"
+          class="submit-button"
+          type="button"
+        >
           Send My RSVP
         </button>
 
@@ -679,42 +685,77 @@
   <script>
     "use strict";
 
-    /*
-      Keep this exact Apps Script deployment URL.
-    */
     const SCRIPT_URL =
       "https://script.google.com/macros/s/" +
       "AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_" +
       "wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec";
 
     const params = new URLSearchParams(window.location.search);
-    const guestId = String(params.get("id") || "").trim().toUpperCase();
+
+    const guestId = String(
+      params.get("id") ||
+      params.get("guestId") ||
+      ""
+    )
+      .trim()
+      .toUpperCase();
 
     let guestRecord = null;
     let attendanceChoice = "";
     let guestCount = 1;
 
-    const loadingScreen = document.getElementById("loadingScreen");
-    const loadingMessage = document.getElementById("loadingMessage");
-    const site = document.getElementById("site");
+    const loadingScreen =
+      document.getElementById("loadingScreen");
 
-    const guestGreeting = document.getElementById("guestGreeting");
-    const yesButton = document.getElementById("yesButton");
-    const noButton = document.getElementById("noButton");
-    const minusButton = document.getElementById("minusButton");
-    const plusButton = document.getElementById("plusButton");
-    const guestCountOutput = document.getElementById("guestCount");
-    const messageField = document.getElementById("message");
-    const submitButton = document.getElementById("submitButton");
-    const statusBox = document.getElementById("statusBox");
+    const loadingMessage =
+      document.getElementById("loadingMessage");
+
+    const site =
+      document.getElementById("site");
+
+    const guestGreeting =
+      document.getElementById("guestGreeting");
+
+    const yesButton =
+      document.getElementById("yesButton");
+
+    const noButton =
+      document.getElementById("noButton");
+
+    const minusButton =
+      document.getElementById("minusButton");
+
+    const plusButton =
+      document.getElementById("plusButton");
+
+    const guestCountOutput =
+      document.getElementById("guestCount");
+
+    const messageField =
+      document.getElementById("message");
+
+    const submitButton =
+      document.getElementById("submitButton");
+
+    const statusBox =
+      document.getElementById("statusBox");
+
+    function normaliseId(value) {
+      return String(value || "")
+        .trim()
+        .toUpperCase();
+    }
 
     function normaliseStatus(value) {
-      const status = String(value || "").trim().toLowerCase();
+      const status = String(value || "")
+        .trim()
+        .toLowerCase();
 
       if (
         status === "yes" ||
         status === "accepted" ||
-        status === "attending"
+        status === "attending" ||
+        status === "confirmed"
       ) {
         return "Yes";
       }
@@ -742,7 +783,10 @@
 
     function toSafeInteger(value, fallback = 0) {
       const number = Number.parseInt(value, 10);
-      return Number.isFinite(number) ? number : fallback;
+
+      return Number.isFinite(number)
+        ? number
+        : fallback;
     }
 
     function showPage() {
@@ -756,9 +800,12 @@
 
     function showStatus(message, type) {
       statusBox.textContent = message;
+
       statusBox.className =
         `status-box show ${
-          type === "success" ? "status-success" : "status-error"
+          type === "success"
+            ? "status-success"
+            : "status-error"
         }`;
     }
 
@@ -768,12 +815,15 @@
     }
 
     function renderCount() {
-      guestCountOutput.textContent = String(guestCount);
+      guestCountOutput.textContent =
+        String(guestCount);
 
       minusButton.disabled =
-        attendanceChoice !== "Yes" || guestCount <= 1;
+        attendanceChoice !== "Yes" ||
+        guestCount <= 1;
 
-      plusButton.disabled = attendanceChoice !== "Yes";
+      plusButton.disabled =
+        attendanceChoice !== "Yes";
     }
 
     function renderAttendanceChoice() {
@@ -799,7 +849,12 @@
 
       if (attendanceChoice === "No") {
         guestCount = 0;
-      } else if (attendanceChoice === "Yes" && guestCount < 1) {
+      }
+
+      if (
+        attendanceChoice === "Yes" &&
+        guestCount < 1
+      ) {
         guestCount = 1;
       }
 
@@ -820,19 +875,42 @@
       });
 
       if (!response.ok) {
-        throw new Error(`Server returned ${response.status}.`);
-      }
-
-      const text = await response.text();
-
-      try {
-        return JSON.parse(text);
-      } catch (error) {
         throw new Error(
-          "The server returned an invalid response. " +
-          "Please refresh and try again."
+          `Server returned status ${response.status}.`
         );
       }
+
+      const responseText = await response.text();
+
+      try {
+        return JSON.parse(responseText);
+      } catch (error) {
+        console.error(
+          "Non-JSON server response:",
+          responseText
+        );
+
+        throw new Error(
+          "The server returned an invalid response."
+        );
+      }
+    }
+
+    function findGuestInArray(records) {
+      if (!Array.isArray(records)) {
+        return null;
+      }
+
+      return records.find((record) => {
+        const recordId = normaliseId(
+          record.guestId ||
+          record.guestID ||
+          record.id ||
+          record["Guest ID"]
+        );
+
+        return recordId === guestId;
+      }) || null;
     }
 
     function extractGuest(data) {
@@ -840,28 +918,82 @@
         return null;
       }
 
-      if (data.success === false) {
-        throw new Error(
-          data.message || "The invitation could not be loaded."
-        );
+      if (
+        data.success === false &&
+        !Array.isArray(data.data) &&
+        !Array.isArray(data.guests)
+      ) {
+        return null;
       }
 
-      if (data.guest && typeof data.guest === "object") {
+      if (
+        data.guest &&
+        typeof data.guest === "object"
+      ) {
         return data.guest;
       }
 
-      if (Array.isArray(data)) {
-        return data.find(
-          (item) =>
-            String(item.guestId || "").trim().toUpperCase() === guestId
-        ) || null;
+      if (
+        data.data &&
+        !Array.isArray(data.data) &&
+        typeof data.data === "object"
+      ) {
+        const directDataId = normaliseId(
+          data.data.guestId ||
+          data.data.id
+        );
+
+        if (
+          directDataId === guestId ||
+          data.data.name
+        ) {
+          return data.data;
+        }
       }
 
-      if (data.guestId || data.name) {
+      if (Array.isArray(data)) {
+        return findGuestInArray(data);
+      }
+
+      if (Array.isArray(data.guests)) {
+        return findGuestInArray(data.guests);
+      }
+
+      if (Array.isArray(data.data)) {
+        return findGuestInArray(data.data);
+      }
+
+      const directId = normaliseId(
+        data.guestId ||
+        data.id
+      );
+
+      if (
+        directId === guestId ||
+        (
+          data.name &&
+          !data.stats
+        )
+      ) {
         return data;
       }
 
       return null;
+    }
+
+    async function attemptGuestLookup(url) {
+      try {
+        const data = await fetchJson(url);
+        return extractGuest(data);
+      } catch (error) {
+        console.warn(
+          "Guest lookup attempt failed:",
+          url,
+          error
+        );
+
+        return null;
+      }
     }
 
     async function loadGuest() {
@@ -870,35 +1002,61 @@
           "This invitation link is incomplete. " +
           "Please use the personalised link sent to you."
         );
+
         return;
       }
 
       try {
-        /*
-          The backend previously returned:
-          {"success":true,"guest":{...}}
-          for a personalised guest lookup.
-        */
-        const url =
-          `${SCRIPT_URL}?action=getGuest&id=${encodeURIComponent(guestId)}` +
-          `&_=${Date.now()}`;
+        const timestamp = Date.now();
 
-        let data;
+        const lookupUrls = [
+          `${SCRIPT_URL}?action=getGuest&guestId=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`,
 
-        try {
-          data = await fetchJson(url);
-        } catch (firstError) {
-          /*
-            Fallback for the existing backend if it retrieves the guest
-            when only the ID is supplied.
-          */
-          data = await fetchJson(
-            `${SCRIPT_URL}?id=${encodeURIComponent(guestId)}` +
-            `&_=${Date.now()}`
-          );
+          `${SCRIPT_URL}?action=getGuest&id=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`,
+
+          `${SCRIPT_URL}?guestId=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`,
+
+          `${SCRIPT_URL}?id=${
+            encodeURIComponent(guestId)
+          }&_=${timestamp}`
+        ];
+
+        for (const url of lookupUrls) {
+          guestRecord =
+            await attemptGuestLookup(url);
+
+          if (guestRecord) {
+            break;
+          }
         }
 
-        guestRecord = extractGuest(data);
+        /*
+          Final fallback:
+          retrieve the entire guest list and locate the matching ID.
+        */
+        if (!guestRecord) {
+          const allGuestUrls = [
+            `${SCRIPT_URL}?action=getGuests&_=${timestamp}`,
+            `${SCRIPT_URL}?action=getAll&_=${timestamp}`,
+            `${SCRIPT_URL}?action=listGuests&_=${timestamp}`,
+            `${SCRIPT_URL}?_=${timestamp}`
+          ];
+
+          for (const url of allGuestUrls) {
+            guestRecord =
+              await attemptGuestLookup(url);
+
+            if (guestRecord) {
+              break;
+            }
+          }
+        }
 
         if (!guestRecord) {
           throw new Error(
@@ -906,20 +1064,27 @@
           );
         }
 
-        const displayedName = cleanGuestName(guestRecord.name);
+        const displayedName =
+          cleanGuestName(guestRecord.name);
 
-        guestGreeting.textContent = `Dear ${displayedName}`;
+        guestGreeting.textContent =
+          `Dear ${displayedName}`;
 
         const savedStatus = normaliseStatus(
-          guestRecord.rsvpStatus || guestRecord.attending
+          guestRecord.rsvpStatus ||
+          guestRecord.attending ||
+          guestRecord.status
         );
 
         if (savedStatus === "Yes") {
           attendanceChoice = "Yes";
+
           guestCount = Math.max(
             1,
             toSafeInteger(
-              guestRecord.confirmedGuests || guestRecord.guests,
+              guestRecord.confirmedGuests ||
+              guestRecord.guests ||
+              guestRecord.numberAttending,
               1
             )
           );
@@ -928,18 +1093,25 @@
           guestCount = 0;
         } else {
           attendanceChoice = "";
+
           guestCount = Math.max(
             1,
-            toSafeInteger(guestRecord.expectedGuests, 1)
+            toSafeInteger(
+              guestRecord.expectedGuests,
+              1
+            )
           );
         }
 
         messageField.value = String(
-          guestRecord.notes || guestRecord.message || ""
+          guestRecord.notes ||
+          guestRecord.message ||
+          ""
         );
 
         renderAttendanceChoice();
         showPage();
+
       } catch (error) {
         console.error(error);
 
@@ -956,9 +1128,11 @@
 
       if (!guestRecord || !guestId) {
         showStatus(
-          "Your guest record has not loaded. Please refresh the page.",
+          "Your invitation record has not loaded. " +
+          "Please refresh the page.",
           "error"
         );
+
         return;
       }
 
@@ -967,76 +1141,101 @@
           "Please select whether you will be attending.",
           "error"
         );
+
         return;
       }
 
-      if (attendanceChoice === "Yes" && guestCount < 1) {
+      if (
+        attendanceChoice === "Yes" &&
+        guestCount < 1
+      ) {
         showStatus(
           "Please select at least one person attending.",
           "error"
         );
+
         return;
       }
 
       submitButton.disabled = true;
-      submitButton.textContent = "Submitting RSVP…";
+      submitButton.textContent =
+        "Submitting RSVP…";
+
+      const confirmedGuests =
+        attendanceChoice === "Yes"
+          ? guestCount
+          : 0;
+
+      const note =
+        messageField.value.trim();
 
       const payload = {
         action: "submitRSVP",
-        guestId,
+        guestId: guestId,
         id: guestId,
         rsvpStatus: attendanceChoice,
         attending: attendanceChoice,
-        confirmedGuests:
-          attendanceChoice === "Yes" ? guestCount : 0,
-        guests:
-          attendanceChoice === "Yes" ? guestCount : 0,
-        notes: messageField.value.trim(),
-        message: messageField.value.trim()
+        status: attendanceChoice,
+        confirmedGuests: confirmedGuests,
+        guests: confirmedGuests,
+        numberAttending: confirmedGuests,
+        notes: note,
+        message: note
       };
 
       try {
-        /*
-          Send standard form fields. This format is reliable with
-          Google Apps Script and does not require custom CORS headers.
-        */
         const body = new URLSearchParams();
 
-        Object.entries(payload).forEach(([key, value]) => {
-          body.append(key, String(value));
-        });
+        Object.entries(payload).forEach(
+          ([key, value]) => {
+            body.append(key, String(value));
+          }
+        );
 
-        const data = await fetchJson(SCRIPT_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/x-www-form-urlencoded;charset=UTF-8"
-          },
-          body: body.toString()
-        });
+        const data = await fetchJson(
+          SCRIPT_URL,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            body: body.toString()
+          }
+        );
 
-        if (data && data.success === false) {
+        if (
+          data &&
+          data.success === false
+        ) {
           throw new Error(
-            data.message || "The RSVP could not be saved."
+            data.message ||
+            "The RSVP could not be saved."
           );
         }
 
         showStatus(
           attendanceChoice === "Yes"
-            ? `Thank you. Attendance has been confirmed for ` +
-              `${guestCount} ${
-                guestCount === 1 ? "person" : "people"
+            ? `Thank you. Attendance has been confirmed for ${
+                guestCount
+              } ${
+                guestCount === 1
+                  ? "person"
+                  : "people"
               }.`
             : "Thank you. Your response has been recorded.",
           "success"
         );
 
-        submitButton.textContent = "RSVP Submitted";
+        submitButton.textContent =
+          "RSVP Submitted";
 
         window.setTimeout(() => {
           submitButton.disabled = false;
-          submitButton.textContent = "Update My RSVP";
+          submitButton.textContent =
+            "Update My RSVP";
         }, 1600);
+
       } catch (error) {
         console.error(error);
 
@@ -1048,33 +1247,48 @@
         );
 
         submitButton.disabled = false;
-        submitButton.textContent = "Send My RSVP";
+        submitButton.textContent =
+          "Send My RSVP";
       }
     }
 
-    yesButton.addEventListener("click", () => {
-      selectAttendance("Yes");
-    });
+    yesButton.addEventListener(
+      "click",
+      () => selectAttendance("Yes")
+    );
 
-    noButton.addEventListener("click", () => {
-      selectAttendance("No");
-    });
+    noButton.addEventListener(
+      "click",
+      () => selectAttendance("No")
+    );
 
-    minusButton.addEventListener("click", () => {
-      if (attendanceChoice === "Yes" && guestCount > 1) {
-        guestCount -= 1;
-        renderCount();
+    minusButton.addEventListener(
+      "click",
+      () => {
+        if (
+          attendanceChoice === "Yes" &&
+          guestCount > 1
+        ) {
+          guestCount -= 1;
+          renderCount();
+        }
       }
-    });
+    );
 
-    plusButton.addEventListener("click", () => {
-      if (attendanceChoice === "Yes") {
-        guestCount += 1;
-        renderCount();
+    plusButton.addEventListener(
+      "click",
+      () => {
+        if (attendanceChoice === "Yes") {
+          guestCount += 1;
+          renderCount();
+        }
       }
-    });
+    );
 
-    submitButton.addEventListener("click", submitRsvp);
+    submitButton.addEventListener(
+      "click",
+      submitRsvp
+    );
 
     loadGuest();
   </script>
