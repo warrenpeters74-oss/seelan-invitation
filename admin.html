@@ -1,107 +1,1258 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Seelan RSVP Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Seelan RSVP Organiser Panel</title>
+
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
+
+    :root {
+      --navy: #071f4a;
+      --navy-2: #143665;
+      --gold: #a76d10;
+      --gold-2: #c28b25;
+      --cream: #fffdf8;
+      --cream-2: #faf5e9;
+      --cream-3: #f3ead8;
+      --green: #277354;
+      --red: #a34848;
+      --purple: #76539c;
+      --blue: #3a7abf;
+      --text: #1e2f4d;
+      --muted: #786b59;
+      --line: rgba(167, 109, 16, 0.32);
+      --shadow: 0 12px 32px rgba(56, 38, 10, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Arial;
-      background: #f5f5f5;
-      padding: 20px;
+      margin: 0;
+      background:
+        radial-gradient(circle at top, #fffefb 0%, #faf5eb 58%, #f4ead7 100%);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
     }
 
-    h2 {
-      color: #2C3E50;
+    button, input, select, textarea { font: inherit; }
+
+    .shell {
+      width: min(100%, 1240px);
+      margin: 0 auto;
+      padding: 18px 16px 42px;
     }
 
-    .card {
-      display: inline-block;
-      padding: 15px;
-      margin: 10px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      min-width: 150px;
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 22px;
+      background: rgba(47, 30, 13, 0.97);
+      color: #fff8e9;
+      border-bottom: 3px solid var(--gold-2);
+      box-shadow: 0 8px 24px rgba(33, 21, 8, 0.18);
+    }
+
+    .brand {
+      margin-right: auto;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 31px;
+      font-style: italic;
+      color: #ffe9b5;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .nav button {
+      padding: 11px 14px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #f8e7c0;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .nav button.active {
+      background: rgba(199, 151, 50, 0.16);
+      border-color: var(--gold-2);
+      color: #fff;
+    }
+
+    .hero {
+      padding: 38px 6px 22px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      color: #342113;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(44px, 6vw, 72px);
+      font-weight: 600;
+      line-height: 0.95;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 14px 0 22px;
+    }
+
+    .btn {
+      min-height: 43px;
+      padding: 10px 16px;
+      border: 1px solid var(--gold);
+      background: var(--cream);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn.primary {
+      background: linear-gradient(90deg, #a76d10, #c28b25);
+      color: #fff;
+    }
+
+    .btn.navy {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+    }
+
+    .btn.green {
+      background: #1f9d6f;
+      border-color: #1f9d6f;
+      color: #fff;
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: rgba(163, 72, 72, 0.55);
+    }
+
+    .updated {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      position: relative;
+      overflow: hidden;
+      padding: 22px 18px 18px;
+      background: rgba(255, 253, 248, 0.95);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
       text-align: center;
+    }
+
+    .stat::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+      background: var(--blue);
+    }
+
+    .stat.green::after { background: var(--green); }
+    .stat.red::after { background: var(--red); }
+    .stat.purple::after { background: var(--purple); }
+    .stat.gold::after { background: var(--gold-2); }
+    .stat.orange::after { background: #c77a28; }
+
+    .stat strong {
+      display: block;
+      color: #322014;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 50px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: #675742;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+    }
+
+    .progress-panel,
+    .panel {
+      margin-bottom: 20px;
+      padding: 22px;
+      background: rgba(255, 253, 248, 0.96);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin: 0 0 15px;
+      color: #3b2414;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 35px;
+    }
+
+    .progress-row {
+      display: grid;
+      grid-template-columns: 220px 1fr 68px;
+      gap: 14px;
+      align-items: center;
+      margin: 14px 0;
+    }
+
+    .progress-row span {
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 12px;
+    }
+
+    .track {
+      height: 13px;
+      border-radius: 999px;
+      background: #eee6d6;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #9c7418, #d2ac43);
+      transition: width 0.35s ease;
+    }
+
+    .fill.green { background: linear-gradient(90deg, #277354, #55b487); }
+    .fill.red { background: linear-gradient(90deg, #a34848, #d27878); }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1.7fr repeat(3, minmax(145px, 0.7fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid rgba(167, 109, 16, 0.38);
+      background: rgba(255,255,255,0.78);
+      color: var(--text);
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(167, 109, 16, 0.10);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
     }
 
     table {
       width: 100%;
-      margin-top: 20px;
+      min-width: 980px;
       border-collapse: collapse;
-      background: white;
-    }
-
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
+      background: rgba(255,255,255,0.75);
     }
 
     th {
-      background: #2C3E50;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 12px;
+      background: #3d260f;
+      color: #fff6df;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-size: 11px;
+    }
+
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid rgba(167,109,16,0.14);
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    tbody tr:hover { background: #fff9ed; }
+
+    .name-cell {
+      color: #1f2740;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 19px;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-width: 78px;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f2ead8;
+      color: #7b652f;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge.yes { background: #e9f4ee; color: var(--green); }
+    .badge.no { background: #f8e9e9; color: var(--red); }
+    .badge.pending { background: #f4eddc; color: #8c6f26; }
+    .badge.sent { background: #e9eff8; color: var(--navy-2); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .mini {
+      padding: 7px 9px;
+      border: 1px solid rgba(167,109,16,0.42);
+      background: #fffdf8;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .mini.whatsapp {
+      background: #21a773;
       color: white;
+      border-color: #21a773;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-grid .full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #6f5a37;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    textarea { min-height: 112px; resize: vertical; }
+
+    .queue {
+      max-height: 520px;
+      overflow: auto;
+      border-top: 1px solid var(--line);
+    }
+
+    .queue-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(167,109,16,0.18);
+    }
+
+    .queue-item strong {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 20px;
+    }
+
+    .queue-item small {
+      display: block;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .empty {
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      max-width: 360px;
+      padding: 14px 17px;
+      border: 1px solid var(--gold);
+      background: #fffdf8;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      display: none;
+    }
+
+    .toast.show { display: block; }
+    .toast.error { border-color: var(--red); color: var(--red); }
+
+    @media (max-width: 960px) {
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .filters { grid-template-columns: 1fr 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .shell { padding: 8px 7px 28px; }
+      .topbar { position: static; padding: 14px 12px; }
+      .brand { width: 100%; }
+      .nav { width: 100%; }
+      .nav button { flex: 1 1 42%; }
+      .hero { padding-top: 24px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat strong { font-size: 40px; }
+      .progress-row { grid-template-columns: 1fr; gap: 6px; }
+      .filters, .form-grid { grid-template-columns: 1fr; }
+      .form-grid .full { grid-column: auto; }
+      .updated { width: 100%; margin-left: 0; }
     }
   </style>
 </head>
 
 <body>
+  <header class="topbar">
+    <div class="brand">Seelan RSVP Organiser Panel</div>
+    <nav class="nav" aria-label="Admin navigation">
+      <button class="active" data-view="dashboard">Dashboard</button>
+      <button data-view="invitations">Send Invites</button>
+      <button data-view="reminders">Reminders</button>
+      <button data-view="guests">Guest Management</button>
+      <button id="exitButton">Exit to RSVP Form</button>
+    </nav>
+  </header>
 
-  <h2>RSVP Dashboard</h2>
+  <main class="shell">
+    <section class="hero">
+      <h1 id="pageTitle">RSVP Dashboard</h1>
+      <p>Seelan “Seela” Moodley · Live from Google Sheets</p>
+    </section>
 
-  <!-- SUMMARY CARDS -->
-  <div class="card">Total<br><b id="total">0</b></div>
-  <div class="card">Attending<br><b id="yes">0</b></div>
-  <div class="card">Declined<br><b id="no">0</b></div>
-  <div class="card">Pending<br><b id="pending">0</b></div>
+    <div class="toolbar">
+      <button id="refreshButton" class="btn">Refresh live data</button>
+      <button id="exportButton" class="btn">Export CSV</button>
+      <span id="lastUpdated" class="updated">Not yet refreshed</span>
+    </div>
 
-  <!-- TABLE -->
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Guests</th>
-        <th>Checked In</th>
-      </tr>
-    </thead>
-    <tbody id="guestList"></tbody>
-  </table>
+    <section id="dashboard" class="view active">
+      <div class="stats">
+        <article class="stat"><strong id="totalInvitations">0</strong><span>Total invitations</span></article>
+        <article class="stat gold"><strong id="responses">0</strong><span>Responses</span></article>
+        <article class="stat green"><strong id="attending">0</strong><span>Confirmed yes</span></article>
+        <article class="stat red"><strong id="declined">0</strong><span>Declined</span></article>
+        <article class="stat purple"><strong id="pending">0</strong><span>Awaiting reply</span></article>
+        <article class="stat orange"><strong id="confirmedPeople">0</strong><span>Confirmed people</span></article>
+      </div>
+
+      <div class="progress-panel">
+        <div class="progress-row">
+          <span>Response rate</span>
+          <div class="track"><div id="responseBar" class="fill"></div></div>
+          <strong id="responseRate">0%</strong>
+        </div>
+        <div class="progress-row">
+          <span>Attending of responses</span>
+          <div class="track"><div id="attendingBar" class="fill green"></div></div>
+          <strong id="attendingRate">0%</strong>
+        </div>
+        <div class="progress-row">
+          <span>Declined of responses</span>
+          <div class="track"><div id="declinedBar" class="fill red"></div></div>
+          <strong id="declinedRate">0%</strong>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>All Responses</h2>
+        <div class="filters">
+          <input id="searchInput" placeholder="Search guest name or number">
+          <select id="statusFilter">
+            <option value="">All statuses</option>
+            <option value="Yes">Attending</option>
+            <option value="No">Declined</option>
+            <option value="Pending">Pending</option>
+          </select>
+          <select id="sentFilter">
+            <option value="">All invitations</option>
+            <option value="sent">Sent</option>
+            <option value="not-sent">Not sent</option>
+          </select>
+          <select id="groupFilter">
+            <option value="">All groups</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Guest</th>
+                <th>Contact</th>
+                <th>Group</th>
+                <th>Status</th>
+                <th>Expected</th>
+                <th>Confirmed</th>
+                <th>Invitation</th>
+                <th>Reminders</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="guestTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="invitations" class="view">
+      <div class="stats">
+        <article class="stat"><strong id="inviteTotal">0</strong><span>Total guests</span></article>
+        <article class="stat green"><strong id="inviteSent">0</strong><span>Invitations sent</span></article>
+        <article class="stat purple"><strong id="inviteUnsent">0</strong><span>Not yet sent</span></article>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h2>Invitation Message</h2>
+          <label for="inviteTemplate">WhatsApp message template</label>
+          <textarea id="inviteTemplate">Dear {{name}} & Family,
+
+The Moodley Family warmly invites you to join us for Seelan “Seela” Moodley’s 16th Day Prayer.
+
+Please view your personalised invitation and confirm attendance here:
+{{link}}
+
+Your presence and prayers will be deeply appreciated.</textarea>
+          <div class="toolbar">
+            <button id="copyInviteTemplate" class="btn">Copy template</button>
+            <button id="openNextInvite" class="btn green">Open next unsent WhatsApp</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Invitation Queue</h2>
+          <div class="filters">
+            <input id="inviteSearch" placeholder="Search guest">
+            <select id="inviteQueueFilter">
+              <option value="unsent">Not sent</option>
+              <option value="sent">Sent</option>
+              <option value="all">All</option>
+            </select>
+          </div>
+          <div id="inviteQueue" class="queue"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reminders" class="view">
+      <div class="stats">
+        <article class="stat purple"><strong id="reminderPending">0</strong><span>Still pending</span></article>
+        <article class="stat green"><strong id="reminderResponded">0</strong><span>Responded</span></article>
+        <article class="stat gold"><strong id="remindersSent">0</strong><span>Reminders sent</span></article>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h2>Reminder Message</h2>
+          <label for="reminderTemplate">WhatsApp reminder template</label>
+          <textarea id="reminderTemplate">Dear {{name}} & Family,
+
+A gentle reminder to please confirm your attendance for Seelan “Seela” Moodley’s 16th Day Prayer.
+
+Your personalised RSVP link:
+{{link}}
+
+Thank you.</textarea>
+          <div class="toolbar">
+            <button id="copyReminderTemplate" class="btn">Copy template</button>
+            <button id="openNextReminder" class="btn green">Open next reminder</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Pending Guests</h2>
+          <input id="reminderSearch" placeholder="Search pending guest">
+          <div id="reminderQueue" class="queue"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="guests" class="view">
+      <div class="two-col">
+        <div class="panel">
+          <h2>Add New Guest</h2>
+          <form id="addGuestForm" class="form-grid">
+            <div>
+              <label for="newName">Guest name</label>
+              <input id="newName" required>
+            </div>
+            <div>
+              <label for="newContact">Contact number</label>
+              <input id="newContact" inputmode="tel">
+            </div>
+            <div>
+              <label for="newGroup">Group</label>
+              <input id="newGroup">
+            </div>
+            <div>
+              <label for="newExpected">Expected guests</label>
+              <input id="newExpected" type="number" min="0" value="1">
+            </div>
+            <div>
+              <label for="newStatus">Current status</label>
+              <select id="newStatus">
+                <option value="Pending">Pending</option>
+                <option value="Yes">Confirmed yes</option>
+                <option value="No">Declined</option>
+              </select>
+            </div>
+            <div>
+              <label for="newConfirmed">Confirmed guests</label>
+              <input id="newConfirmed" type="number" min="0" value="0">
+            </div>
+            <div class="full">
+              <label for="newNotes">Notes</label>
+              <textarea id="newNotes"></textarea>
+            </div>
+            <div class="full">
+              <button class="btn primary" type="submit">Add guest to master list</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Update Existing Guest</h2>
+          <div class="form-grid">
+            <div class="full">
+              <label for="editGuestSelect">Select guest</label>
+              <select id="editGuestSelect">
+                <option value="">Choose guest</option>
+              </select>
+            </div>
+            <div>
+              <label for="editStatus">RSVP status</label>
+              <select id="editStatus">
+                <option value="Pending">Pending</option>
+                <option value="Yes">Confirmed yes</option>
+                <option value="No">Declined</option>
+              </select>
+            </div>
+            <div>
+              <label for="editConfirmed">Confirmed guests</label>
+              <input id="editConfirmed" type="number" min="0">
+            </div>
+            <div>
+              <label for="editSent">Invitation sent</label>
+              <select id="editSent">
+                <option value="">Not sent</option>
+                <option value="Yes">Sent</option>
+              </select>
+            </div>
+            <div>
+              <label for="editCheckedIn">Checked in</label>
+              <select id="editCheckedIn">
+                <option value="">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div class="full">
+              <label for="editNotes">Notes</label>
+              <textarea id="editNotes"></textarea>
+            </div>
+            <div class="full">
+              <button id="saveGuestButton" class="btn primary" type="button">Save guest changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
 
   <script>
+    "use strict";
 
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec";
-    
-    async function loadDashboard() {
-      const res = await fetch(SCRIPT_URL);
-      const data = await res.json();
+    const RSVP_BASE_URL = "https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=";
 
-      let total = data.length;
-      let yes = data.filter(x => x.attending === "Yes").length;
-      let no = data.filter(x => x.attending === "No").length;
-      let pending = total - (yes + no);
+    let guests = [];
+    let filteredGuests = [];
 
-      document.getElementById("total").innerText = total;
-      document.getElementById("yes").innerText = yes;
-      document.getElementById("no").innerText = no;
-      document.getElementById("pending").innerText = pending;
+    const $ = (id) => document.getElementById(id);
 
-      let table = document.getElementById("guestList");
-      table.innerHTML = "";
-
-      data.forEach(g => {
-        table.innerHTML += `
-          <tr>
-            <td>${g.name}</td>
-            <td>${g.attending}</td>
-            <td>${g.guests}</td>
-            <td>${g.checkedIn || ""}</td>
-          </tr>
-        `;
-      });
+    function text(value) {
+      return String(value ?? "").trim();
     }
 
-    window.onload = loadDashboard;
+    function normaliseStatus(value) {
+      const status = text(value).toLowerCase();
+      if (["yes", "accepted", "attending", "confirmed"].includes(status)) return "Yes";
+      if (["no", "declined", "not attending"].includes(status)) return "No";
+      return "Pending";
+    }
 
+    function number(value) {
+      const parsed = Number.parseInt(value, 10);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function isSent(guest) {
+      return ["yes", "sent", "true"].includes(text(guest.invitationSent).toLowerCase());
+    }
+
+    function escapeHtml(value) {
+      return text(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function phoneForWhatsApp(value) {
+      let digits = text(value).replace(/\D/g, "");
+      if (!digits) return "";
+      if (digits.startsWith("0")) digits = "27" + digits.slice(1);
+      if (!digits.startsWith("27")) digits = "27" + digits;
+      return digits;
+    }
+
+    function rsvpLink(guestId) {
+      return RSVP_BASE_URL + encodeURIComponent(text(guestId));
+    }
+
+    function fillTemplate(template, guest) {
+      return template
+        .replaceAll("{{name}}", text(guest.name).replace(/\s*&\s*Family$/i, ""))
+        .replaceAll("{{link}}", rsvpLink(guest.guestId));
+    }
+
+    function toast(message, type = "") {
+      const node = $("toast");
+      node.textContent = message;
+      node.className = "toast show" + (type === "error" ? " error" : "");
+      clearTimeout(node._timer);
+      node._timer = setTimeout(() => node.className = "toast", 3200);
+    }
+
+    async function fetchJson(url, options = {}) {
+      const response = await fetch(url, {
+        cache: "no-store",
+        redirect: "follow",
+        ...options
+      });
+
+      if (!response.ok) throw new Error(`Server returned ${response.status}.`);
+
+      const raw = await response.text();
+      try {
+        return JSON.parse(raw);
+      } catch {
+        throw new Error("The server returned an invalid response.");
+      }
+    }
+
+    async function postAction(action, payload = {}) {
+      const body = new URLSearchParams({ action, ...payload });
+      const data = await fetchJson(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: body.toString()
+      });
+      if (data && data.success === false) throw new Error(data.message || "The update failed.");
+      return data;
+    }
+
+    async function loadData(showMessage = true) {
+      try {
+        $("refreshButton").disabled = true;
+        $("refreshButton").textContent = "Refreshing…";
+
+        const data = await fetchJson(`${SCRIPT_URL}?_=${Date.now()}`);
+        const records = Array.isArray(data) ? data : (Array.isArray(data.guests) ? data.guests : []);
+
+        guests = records.map((guest) => ({
+          guestId: text(guest.guestId || guest.id),
+          name: text(guest.name),
+          contactNumber: text(guest.contactNumber),
+          group: text(guest.group),
+          expectedGuests: number(guest.expectedGuests),
+          rsvpStatus: normaliseStatus(guest.rsvpStatus || guest.attending || guest.status),
+          confirmedGuests: number(guest.confirmedGuests || guest.guests),
+          invitationSent: text(guest.invitationSent),
+          sentDate: text(guest.sentDate),
+          reminderCount: number(guest.reminderCount),
+          lastReminder: text(guest.lastReminder),
+          checkedIn: text(guest.checkedIn),
+          responseDate: text(guest.responseDate),
+          notes: text(guest.notes)
+        }));
+
+        populateGroupFilter();
+        populateGuestSelect();
+        renderAll();
+        $("lastUpdated").textContent = "Updated " + new Date().toLocaleString();
+        if (showMessage) toast("Live Google Sheet data refreshed.");
+      } catch (error) {
+        console.error(error);
+        toast(error.message || "Could not load the guest list.", "error");
+      } finally {
+        $("refreshButton").disabled = false;
+        $("refreshButton").textContent = "Refresh live data";
+      }
+    }
+
+    function stats() {
+      const total = guests.length;
+      const attending = guests.filter(g => g.rsvpStatus === "Yes").length;
+      const declined = guests.filter(g => g.rsvpStatus === "No").length;
+      const pending = guests.filter(g => g.rsvpStatus === "Pending").length;
+      const responses = attending + declined;
+      const confirmedPeople = guests.reduce((sum, g) => sum + (g.rsvpStatus === "Yes" ? g.confirmedGuests : 0), 0);
+      const sent = guests.filter(isSent).length;
+      const reminders = guests.reduce((sum, g) => sum + g.reminderCount, 0);
+      return { total, attending, declined, pending, responses, confirmedPeople, sent, reminders };
+    }
+
+    function percentage(part, whole) {
+      return whole > 0 ? Math.round((part / whole) * 100) : 0;
+    }
+
+    function renderStats() {
+      const s = stats();
+
+      $("totalInvitations").textContent = s.total;
+      $("responses").textContent = s.responses;
+      $("attending").textContent = s.attending;
+      $("declined").textContent = s.declined;
+      $("pending").textContent = s.pending;
+      $("confirmedPeople").textContent = s.confirmedPeople;
+
+      const responseRate = percentage(s.responses, s.total);
+      const attendingRate = percentage(s.attending, s.responses);
+      const declinedRate = percentage(s.declined, s.responses);
+
+      $("responseRate").textContent = responseRate + "%";
+      $("attendingRate").textContent = attendingRate + "%";
+      $("declinedRate").textContent = declinedRate + "%";
+
+      $("responseBar").style.width = responseRate + "%";
+      $("attendingBar").style.width = attendingRate + "%";
+      $("declinedBar").style.width = declinedRate + "%";
+
+      $("inviteTotal").textContent = s.total;
+      $("inviteSent").textContent = s.sent;
+      $("inviteUnsent").textContent = s.total - s.sent;
+
+      $("reminderPending").textContent = s.pending;
+      $("reminderResponded").textContent = s.responses;
+      $("remindersSent").textContent = s.reminders;
+    }
+
+    function applyFilters() {
+      const query = text($("searchInput").value).toLowerCase();
+      const status = $("statusFilter").value;
+      const sent = $("sentFilter").value;
+      const group = $("groupFilter").value;
+
+      filteredGuests = guests.filter(g => {
+        const matchesQuery = !query ||
+          g.name.toLowerCase().includes(query) ||
+          g.contactNumber.toLowerCase().includes(query) ||
+          g.guestId.toLowerCase().includes(query);
+
+        const matchesStatus = !status || g.rsvpStatus === status;
+        const matchesSent = !sent ||
+          (sent === "sent" && isSent(g)) ||
+          (sent === "not-sent" && !isSent(g));
+        const matchesGroup = !group || g.group === group;
+
+        return matchesQuery && matchesStatus && matchesSent && matchesGroup;
+      });
+
+      renderGuestTable();
+    }
+
+    function badgeClass(status) {
+      if (status === "Yes") return "yes";
+      if (status === "No") return "no";
+      return "pending";
+    }
+
+    function renderGuestTable() {
+      const tbody = $("guestTable");
+
+      if (!filteredGuests.length) {
+        tbody.innerHTML = `<tr><td colspan="9" class="empty">No guests match the selected filters.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filteredGuests.map(g => `
+        <tr>
+          <td><div class="name-cell">${escapeHtml(g.name)}</div><small>${escapeHtml(g.guestId)}</small></td>
+          <td>${escapeHtml(g.contactNumber)}</td>
+          <td>${escapeHtml(g.group || "—")}</td>
+          <td><span class="badge ${badgeClass(g.rsvpStatus)}">${escapeHtml(g.rsvpStatus)}</span></td>
+          <td>${g.expectedGuests}</td>
+          <td>${g.confirmedGuests}</td>
+          <td>${isSent(g) ? `<span class="badge sent">Sent</span>` : `<span class="badge">Not sent</span>`}</td>
+          <td>${g.reminderCount}</td>
+          <td>
+            <div class="actions">
+              <button class="mini" data-copy="${escapeHtml(g.guestId)}">Copy link</button>
+              <button class="mini whatsapp" data-whatsapp="${escapeHtml(g.guestId)}">WhatsApp</button>
+              <button class="mini" data-edit="${escapeHtml(g.guestId)}">Edit</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function populateGroupFilter() {
+      const groups = [...new Set(guests.map(g => g.group).filter(Boolean))].sort();
+      $("groupFilter").innerHTML = `<option value="">All groups</option>` +
+        groups.map(group => `<option value="${escapeHtml(group)}">${escapeHtml(group)}</option>`).join("");
+    }
+
+    function populateGuestSelect() {
+      $("editGuestSelect").innerHTML = `<option value="">Choose guest</option>` +
+        guests.slice().sort((a,b) => a.name.localeCompare(b.name))
+          .map(g => `<option value="${escapeHtml(g.guestId)}">${escapeHtml(g.name)} (${escapeHtml(g.guestId)})</option>`)
+          .join("");
+    }
+
+    function renderInviteQueue() {
+      const query = text($("inviteSearch").value).toLowerCase();
+      const filter = $("inviteQueueFilter").value;
+
+      const queue = guests.filter(g => {
+        const matchesQuery = !query || g.name.toLowerCase().includes(query);
+        const matchesFilter =
+          filter === "all" ||
+          (filter === "sent" && isSent(g)) ||
+          (filter === "unsent" && !isSent(g));
+        return matchesQuery && matchesFilter;
+      });
+
+      $("inviteQueue").innerHTML = queue.length
+        ? queue.map(g => `
+          <div class="queue-item">
+            <div>
+              <strong>${escapeHtml(g.name)}</strong>
+              <small>${escapeHtml(g.contactNumber || "No contact number")} · ${isSent(g) ? "Sent" : "Not sent"}</small>
+            </div>
+            <div class="actions">
+              <button class="mini" data-copy="${escapeHtml(g.guestId)}">Copy link</button>
+              <button class="mini whatsapp" data-invite="${escapeHtml(g.guestId)}">WhatsApp</button>
+              ${!isSent(g) ? `<button class="mini" data-mark-sent="${escapeHtml(g.guestId)}">Mark sent</button>` : ""}
+            </div>
+          </div>
+        `).join("")
+        : `<div class="empty">No guests in this invitation queue.</div>`;
+    }
+
+    function renderReminderQueue() {
+      const query = text($("reminderSearch").value).toLowerCase();
+      const queue = guests.filter(g =>
+        g.rsvpStatus === "Pending" &&
+        (!query || g.name.toLowerCase().includes(query))
+      );
+
+      $("reminderQueue").innerHTML = queue.length
+        ? queue.map(g => `
+          <div class="queue-item">
+            <div>
+              <strong>${escapeHtml(g.name)}</strong>
+              <small>${escapeHtml(g.contactNumber || "No contact number")} · ${g.reminderCount} reminder(s)</small>
+            </div>
+            <button class="mini whatsapp" data-reminder="${escapeHtml(g.guestId)}">Send reminder</button>
+          </div>
+        `).join("")
+        : `<div class="empty">No pending guests match the search.</div>`;
+    }
+
+    function renderAll() {
+      renderStats();
+      applyFilters();
+      renderInviteQueue();
+      renderReminderQueue();
+    }
+
+    function getGuest(guestId) {
+      return guests.find(g => g.guestId === guestId);
+    }
+
+    function openWhatsApp(guest, message) {
+      const phone = phoneForWhatsApp(guest.contactNumber);
+      if (!phone) {
+        toast(`No valid contact number is available for ${guest.name}.`, "error");
+        return;
+      }
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank", "noopener");
+    }
+
+    async function copyText(value, successMessage) {
+      await navigator.clipboard.writeText(value);
+      toast(successMessage);
+    }
+
+    async function markInvitationSent(guestId) {
+      try {
+        await postAction("markInvitationSent", { guestId });
+        toast("Invitation marked as sent.");
+        await loadData(false);
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    }
+
+    async function recordReminder(guestId) {
+      try {
+        await postAction("recordReminder", { guestId });
+        toast("Reminder recorded.");
+        await loadData(false);
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    }
+
+    function exportCsv() {
+      const headers = [
+        "Guest ID","Name","Contact Number","Group","Expected Guests","RSVP Status",
+        "Confirmed Guests","Invitation Sent","Sent Date","Reminder Count",
+        "Last Reminder","Checked In","Response Date","Notes"
+      ];
+
+      const rows = guests.map(g => [
+        g.guestId,g.name,g.contactNumber,g.group,g.expectedGuests,g.rsvpStatus,
+        g.confirmedGuests,g.invitationSent,g.sentDate,g.reminderCount,
+        g.lastReminder,g.checkedIn,g.responseDate,g.notes
+      ]);
+
+      const csv = [headers, ...rows]
+        .map(row => row.map(value => `"${String(value ?? "").replaceAll('"','""')}"`).join(","))
+        .join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Seelan_RSVP_Export_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function loadGuestIntoEditor(guestId) {
+      const guest = getGuest(guestId);
+      if (!guest) return;
+
+      $("editGuestSelect").value = guestId;
+      $("editStatus").value = guest.rsvpStatus;
+      $("editConfirmed").value = guest.confirmedGuests;
+      $("editSent").value = isSent(guest) ? "Yes" : "";
+      $("editCheckedIn").value = text(guest.checkedIn).toLowerCase() === "yes" ? "Yes" : "";
+      $("editNotes").value = guest.notes;
+      showView("guests");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showView(viewId) {
+      document.querySelectorAll(".view").forEach(view => view.classList.toggle("active", view.id === viewId));
+      document.querySelectorAll(".nav button[data-view]").forEach(button => button.classList.toggle("active", button.dataset.view === viewId));
+
+      const titles = {
+        dashboard: "RSVP Dashboard",
+        invitations: "Send Personalised Invites",
+        reminders: "Reminders & Follow-ups",
+        guests: "Guest Management"
+      };
+
+      $("pageTitle").textContent = titles[viewId] || "RSVP Organiser Panel";
+    }
+
+    document.querySelectorAll(".nav button[data-view]").forEach(button => {
+      button.addEventListener("click", () => showView(button.dataset.view));
+    });
+
+    $("exitButton").addEventListener("click", () => {
+      window.location.href = "rsvp.html?id=G077";
+    });
+
+    $("refreshButton").addEventListener("click", () => loadData());
+    $("exportButton").addEventListener("click", exportCsv);
+
+    ["searchInput","statusFilter","sentFilter","groupFilter"].forEach(id => {
+      $(id).addEventListener("input", applyFilters);
+      $(id).addEventListener("change", applyFilters);
+    });
+
+    ["inviteSearch","inviteQueueFilter"].forEach(id => {
+      $(id).addEventListener("input", renderInviteQueue);
+      $(id).addEventListener("change", renderInviteQueue);
+    });
+
+    $("reminderSearch").addEventListener("input", renderReminderQueue);
+
+    $("copyInviteTemplate").addEventListener("click", () =>
+      copyText($("inviteTemplate").value, "Invitation template copied.")
+    );
+
+    $("copyReminderTemplate").addEventListener("click", () =>
+      copyText($("reminderTemplate").value, "Reminder template copied.")
+    );
+
+    $("openNextInvite").addEventListener("click", () => {
+      const guest = guests.find(g => !isSent(g) && phoneForWhatsApp(g.contactNumber));
+      if (!guest) return toast("There are no unsent guests with valid contact numbers.", "error");
+      openWhatsApp(guest, fillTemplate($("inviteTemplate").value, guest));
+    });
+
+    $("openNextReminder").addEventListener("click", () => {
+      const guest = guests.find(g => g.rsvpStatus === "Pending" && phoneForWhatsApp(g.contactNumber));
+      if (!guest) return toast("There are no pending guests with valid contact numbers.", "error");
+      openWhatsApp(guest, fillTemplate($("reminderTemplate").value, guest));
+    });
+
+    document.addEventListener("click", async (event) => {
+      const target = event.target.closest("button");
+      if (!target) return;
+
+      if (target.dataset.copy) {
+        await copyText(rsvpLink(target.dataset.copy), "Personalised RSVP link copied.");
+      }
+
+      if (target.dataset.whatsapp || target.dataset.invite) {
+        const guest = getGuest(target.dataset.whatsapp || target.dataset.invite);
+        if (guest) openWhatsApp(guest, fillTemplate($("inviteTemplate").value, guest));
+      }
+
+      if (target.dataset.markSent) {
+        await markInvitationSent(target.dataset.markSent);
+      }
+
+      if (target.dataset.reminder) {
+        const guest = getGuest(target.dataset.reminder);
+        if (guest) {
+          openWhatsApp(guest, fillTemplate($("reminderTemplate").value, guest));
+          await recordReminder(guest.guestId);
+        }
+      }
+
+      if (target.dataset.edit) {
+        loadGuestIntoEditor(target.dataset.edit);
+      }
+    });
+
+    $("addGuestForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      try {
+        await postAction("addGuest", {
+          name: $("newName").value,
+          contactNumber: $("newContact").value,
+          group: $("newGroup").value,
+          expectedGuests: $("newExpected").value,
+          rsvpStatus: $("newStatus").value,
+          confirmedGuests: $("newConfirmed").value,
+          notes: $("newNotes").value
+        });
+
+        event.target.reset();
+        $("newExpected").value = 1;
+        $("newConfirmed").value = 0;
+        toast("New guest added successfully.");
+        await loadData(false);
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    });
+
+    $("editGuestSelect").addEventListener("change", () => {
+      const guest = getGuest($("editGuestSelect").value);
+      if (!guest) return;
+
+      $("editStatus").value = guest.rsvpStatus;
+      $("editConfirmed").value = guest.confirmedGuests;
+      $("editSent").value = isSent(guest) ? "Yes" : "";
+      $("editCheckedIn").value = text(guest.checkedIn).toLowerCase() === "yes" ? "Yes" : "";
+      $("editNotes").value = guest.notes;
+    });
+
+    $("saveGuestButton").addEventListener("click", async () => {
+      const guestId = $("editGuestSelect").value;
+      if (!guestId) return toast("Select a guest to update.", "error");
+
+      try {
+        await postAction("updateGuest", {
+          guestId,
+          rsvpStatus: $("editStatus").value,
+          confirmedGuests: $("editConfirmed").value,
+          invitationSent: $("editSent").value,
+          checkedIn: $("editCheckedIn").value,
+          notes: $("editNotes").value
+        });
+
+        toast("Guest record updated.");
+        await loadData(false);
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    });
+
+    loadData(false);
   </script>
-
 </body>
 </html>
