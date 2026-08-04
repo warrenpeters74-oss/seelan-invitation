@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>Seelan RSVP Organiser Panel</title>
+  <title>RSVP Organiser Panel</title>
 
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
@@ -53,7 +53,7 @@
       align-items: center;
       gap: 18px;
       padding: 18px 22px;
-      background: rgba(47, 30, 13, 0.97);
+      background: linear-gradient(90deg, #061a3b 0%, #0a2a5f 58%, #071f4a 100%);
       color: #fff8e9;
       border-bottom: 3px solid var(--gold-2);
       box-shadow: 0 8px 24px rgba(33, 21, 8, 0.18);
@@ -64,7 +64,7 @@
       font-family: "Cormorant Garamond", Georgia, serif;
       font-size: 31px;
       font-style: italic;
-      color: #ffe9b5;
+      color: #f5d78f;
       white-space: nowrap;
     }
 
@@ -78,7 +78,7 @@
       padding: 11px 14px;
       border: 1px solid transparent;
       background: transparent;
-      color: #f8e7c0;
+      color: #f7e7bb;
       text-transform: uppercase;
       letter-spacing: 1.6px;
       font-size: 12px;
@@ -97,7 +97,7 @@
 
     .hero h1 {
       margin: 0;
-      color: #342113;
+      color: var(--navy);
       font-family: "Cormorant Garamond", Georgia, serif;
       font-size: clamp(44px, 6vw, 72px);
       font-weight: 600;
@@ -110,6 +110,80 @@
       text-transform: uppercase;
       letter-spacing: 3px;
       font-size: 13px;
+    }
+
+
+    .dashboard-identity {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px;
+      gap: 26px;
+      align-items: center;
+      margin-bottom: 22px;
+      padding: 22px 24px;
+      background:
+        linear-gradient(135deg, rgba(255,253,248,0.98), rgba(250,245,233,0.96));
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--navy);
+      box-shadow: var(--shadow);
+    }
+
+    .dashboard-identity h2 {
+      margin: 0;
+      color: var(--navy);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1;
+    }
+
+    .dashboard-identity p {
+      margin: 10px 0 0;
+      color: #65728a;
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 760px;
+    }
+
+    .memorial-portrait {
+      text-align: center;
+    }
+
+    .memorial-portrait-frame {
+      width: 152px;
+      height: 152px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 4px solid #fff;
+      outline: 2px solid var(--gold);
+      border-radius: 50%;
+      background: var(--cream);
+      box-shadow: 0 10px 24px rgba(7,31,74,0.18);
+    }
+
+    .memorial-portrait-frame img {
+      width: 310%;
+      height: 310%;
+      object-fit: cover;
+      object-position: 82% 13%;
+      transform: translate(-59%, -5%);
+      display: block;
+    }
+
+    .memorial-name {
+      margin-top: 12px;
+      color: var(--navy);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .memorial-subtitle {
+      margin-top: 3px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
     }
 
     .toolbar {
@@ -133,7 +207,7 @@
     .btn:hover { transform: translateY(-1px); }
 
     .btn.primary {
-      background: linear-gradient(90deg, #a76d10, #c28b25);
+      background: linear-gradient(90deg, #071f4a 0%, #143665 58%, #a76d10 100%);
       color: #fff;
     }
 
@@ -144,8 +218,8 @@
     }
 
     .btn.green {
-      background: #1f9d6f;
-      border-color: #1f9d6f;
+      background: var(--navy-2);
+      border-color: var(--navy-2);
       color: #fff;
     }
 
@@ -198,7 +272,7 @@
 
     .stat strong {
       display: block;
-      color: #322014;
+      color: var(--navy);
       font-family: "Cormorant Garamond", Georgia, serif;
       font-size: 50px;
       line-height: 1;
@@ -207,7 +281,7 @@
     .stat span {
       display: block;
       margin-top: 8px;
-      color: #675742;
+      color: #5d6b82;
       text-transform: uppercase;
       letter-spacing: 2px;
       font-size: 12px;
@@ -225,7 +299,7 @@
     .panel h2,
     .panel h3 {
       margin: 0 0 15px;
-      color: #3b2414;
+      color: var(--navy);
       font-family: "Cormorant Garamond", Georgia, serif;
       font-size: 35px;
     }
@@ -299,7 +373,7 @@
       top: 0;
       z-index: 2;
       padding: 12px;
-      background: #3d260f;
+      background: linear-gradient(90deg, #071f4a, #143665);
       color: #fff6df;
       text-align: left;
       text-transform: uppercase;
@@ -439,10 +513,70 @@
     .toast.show { display: block; }
     .toast.error { border-color: var(--red); color: var(--red); }
 
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .schedule-card {
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(255,253,248,.98), rgba(250,245,233,.96));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .schedule-card h3 {
+      margin: 0 0 8px;
+      color: var(--navy);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 29px;
+    }
+
+    .schedule-card p { margin: 0 0 14px; color: var(--muted); line-height: 1.55; }
+
+    .checklist { display: grid; gap: 10px; }
+
+    .check-item {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid rgba(167,109,16,.18);
+      background: rgba(255,255,255,.7);
+    }
+
+    .check-item input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--gold); }
+    .check-item strong { display: block; color: var(--navy); margin-bottom: 3px; }
+    .check-item small { display: block; color: var(--muted); line-height: 1.4; }
+    .test-result { min-width: 86px; padding: 6px 8px; border: 1px solid var(--line); font-size: 11px; }
+
+    .timeline { display: grid; gap: 12px; }
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 125px 1fr 150px;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      border-left: 4px solid var(--gold);
+      background: rgba(255,255,255,.74);
+    }
+    .timeline-row strong { color: var(--navy); }
+    .timeline-row span { color: var(--muted); line-height: 1.45; }
+    .timeline-row select { padding: 8px; }
+
+    .portal-links { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .portal-link { padding: 16px; border: 1px solid var(--line); background: rgba(255,255,255,.72); }
+    .portal-link code { display:block; margin: 8px 0 12px; overflow-wrap:anywhere; color: var(--navy); }
+
     @media (max-width: 960px) {
       .stats { grid-template-columns: repeat(3, 1fr); }
       .filters { grid-template-columns: 1fr 1fr; }
       .two-col { grid-template-columns: 1fr; }
+      .schedule-grid, .portal-links { grid-template-columns: 1fr; }
+      .timeline-row { grid-template-columns: 100px 1fr; }
+      .timeline-row select { grid-column: 1 / -1; }
     }
 
     @media (max-width: 640px) {
@@ -452,24 +586,41 @@
       .nav { width: 100%; }
       .nav button { flex: 1 1 42%; }
       .hero { padding-top: 24px; }
+
+      .dashboard-identity {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .dashboard-identity p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
       .stats { grid-template-columns: 1fr 1fr; }
       .stat strong { font-size: 40px; }
       .progress-row { grid-template-columns: 1fr; gap: 6px; }
       .filters, .form-grid { grid-template-columns: 1fr; }
       .form-grid .full { grid-column: auto; }
       .updated { width: 100%; margin-left: 0; }
+      .check-item { grid-template-columns: 24px 1fr; }
+      .check-item .test-result { grid-column: 2; }
+      .timeline-row { grid-template-columns: 1fr; }
+      .timeline-row select { grid-column: auto; }
     }
   </style>
 </head>
 
 <body>
   <header class="topbar">
-    <div class="brand">Seelan RSVP Organiser Panel</div>
+    <div class="brand">RSVP Organiser Panel</div>
     <nav class="nav" aria-label="Admin navigation">
       <button class="active" data-view="dashboard">Dashboard</button>
       <button data-view="invitations">Send Invites</button>
       <button data-view="reminders">Reminders</button>
       <button data-view="guests">Guest Management</button>
+      <button data-view="rollout">Rollout Schedule</button>
+      <button data-view="testplan">Test Plan</button>
       <button id="exitButton">Exit to RSVP Form</button>
     </nav>
   </header>
@@ -477,7 +628,7 @@
   <main class="shell">
     <section class="hero">
       <h1 id="pageTitle">RSVP Dashboard</h1>
-      <p>Seelan “Seela” Moodley · Live from Google Sheets</p>
+      <p>Live RSVP Control · Google Sheets Integration</p>
     </section>
 
     <div class="toolbar">
@@ -487,6 +638,24 @@
     </div>
 
     <section id="dashboard" class="view active">
+
+    <div class="panel" style="border-left:5px solid var(--gold);">
+      <strong style="color:var(--navy);">Browser access note:</strong>
+      Use the live GitHub Pages Admin address for normal operation. ChatGPT Preview may repeatedly request permission whenever the portal connects to Google Apps Script.
+    </div>
+      <div class="dashboard-identity">
+        <div>
+          <h2>Invitation & Attendance Control</h2>
+          <p>Manage personalised invitations, responses, reminders, guest numbers and event readiness from one central administration portal.</p>
+        </div>
+        <div class="memorial-portrait">
+          <div class="memorial-portrait-frame">
+            <img src="seelan-invitation.jpg" alt="Seelan Seela Moodley">
+          </div>
+          <div class="memorial-name">Seelan “Seela” Moodley</div>
+          <div class="memorial-subtitle">16th Day Prayer</div>
+        </div>
+      </div>
       <div class="stats">
         <article class="stat"><strong id="totalInvitations">0</strong><span>Total invitations</span></article>
         <article class="stat gold"><strong id="responses">0</strong><span>Responses</span></article>
@@ -568,12 +737,15 @@
           <label for="inviteTemplate">WhatsApp message template</label>
           <textarea id="inviteTemplate">Dear {{name}} & Family,
 
-The Moodley Family warmly invites you to join us for Seelan “Seela” Moodley’s 16th Day Prayer.
+Please find your personalised invitation to Seelan “Seela” Moodley’s 16th Day Prayer at the link below:
 
-Please view your personalised invitation and confirm attendance here:
 {{link}}
 
-Your presence and prayers will be deeply appreciated.</textarea>
+Kindly confirm whether you will be attending by completing the RSVP details on the invitation page.
+
+For any questions, please contact Shai on 076 588 2192.
+
+Thank you.</textarea>
           <div class="toolbar">
             <button id="copyInviteTemplate" class="btn">Copy template</button>
             <button id="openNextInvite" class="btn green">Open next unsent WhatsApp</button>
@@ -713,6 +885,71 @@ Thank you.</textarea>
             <div class="full">
               <button id="saveGuestButton" class="btn primary" type="button">Save guest changes</button>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="rollout" class="view">
+      <div class="panel">
+        <h2>Invitation & Follow-up Rollout Schedule</h2>
+        <p>This operating schedule provides a controlled sequence for final testing, issuing invitations, reminders and event-day reconciliation.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Portal Addresses</h3>
+        <div class="portal-links">
+          <div class="portal-link"><strong>Guest Invitation Portal</strong><code>https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID</code><button class="btn" data-copy-static="https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID">Copy address format</button></div>
+          <div class="portal-link"><strong>Administration Portal</strong><code>https://warrenpeters74-oss.github.io/seelan-invitation/admin.html</code><button class="btn" data-copy-static="https://warrenpeters74-oss.github.io/seelan-invitation/admin.html">Copy Admin address</button></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Operational Schedule</h3>
+        <div class="timeline">
+          <div class="timeline-row"><strong>Stage 1</strong><span><b>Final technical testing:</b> Complete all test-plan scenarios using G077, G081 and one temporary test guest. Correct all failures before release.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 2</strong><span><b>Guest-list freeze:</b> Validate names, mobile numbers, household grouping and expected guest counts. Remove duplicate or obsolete records.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 3</strong><span><b>Initial invitation issue:</b> Send personalised WhatsApp invitations in controlled batches. Mark each invitation sent immediately after sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 4</strong><span><b>First reconciliation:</b> Review delivery issues, incorrect numbers and early responses. Manually capture telephone confirmations or declines.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 5</strong><span><b>First reminder:</b> Send reminders only to guests still marked Pending. Review reminder count before sending.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 6</strong><span><b>Final reminder and catering count:</b> Contact remaining priority guests and lock the confirmed guest count for catering.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+          <div class="timeline-row"><strong>Stage 7</strong><span><b>Event-day control:</b> Use the Admin portal for final guest lookup and optional check-in recording. Export a final backup before the event.</span><select><option>Not started</option><option>In progress</option><option>Complete</option></select></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testplan" class="view">
+      <div class="panel">
+        <h2>End-to-End Test Plan Guide</h2>
+        <p>Complete each scenario in sequence. Tick the scenario only after the website action, Google Sheet update and Admin dashboard result have all been verified.</p>
+        <div class="toolbar">
+          <button id="resetTestPlan" class="btn">Reset test plan</button>
+          <button id="printTestPlan" class="btn navy">Print / Save as PDF</button>
+        </div>
+      </div>
+
+      <div class="schedule-grid">
+        <div class="schedule-card">
+          <h3>Guest RSVP Scenarios</h3>
+          <div id="testChecklist" class="checklist">
+            <label class="check-item"><input type="checkbox" data-test="personalised"><span><strong>1. Personalised link</strong><small>Open G077. Confirm the correct name plus “& Family” appears and the locked invitation loads.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="accept"><span><strong>2. Accept invitation</strong><small>Select Yes, change members attending, add an optional note and submit. Confirm RSVP Status, Confirmed Guests, Response Date and Notes update in the Sheet.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="decline"><span><strong>3. Decline invitation</strong><small>Use G081, select No and submit. Confirm RSVP Status becomes No and Confirmed Guests becomes 0.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="update"><span><strong>4. Update a previous response</strong><small>Reopen a responded guest, change the status or guest count, resubmit and verify the original row is updated rather than duplicated.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="invalid"><span><strong>5. Invalid Guest ID</strong><small>Open the RSVP page with an invalid ID. Confirm a clear error appears and no Sheet record changes.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+          </div>
+        </div>
+
+        <div class="schedule-card">
+          <h3>Administration Scenarios</h3>
+          <div class="checklist">
+            <label class="check-item"><input type="checkbox" data-test="dashboard"><span><strong>6. Dashboard reconciliation</strong><small>Reconcile total, Yes, No, Pending and Confirmed People counts to the Google Sheet.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="addguest"><span><strong>7. Add a new guest</strong><small>Add a temporary test guest. Confirm a new sequential Guest ID is created and the guest appears in all relevant lists.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="manual"><span><strong>8. Manual confirmation</strong><small>Update a guest to Yes or No in Guest Management and verify the Sheet, dashboard and RSVP page reflect the change.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="sent"><span><strong>9. Invitation sent tracking</strong><small>Open a WhatsApp invitation, mark it sent and verify Invitation Sent and Sent Date are recorded.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="reminder"><span><strong>10. Reminder tracking</strong><small>Send one test reminder and confirm Reminder Count increments and Last Reminder records a date/time.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="mobile"><span><strong>11. Browser and mobile validation</strong><small>Test Chrome desktop, Android/iPhone view, WhatsApp opening and return navigation.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
           </div>
         </div>
       </div>
@@ -1117,7 +1354,9 @@ Thank you.</textarea>
         dashboard: "RSVP Dashboard",
         invitations: "Send Personalised Invites",
         reminders: "Reminders & Follow-ups",
-        guests: "Guest Management"
+        guests: "Guest Management",
+        rollout: "Invitation Rollout Schedule",
+        testplan: "Test Plan & Quality Assurance"
       };
 
       $("pageTitle").textContent = titles[viewId] || "RSVP Organiser Panel";
@@ -1252,6 +1491,41 @@ Thank you.</textarea>
       }
     });
 
+    document.addEventListener("change", (event) => {
+      if (event.target.matches("[data-test], .test-result, #rollout select")) {
+        const state = {};
+        document.querySelectorAll("[data-test]").forEach(node => state[`check_${node.dataset.test}`] = node.checked);
+        document.querySelectorAll(".test-result").forEach((node, index) => state[`result_${index}`] = node.value);
+        document.querySelectorAll("#rollout select").forEach((node, index) => state[`rollout_${index}`] = node.value);
+        localStorage.setItem("rsvpAdminSchedules", JSON.stringify(state));
+      }
+    });
+
+    function restoreScheduleState() {
+      try {
+        const state = JSON.parse(localStorage.getItem("rsvpAdminSchedules") || "{}");
+        document.querySelectorAll("[data-test]").forEach(node => node.checked = Boolean(state[`check_${node.dataset.test}`]));
+        document.querySelectorAll(".test-result").forEach((node, index) => { if (state[`result_${index}`]) node.value = state[`result_${index}`]; });
+        document.querySelectorAll("#rollout select").forEach((node, index) => { if (state[`rollout_${index}`]) node.value = state[`rollout_${index}`]; });
+      } catch (error) { console.warn(error); }
+    }
+
+    $("resetTestPlan").addEventListener("click", () => {
+      document.querySelectorAll("[data-test]").forEach(node => node.checked = false);
+      document.querySelectorAll(".test-result").forEach(node => node.value = "Not tested");
+      localStorage.removeItem("rsvpAdminSchedules");
+      toast("Test plan reset.");
+    });
+
+    $("printTestPlan").addEventListener("click", () => window.print());
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy-static]");
+      if (!button) return;
+      await copyText(button.dataset.copyStatic, "Portal address copied.");
+    });
+
+    restoreScheduleState();
     loadData(false);
   </script>
 </body>
