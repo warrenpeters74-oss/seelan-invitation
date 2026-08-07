@@ -840,6 +840,65 @@ Thank you.</textarea>
         </div>
       </div>
 
+      <div class="panel" id="manualVenuePanel" style="border-left:5px solid var(--navy);">
+        <h2>Manual Venue Update</h2>
+        <p style="margin-top:-4px;color:var(--muted);line-height:1.55;">
+          Use this when a guest confirms the venue update verbally, by telephone or by WhatsApp.
+          The original RSVP remains unchanged; this records only the venue-update status, comments and any attendance change.
+        </p>
+
+        <div class="form-grid">
+          <div class="full">
+            <label for="manualVenueGuest">Select accepted guest</label>
+            <select id="manualVenueGuest">
+              <option value="">Choose accepted guest</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="manualVenueAccessCode">Estate entry code</label>
+            <input id="manualVenueAccessCode" readonly>
+          </div>
+
+          <div>
+            <label for="manualVenueSent">Venue update sent</label>
+            <select id="manualVenueSent">
+              <option value="">Leave as current</option>
+              <option value="Yes">Mark as sent</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="manualVenueAcknowledged">Venue update acknowledged</label>
+            <select id="manualVenueAcknowledged">
+              <option value="">Leave as current</option>
+              <option value="Yes">Mark as acknowledged</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="manualAttendanceChange">Attendance after venue update</label>
+            <select id="manualAttendanceChange">
+              <option value="">No change / leave blank</option>
+              <option value="Still Attending">Still attending</option>
+              <option value="No Longer Attending">No longer attending</option>
+            </select>
+          </div>
+
+          <div class="full">
+            <label for="manualVenueComments">Venue update comments / verbal confirmation note</label>
+            <textarea id="manualVenueComments" placeholder="Example: Verbally confirmed with Rani — venue update received and still attending."></textarea>
+          </div>
+
+          <div class="full">
+            <div id="manualVenueCurrent" style="margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.5;">
+              Select an accepted guest to view the current venue-update status.
+            </div>
+            <button id="saveManualVenueButton" class="btn primary" type="button">Save venue update</button>
+          </div>
+        </div>
+      </div>
+
       <div class="panel">
         <h2>Venue Update Tracking</h2>
         <div class="table-wrap">
@@ -953,33 +1012,43 @@ Thank you.</textarea>
       </div>
     </section>
     <section id="reminders" class="view">
+      <div class="panel" style="border-left:5px solid var(--gold);">
+        <h2>Venue Update Reminders</h2>
+        <p>Reminders are shown only for accepted guests whose venue update has already been marked as sent but who have not yet acknowledged it.</p>
+      </div>
+
       <div class="stats">
-        <article class="stat purple"><strong id="reminderPending">0</strong><span>Still pending</span></article>
-        <article class="stat green"><strong id="reminderResponded">0</strong><span>Responded</span></article>
-        <article class="stat gold"><strong id="remindersSent">0</strong><span>Reminders sent</span></article>
+        <article class="stat purple"><strong id="reminderPending">0</strong><span>Awaiting acknowledgement</span></article>
+        <article class="stat green"><strong id="reminderResponded">0</strong><span>Acknowledged</span></article>
+        <article class="stat gold"><strong id="remindersSent">0</strong><span>Reminder records</span></article>
       </div>
 
       <div class="two-col">
         <div class="panel">
           <h2>Reminder Message</h2>
-          <label for="reminderTemplate">WhatsApp reminder template</label>
+          <label for="reminderTemplate">WhatsApp venue-update reminder</label>
           <textarea id="reminderTemplate">Dear {{name}} & Family,
 
-A gentle reminder to please confirm your attendance for Seelan “Seela” Moodley’s 16th Day Prayer.
+A gentle reminder regarding the important venue update for Seelan “Seela” Moodley’s 16th Day Prayer.
 
-Your personalised RSVP link:
+Please open your personalised invitation below to view the updated venue details, Google Maps location and your access code, and kindly acknowledge receipt of the venue update:
+
 {{link}}
+
+We apologise again for the late notice and look forward to seeing you at the Prayer Service.
+
+For any assistance, please contact Shai on 076 588 2192.
 
 Thank you.</textarea>
           <div class="toolbar">
-            <button id="copyReminderTemplate" class="btn">Copy template</button>
-            <button id="openNextReminder" class="btn green">Open next reminder</button>
+            <button id="copyReminderTemplate" class="btn">Copy reminder template</button>
+            <button id="openNextReminder" class="btn green">Open next venue reminder</button>
           </div>
         </div>
 
         <div class="panel">
-          <h2>Pending Guests</h2>
-          <input id="reminderSearch" placeholder="Search pending guest">
+          <h2>Awaiting Acknowledgement</h2>
+          <input id="reminderSearch" placeholder="Search accepted guest">
           <div id="reminderQueue" class="queue"></div>
         </div>
       </div>
@@ -1241,6 +1310,7 @@ Thank you.</textarea>
 
         populateGroupFilter();
         populateGuestSelect();
+        populateManualVenueGuestSelect();
         renderAll();
         $("lastUpdated").textContent = "Updated " + new Date().toLocaleString();
         if (showMessage) toast("Live Google Sheet data refreshed.");
@@ -1307,8 +1377,8 @@ Thank you.</textarea>
       if ($("venueOutstanding")) $("venueOutstanding").textContent = s.venueOutstanding;
       if ($("venueAwaitingAck")) $("venueAwaitingAck").textContent = Math.max(0, s.venueAwaitingAck);
 
-      $("reminderPending").textContent = s.pending;
-      $("reminderResponded").textContent = s.responses;
+      $("reminderPending").textContent = s.venueAwaitingAck;
+      $("reminderResponded").textContent = s.venueAcknowledged;
       $("remindersSent").textContent = s.reminders;
     }
 
@@ -1382,6 +1452,69 @@ Thank you.</textarea>
         guests.slice().sort((a,b) => a.name.localeCompare(b.name))
           .map(g => `<option value="${escapeHtml(g.guestId)}">${escapeHtml(g.name)} (${escapeHtml(g.guestId)})</option>`)
           .join("");
+    }
+
+    function populateManualVenueGuestSelect() {
+      const select = $("manualVenueGuest");
+      if (!select) return;
+
+      const accepted = guests
+        .filter(g => g.rsvpStatus === "Yes")
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      const current = select.value;
+
+      select.innerHTML =
+        `<option value="">Choose accepted guest</option>` +
+        accepted.map(g =>
+          `<option value="${escapeHtml(g.guestId)}">${escapeHtml(g.name)} (${escapeHtml(g.guestId)})</option>`
+        ).join("");
+
+      if (accepted.some(g => g.guestId === current)) {
+        select.value = current;
+      }
+
+      renderManualVenueGuest();
+    }
+
+    function renderManualVenueGuest() {
+      const select = $("manualVenueGuest");
+      if (!select) return;
+
+      const guest = getGuest(select.value);
+      const current = $("manualVenueCurrent");
+
+      if (!guest) {
+        $("manualVenueAccessCode").value = "";
+        $("manualVenueSent").value = "";
+        $("manualVenueAcknowledged").value = "";
+        $("manualAttendanceChange").value = "";
+        $("manualVenueComments").value = "";
+        current.textContent = "Select an accepted guest to view the current venue-update status.";
+        return;
+      }
+
+      $("manualVenueAccessCode").value = guest.estateEntryCode || "";
+      $("manualVenueSent").value = "";
+      $("manualVenueAcknowledged").value = "";
+      $("manualAttendanceChange").value = guest.attendanceChangeAfterVenueUpdate || "";
+      $("manualVenueComments").value = guest.venueUpdateComments || "";
+
+      const sentText = isVenueSent(guest)
+        ? `Sent: Yes${guest.venueUpdateSentDate ? " (" + guest.venueUpdateSentDate + ")" : ""}`
+        : "Sent: No";
+
+      const ackText = isVenueAcknowledged(guest)
+        ? `Acknowledged: Yes${guest.venueAcknowledgedDate ? " (" + guest.venueAcknowledgedDate + ")" : ""}`
+        : "Acknowledged: No";
+
+      const attendanceText = guest.attendanceChangeAfterVenueUpdate
+        ? `Attendance change: ${guest.attendanceChangeAfterVenueUpdate}`
+        : "Attendance change: None recorded";
+
+      current.innerHTML =
+        `<strong>Current status:</strong> ${escapeHtml(sentText)} · ${escapeHtml(ackText)} · ${escapeHtml(attendanceText)}`;
     }
 
     function renderVenueQueue() {
@@ -1465,9 +1598,15 @@ Thank you.</textarea>
 
     function renderReminderQueue() {
       const query = text($("reminderSearch").value).toLowerCase();
+
       const queue = guests.filter(g =>
-        g.rsvpStatus === "Pending" &&
-        (!query || g.name.toLowerCase().includes(query))
+        g.rsvpStatus === "Yes" &&
+        isVenueSent(g) &&
+        !isVenueAcknowledged(g) &&
+        (!query ||
+          g.name.toLowerCase().includes(query) ||
+          g.guestId.toLowerCase().includes(query) ||
+          g.contactNumber.toLowerCase().includes(query))
       );
 
       $("reminderQueue").innerHTML = queue.length
@@ -1475,12 +1614,16 @@ Thank you.</textarea>
           <div class="queue-item">
             <div>
               <strong>${escapeHtml(g.name)}</strong>
-              <small>${escapeHtml(g.contactNumber || "No contact number")} · ${g.reminderCount} reminder(s)</small>
+              <small>
+                ${escapeHtml(g.contactNumber || "No contact number")}
+                · Access ${escapeHtml(g.estateEntryCode || "MISSING")}
+                · ${g.reminderCount} reminder record(s)
+              </small>
             </div>
-            <button class="mini whatsapp" data-reminder="${escapeHtml(g.guestId)}">Send reminder</button>
+            <button class="mini whatsapp" data-reminder="${escapeHtml(g.guestId)}">Send venue reminder</button>
           </div>
         `).join("")
-        : `<div class="empty">No pending guests match the search.</div>`;
+        : `<div class="empty">No sent venue updates are awaiting acknowledgement.</div>`;
     }
 
     function renderAll() {
@@ -1557,7 +1700,7 @@ Thank you.</textarea>
     async function recordReminder(guestId) {
       try {
         await postAction("recordReminder", { guestId });
-        toast("Reminder recorded.");
+        toast("Venue reminder recorded.");
         await loadData(false);
       } catch (error) {
         toast(error.message, "error");
@@ -1668,8 +1811,13 @@ Thank you.</textarea>
     });
 
     $("openNextReminder").addEventListener("click", () => {
-      const guest = guests.find(g => g.rsvpStatus === "Pending" && phoneForWhatsApp(g.contactNumber));
-      if (!guest) return toast("There are no pending guests with valid contact numbers.", "error");
+      const guest = guests.find(g =>
+        g.rsvpStatus === "Yes" &&
+        isVenueSent(g) &&
+        !isVenueAcknowledged(g) &&
+        phoneForWhatsApp(g.contactNumber)
+      );
+      if (!guest) return toast("There are no sent venue updates awaiting acknowledgement with a valid contact number.", "error");
       openWhatsApp(guest, fillTemplate($("reminderTemplate").value, guest));
     });
 
@@ -1709,6 +1857,66 @@ Thank you.</textarea>
 
       if (target.dataset.edit) {
         loadGuestIntoEditor(target.dataset.edit);
+      }
+    });
+
+    $("manualVenueGuest").addEventListener("change", renderManualVenueGuest);
+
+    $("saveManualVenueButton").addEventListener("click", async () => {
+      const guestId = $("manualVenueGuest").value;
+      if (!guestId) return toast("Select an accepted guest first.", "error");
+
+      const guest = getGuest(guestId);
+      if (!guest) return toast("The selected guest could not be found.", "error");
+
+      const markSent = $("manualVenueSent").value === "Yes";
+      const markAcknowledged = $("manualVenueAcknowledged").value === "Yes";
+      const comments = text($("manualVenueComments").value);
+      const attendanceChange = text($("manualAttendanceChange").value);
+
+      const commentsChanged = comments !== text(guest.venueUpdateComments);
+      const attendanceChanged = attendanceChange !== text(guest.attendanceChangeAfterVenueUpdate);
+
+      if (!markSent && !markAcknowledged && !commentsChanged && !attendanceChanged) {
+        return toast("No venue-update changes were selected.", "error");
+      }
+
+      try {
+        $("saveManualVenueButton").disabled = true;
+        $("saveManualVenueButton").textContent = "Saving…";
+
+        if (markSent && !isVenueSent(guest)) {
+          await postAction("markVenueUpdateSent", { guestId });
+        }
+
+        if (markAcknowledged) {
+          await postAction("submitVenueUpdate", {
+            guestId,
+            acknowledged: "Yes",
+            venueUpdateAcknowledged: "Yes",
+            comments,
+            venueUpdateComments: comments,
+            attendanceChange,
+            attendanceChangeAfterVenueUpdate: attendanceChange
+          });
+        } else if (commentsChanged || attendanceChanged) {
+          await postAction("updateGuest", {
+            guestId,
+            venueUpdateComments: comments,
+            attendanceChangeAfterVenueUpdate: attendanceChange
+          });
+        }
+
+        toast("Venue update recorded.");
+        await loadData(false);
+        $("manualVenueGuest").value = guestId;
+        renderManualVenueGuest();
+      } catch (error) {
+        console.error(error);
+        toast(error.message || "Could not save the venue update.", "error");
+      } finally {
+        $("saveManualVenueButton").disabled = false;
+        $("saveManualVenueButton").textContent = "Save venue update";
       }
     });
 
