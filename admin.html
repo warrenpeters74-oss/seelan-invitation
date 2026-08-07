@@ -161,7 +161,7 @@
       width: 196px;
       height: 214px;
       overflow: hidden;
-      background: url("seelan-invitation.jpg") 82% 10% / 350% auto no-repeat;
+      background: url("seelan-invitation-venue-update.png") 82% 10% / 350% auto no-repeat;
       border: 0;
       outline: 0;
       border-radius: 0;
@@ -667,7 +667,7 @@
     <div class="brand">RSVP Organiser Panel - Seelan “Seela” Moodley</div>
     <nav class="nav" aria-label="Admin navigation">
       <button class="active" data-view="dashboard">Dashboard</button>
-      <button data-view="invitations">Send Invites</button>
+      <button data-view="venueupdate">Venue Update</button>
       <button data-view="guests">Guest Management</button>
       <button data-view="reminders">Reminders</button>
       <button data-view="testplan">Test Plan</button>
@@ -698,7 +698,7 @@
       <div class="dashboard-identity">
         <div>
           <h2>Invitation & Attendance Control</h2>
-          <p>Manage personalised invitations, responses, reminders, guest numbers and event readiness from one central administration portal.</p>
+          <p>Manage accepted guests, venue-update WhatsApps, personalised access codes, acknowledgements, comments and event readiness from one central administration portal.</p>
         </div>
         <div class="memorial-portrait">
           <div class="memorial-portrait-frame">
@@ -779,68 +779,87 @@
 
 
 
-    <section id="invitations" class="view">
+    <section id="venueupdate" class="view">
+      <div class="panel" style="border-left:5px solid var(--gold);">
+        <h2>Venue Update Control</h2>
+        <p><strong>Purpose:</strong> Send the venue change only to guests who previously accepted the invitation. Each personalised link displays the guest's 8-digit estate access code and allows them to acknowledge the update and submit comments.</p>
+        <p><strong>Important:</strong> Mark the venue update as sent immediately after sending the WhatsApp message so the tracker remains accurate.</p>
+      </div>
 
-        <div class="panel" style="border-left:5px solid var(--gold);">
-          <h2>Invitation Deadline & Send Control</h2>
-          <p><strong>Response deadline:</strong> Thursday, 6 August 2026 at 10:00.</p>
-          <p><strong>Today’s priority:</strong> Send every outstanding invitation before close of business today, then confirm that the <em>Not yet sent</em> total is zero.</p>
-          <div class="timeline">
-            <div class="timeline-row">
-              <strong>4 August</strong>
-              <span><b>Initial distribution:</b> Send all personalised invitations and mark each guest as sent.</span>
-              <select><option>Not started</option><option>In progress</option><option>Complete</option></select>
-            </div>
-            <div class="timeline-row">
-              <strong>5 August</strong>
-              <span><b>Daily reminder 1:</b> Contact only guests still marked Pending and record each reminder.</span>
-              <select><option>Not started</option><option>In progress</option><option>Complete</option></select>
-            </div>
-            <div class="timeline-row">
-              <strong>6 August</strong>
-              <span><b>Final reminder:</b> Send the final follow-up early in the morning and close responses at 10:00.</span>
-              <select><option>Not started</option><option>In progress</option><option>Complete</option></select>
-            </div>
-          </div>
-        </div>
       <div class="stats">
-        <article class="stat"><strong id="inviteTotal">0</strong><span>Total guests</span></article>
-        <article class="stat green"><strong id="inviteSent">0</strong><span>Invitations sent</span></article>
-        <article class="stat purple"><strong id="inviteUnsent">0</strong><span>Not yet sent</span></article>
+        <article class="stat"><strong id="venueEligible">0</strong><span>Accepted guests</span></article>
+        <article class="stat green"><strong id="venueSent">0</strong><span>Updates sent</span></article>
+        <article class="stat gold"><strong id="venueAcknowledged">0</strong><span>Acknowledged</span></article>
+        <article class="stat purple"><strong id="venueOutstanding">0</strong><span>Not yet sent</span></article>
+        <article class="stat orange"><strong id="venueAwaitingAck">0</strong><span>Awaiting acknowledgement</span></article>
       </div>
 
       <div class="two-col">
         <div class="panel">
-          <h2>Invitation Message</h2>
-          <label for="inviteTemplate">WhatsApp message template</label>
-          <textarea id="inviteTemplate">Dear {{name}} & Family,
+          <h2>WhatsApp Venue Update Message</h2>
+          <label for="venueTemplate">Personalised WhatsApp message</label>
+          <textarea id="venueTemplate">Dear {{name}} & Family,
 
-You are warmly invited to Seelan “Seela” Moodley’s 16th Day Prayer.
+Thank you for accepting our invitation to Seelan “Seela” Moodley’s 16th Day Prayer.
 
-Please open your personalised invitation and confirm your attendance by Thursday, 6 August 2026 at 10:00:
+*IMPORTANT VENUE UPDATE*
+
+Please note that the *venue for the Prayer Service has changed*. We sincerely apologise for the late notice and for any inconvenience this change may cause.
+
+Please open your personalised invitation below to view the *updated venue details, Google Maps location and your access code*, and kindly acknowledge that you have received the venue update:
 
 {{link}}
 
-For assistance, please contact Shai on 076⁠ 588⁠ 2192.
+We look forward to seeing everyone at the Prayer Service and praying together in remembrance of Seelan.
+
+For any assistance, please contact Shai on 076 588 2192.
 
 Thank you.</textarea>
           <div class="toolbar">
-            <button id="copyInviteTemplate" class="btn">Copy template</button>
-            <button id="openNextInvite" class="btn green">Open next unsent WhatsApp</button>
+            <button id="copyVenueTemplate" class="btn">Copy template</button>
+            <button id="openNextVenueUpdate" class="btn green">Open next venue update WhatsApp</button>
           </div>
         </div>
 
         <div class="panel">
-          <h2>Invitation Queue</h2>
-          <div class="filters">
-            <input id="inviteSearch" placeholder="Search guest">
-            <select id="inviteQueueFilter">
+          <h2>Venue Update Queue</h2>
+          <div class="filters" style="grid-template-columns:1.5fr 1fr 1fr;">
+            <input id="venueSearch" placeholder="Search accepted guest">
+            <select id="venueQueueFilter">
               <option value="unsent">Not sent</option>
               <option value="sent">Sent</option>
-              <option value="all">All</option>
+              <option value="all">All accepted</option>
+            </select>
+            <select id="venueAckFilter">
+              <option value="">All acknowledgement states</option>
+              <option value="acknowledged">Acknowledged</option>
+              <option value="awaiting">Awaiting acknowledgement</option>
             </select>
           </div>
-          <div id="inviteQueue" class="queue"></div>
+          <div id="venueQueue" class="queue"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Venue Update Tracking</h2>
+        <div class="table-wrap">
+          <table style="min-width:1450px;">
+            <thead>
+              <tr>
+                <th>Guest</th>
+                <th>Contact</th>
+                <th>Access Code</th>
+                <th>Update Sent</th>
+                <th>Sent Date</th>
+                <th>Acknowledged</th>
+                <th>Ack Date</th>
+                <th>Comments</th>
+                <th>Attendance Change</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="venueTable"></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -979,8 +998,8 @@ Thank you.</textarea>
         <div class="schedule-card">
           <h3>Guest RSVP Scenarios</h3>
           <div id="testChecklist" class="checklist">
-            <label class="check-item"><input type="checkbox" data-test="personalised"><span><strong>1. Personalised link</strong><small>Open G077. Confirm the correct name plus “& Family” appears and the locked invitation loads.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
-            <label class="check-item"><input type="checkbox" data-test="accept"><span><strong>2. Accept invitation</strong><small>Select Yes, change members attending, add an optional note and submit. Confirm RSVP Status, Confirmed Guests, Response Date and Notes update in the Sheet.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="personalised"><span><strong>1. Personalised venue link</strong><small>Open an accepted test guest. Confirm both locked images load and the correct 8-digit access code appears.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="accept"><span><strong>2. Venue acknowledgement</strong><small>Click “I HAVE NOTED THE CHANGE OF VENUE”, add a test comment and submit. Confirm acknowledgement, date and comments update in the Sheet.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="decline"><span><strong>3. Decline invitation</strong><small>Use G081, select No and submit. Confirm RSVP Status becomes No and Confirmed Guests becomes 0.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="update"><span><strong>4. Update a previous response</strong><small>Reopen a responded guest, change the status or guest count, resubmit and verify the original row is updated rather than duplicated.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="invalid"><span><strong>5. Invalid Guest ID</strong><small>Open the RSVP page with an invalid ID. Confirm a clear error appears and no Sheet record changes.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
@@ -993,7 +1012,7 @@ Thank you.</textarea>
             <label class="check-item"><input type="checkbox" data-test="dashboard"><span><strong>6. Dashboard reconciliation</strong><small>Reconcile total, Yes, No, Pending and Confirmed People counts to the Google Sheet.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="addguest"><span><strong>7. Add a new guest</strong><small>Add a temporary test guest. Confirm a new sequential Guest ID is created and the guest appears in all relevant lists.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="manual"><span><strong>8. Manual confirmation</strong><small>Update a guest to Yes or No in Guest Management and verify the Sheet, dashboard and RSVP page reflect the change.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
-            <label class="check-item"><input type="checkbox" data-test="sent"><span><strong>9. Invitation sent tracking</strong><small>Open a WhatsApp invitation, mark it sent and verify Invitation Sent and Sent Date are recorded.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
+            <label class="check-item"><input type="checkbox" data-test="sent"><span><strong>9. Venue update sent tracking</strong><small>Open one venue-update WhatsApp, mark it sent and verify Venue Update Sent? and Venue Update Sent Date are recorded.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="reminder"><span><strong>10. Reminder tracking</strong><small>Send one test reminder and confirm Reminder Count increments and Last Reminder records a date/time.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
             <label class="check-item"><input type="checkbox" data-test="mobile"><span><strong>11. Browser and mobile validation</strong><small>Test Chrome desktop, Android/iPhone view, WhatsApp opening and return navigation.</small></span><select class="test-result"><option>Not tested</option><option>Pass</option><option>Fail</option></select></label>
           </div>
@@ -1021,7 +1040,7 @@ Thank you.</textarea>
             <p>Personalised guest-facing invitation. Replace <b>GUEST_ID</b> with the guest’s unique ID, for example G077.</p>
             <code>https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID</code>
             <div class="actions">
-              <a class="btn navy" href="https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=G077" target="_blank" rel="noopener">Open test guest</a>
+              <a class="btn navy" href="https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=G069" target="_blank" rel="noopener">Open test guest</a>
               <button class="btn" data-copy-static="https://warrenpeters74-oss.github.io/seelan-invitation/rsvp.html?id=GUEST_ID">Copy address format</button>
             </div>
           </div>
@@ -1117,6 +1136,14 @@ Thank you.</textarea>
       return ["yes", "sent", "true"].includes(text(guest.invitationSent).toLowerCase());
     }
 
+    function isVenueSent(guest) {
+      return ["yes", "sent", "true"].includes(text(guest.venueUpdateSent).toLowerCase());
+    }
+
+    function isVenueAcknowledged(guest) {
+      return ["yes", "true", "acknowledged"].includes(text(guest.venueUpdateAcknowledged).toLowerCase());
+    }
+
     function escapeHtml(value) {
       return text(value)
         .replaceAll("&", "&amp;")
@@ -1202,7 +1229,14 @@ Thank you.</textarea>
           lastReminder: text(guest.lastReminder),
           checkedIn: text(guest.checkedIn),
           responseDate: text(guest.responseDate),
-          notes: text(guest.notes)
+          notes: text(guest.notes),
+          estateEntryCode: text(guest.estateEntryCode),
+          venueUpdateSent: text(guest.venueUpdateSent),
+          venueUpdateSentDate: text(guest.venueUpdateSentDate),
+          venueUpdateAcknowledged: text(guest.venueUpdateAcknowledged),
+          venueAcknowledgedDate: text(guest.venueAcknowledgedDate),
+          venueUpdateComments: text(guest.venueUpdateComments),
+          attendanceChangeAfterVenueUpdate: text(guest.attendanceChangeAfterVenueUpdate)
         }));
 
         populateGroupFilter();
@@ -1228,7 +1262,17 @@ Thank you.</textarea>
       const confirmedPeople = guests.reduce((sum, g) => sum + (g.rsvpStatus === "Yes" ? g.confirmedGuests : 0), 0);
       const sent = guests.filter(isSent).length;
       const reminders = guests.reduce((sum, g) => sum + g.reminderCount, 0);
-      return { total, attending, declined, pending, responses, confirmedPeople, sent, reminders };
+      const venueEligibleGuests = guests.filter(g => g.rsvpStatus === "Yes");
+      const venueSent = venueEligibleGuests.filter(isVenueSent).length;
+      const venueAcknowledged = venueEligibleGuests.filter(isVenueAcknowledged).length;
+      return {
+        total, attending, declined, pending, responses, confirmedPeople, sent, reminders,
+        venueEligible: venueEligibleGuests.length,
+        venueSent,
+        venueAcknowledged,
+        venueOutstanding: venueEligibleGuests.length - venueSent,
+        venueAwaitingAck: venueSent - venueAcknowledged
+      };
     }
 
     function percentage(part, whole) {
@@ -1257,9 +1301,11 @@ Thank you.</textarea>
       $("attendingBar").style.width = attendingRate + "%";
       $("declinedBar").style.width = declinedRate + "%";
 
-      $("inviteTotal").textContent = s.total;
-      $("inviteSent").textContent = s.sent;
-      $("inviteUnsent").textContent = s.total - s.sent;
+      if ($("venueEligible")) $("venueEligible").textContent = s.venueEligible;
+      if ($("venueSent")) $("venueSent").textContent = s.venueSent;
+      if ($("venueAcknowledged")) $("venueAcknowledged").textContent = s.venueAcknowledged;
+      if ($("venueOutstanding")) $("venueOutstanding").textContent = s.venueOutstanding;
+      if ($("venueAwaitingAck")) $("venueAwaitingAck").textContent = Math.max(0, s.venueAwaitingAck);
 
       $("reminderPending").textContent = s.pending;
       $("reminderResponded").textContent = s.responses;
@@ -1317,7 +1363,7 @@ Thank you.</textarea>
           <td>
             <div class="actions">
               <button class="mini" data-copy="${escapeHtml(g.guestId)}">Copy link</button>
-              <button class="mini whatsapp" data-whatsapp="${escapeHtml(g.guestId)}">WhatsApp</button>
+              ${g.rsvpStatus === "Yes" ? `<button class="mini whatsapp" data-whatsapp="${escapeHtml(g.guestId)}">Venue WA</button>` : ""}
               <button class="mini" data-edit="${escapeHtml(g.guestId)}">Edit</button>
             </div>
           </td>
@@ -1338,34 +1384,83 @@ Thank you.</textarea>
           .join("");
     }
 
-    function renderInviteQueue() {
-      const query = text($("inviteSearch").value).toLowerCase();
-      const filter = $("inviteQueueFilter").value;
+    function renderVenueQueue() {
+      const query = text($("venueSearch").value).toLowerCase();
+      const filter = $("venueQueueFilter").value;
+      const ackFilter = $("venueAckFilter").value;
 
       const queue = guests.filter(g => {
-        const matchesQuery = !query || g.name.toLowerCase().includes(query);
-        const matchesFilter =
+        if (g.rsvpStatus !== "Yes") return false;
+
+        const matchesQuery = !query ||
+          g.name.toLowerCase().includes(query) ||
+          g.guestId.toLowerCase().includes(query) ||
+          g.contactNumber.toLowerCase().includes(query);
+
+        const matchesSent =
           filter === "all" ||
-          (filter === "sent" && isSent(g)) ||
-          (filter === "unsent" && !isSent(g));
-        return matchesQuery && matchesFilter;
+          (filter === "sent" && isVenueSent(g)) ||
+          (filter === "unsent" && !isVenueSent(g));
+
+        const matchesAck =
+          !ackFilter ||
+          (ackFilter === "acknowledged" && isVenueAcknowledged(g)) ||
+          (ackFilter === "awaiting" && !isVenueAcknowledged(g));
+
+        return matchesQuery && matchesSent && matchesAck;
       });
 
-      $("inviteQueue").innerHTML = queue.length
+      $("venueQueue").innerHTML = queue.length
         ? queue.map(g => `
           <div class="queue-item">
             <div>
               <strong>${escapeHtml(g.name)}</strong>
-              <small>${escapeHtml(g.contactNumber || "No contact number")} · ${isSent(g) ? "Sent" : "Not sent"}</small>
+              <small>
+                ${escapeHtml(g.contactNumber || "No contact number")}
+                · Access ${escapeHtml(g.estateEntryCode || "MISSING")}
+                · ${isVenueSent(g) ? "Update sent" : "Not sent"}
+                · ${isVenueAcknowledged(g) ? "Acknowledged" : "Awaiting acknowledgement"}
+              </small>
             </div>
             <div class="actions">
               <button class="mini" data-copy="${escapeHtml(g.guestId)}">Copy link</button>
-              <button class="mini whatsapp" data-invite="${escapeHtml(g.guestId)}">WhatsApp</button>
-              ${!isSent(g) ? `<button class="mini" data-mark-sent="${escapeHtml(g.guestId)}">Mark sent</button>` : ""}
+              <button class="mini whatsapp" data-venue-whatsapp="${escapeHtml(g.guestId)}">WhatsApp</button>
+              ${!isVenueSent(g) ? `<button class="mini" data-mark-venue-sent="${escapeHtml(g.guestId)}">Mark sent</button>` : ""}
             </div>
           </div>
         `).join("")
-        : `<div class="empty">No guests in this invitation queue.</div>`;
+        : `<div class="empty">No accepted guests match this venue-update queue.</div>`;
+    }
+
+    function renderVenueTable() {
+      const tbody = $("venueTable");
+      const accepted = guests.filter(g => g.rsvpStatus === "Yes");
+
+      if (!accepted.length) {
+        tbody.innerHTML = `<tr><td colspan="10" class="empty">No accepted guests are available.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = accepted.map(g => `
+        <tr>
+          <td><div class="name-cell">${escapeHtml(g.name)}</div><small>${escapeHtml(g.guestId)}</small></td>
+          <td>${escapeHtml(g.contactNumber || "—")}</td>
+          <td><strong>${escapeHtml(g.estateEntryCode || "MISSING")}</strong></td>
+          <td>${isVenueSent(g) ? `<span class="badge sent">Sent</span>` : `<span class="badge">Not sent</span>`}</td>
+          <td>${escapeHtml(g.venueUpdateSentDate || "—")}</td>
+          <td>${isVenueAcknowledged(g) ? `<span class="badge yes">Yes</span>` : `<span class="badge pending">No</span>`}</td>
+          <td>${escapeHtml(g.venueAcknowledgedDate || "—")}</td>
+          <td style="max-width:280px;white-space:normal;">${escapeHtml(g.venueUpdateComments || "—")}</td>
+          <td>${escapeHtml(g.attendanceChangeAfterVenueUpdate || "—")}</td>
+          <td>
+            <div class="actions">
+              <button class="mini whatsapp" data-venue-whatsapp="${escapeHtml(g.guestId)}">WhatsApp</button>
+              ${!isVenueSent(g) ? `<button class="mini" data-mark-venue-sent="${escapeHtml(g.guestId)}">Mark sent</button>` : ""}
+              <button class="mini" data-attendance-change="${escapeHtml(g.guestId)}">Attendance change</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
     }
 
     function renderReminderQueue() {
@@ -1391,7 +1486,8 @@ Thank you.</textarea>
     function renderAll() {
       renderStats();
       applyFilters();
-      renderInviteQueue();
+      renderVenueQueue();
+      renderVenueTable();
       renderReminderQueue();
     }
 
@@ -1424,6 +1520,40 @@ Thank you.</textarea>
       }
     }
 
+    async function markVenueUpdateSent(guestId) {
+      try {
+        await postAction("markVenueUpdateSent", { guestId });
+        toast("Venue update marked as sent.");
+        await loadData(false);
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    }
+
+    async function setAttendanceChange(guestId) {
+      const guest = getGuest(guestId);
+      if (!guest) return;
+
+      const current = text(guest.attendanceChangeAfterVenueUpdate);
+      const value = window.prompt(
+        "Attendance change after venue update. Enter a note such as “No longer attending”, or leave blank to clear it:",
+        current
+      );
+
+      if (value === null) return;
+
+      try {
+        await postAction("updateGuest", {
+          guestId,
+          attendanceChangeAfterVenueUpdate: value.trim()
+        });
+        toast("Attendance-change note updated.");
+        await loadData(false);
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    }
+
     async function recordReminder(guestId) {
       try {
         await postAction("recordReminder", { guestId });
@@ -1438,13 +1568,19 @@ Thank you.</textarea>
       const headers = [
         "Guest ID","Name","Contact Number","Group","Expected Guests","RSVP Status",
         "Confirmed Guests","Invitation Sent","Sent Date","Reminder Count",
-        "Last Reminder","Checked In","Response Date","Notes"
+        "Last Reminder","Checked In","Response Date","Notes",
+        "Estate Entry Code","Venue Update Sent?","Venue Update Sent Date",
+        "Venue Update Acknowledged?","Venue Acknowledged Date","Venue Update Comments",
+        "Attendance Change After Venue Update"
       ];
 
       const rows = guests.map(g => [
         g.guestId,g.name,g.contactNumber,g.group,g.expectedGuests,g.rsvpStatus,
         g.confirmedGuests,g.invitationSent,g.sentDate,g.reminderCount,
-        g.lastReminder,g.checkedIn,g.responseDate,g.notes
+        g.lastReminder,g.checkedIn,g.responseDate,g.notes,
+        g.estateEntryCode,g.venueUpdateSent,g.venueUpdateSentDate,
+        g.venueUpdateAcknowledged,g.venueAcknowledgedDate,g.venueUpdateComments,
+        g.attendanceChangeAfterVenueUpdate
       ]);
 
       const csv = [headers, ...rows]
@@ -1480,7 +1616,7 @@ Thank you.</textarea>
 
       const titles = {
         dashboard: "RSVP Dashboard",
-        invitations: "Send Personalised Invites",
+        venueupdate: "Venue Update Control",
         guests: "Guest Management",
         reminders: "Reminders & Follow-ups",
         testplan: "Test Plan & Quality Assurance",
@@ -1495,7 +1631,7 @@ Thank you.</textarea>
     });
 
     $("exitButton").addEventListener("click", () => {
-      window.location.href = "rsvp.html?id=G077";
+      window.location.href = "rsvp.html?id=G069";
     });
 
     $("refreshButton").addEventListener("click", () => loadData());
@@ -1506,25 +1642,29 @@ Thank you.</textarea>
       $(id).addEventListener("change", applyFilters);
     });
 
-    ["inviteSearch","inviteQueueFilter"].forEach(id => {
-      $(id).addEventListener("input", renderInviteQueue);
-      $(id).addEventListener("change", renderInviteQueue);
+    ["venueSearch","venueQueueFilter","venueAckFilter"].forEach(id => {
+      $(id).addEventListener("input", renderVenueQueue);
+      $(id).addEventListener("change", renderVenueQueue);
     });
 
     $("reminderSearch").addEventListener("input", renderReminderQueue);
 
-    $("copyInviteTemplate").addEventListener("click", () =>
-      copyText($("inviteTemplate").value, "Invitation template copied.")
+    $("copyVenueTemplate").addEventListener("click", () =>
+      copyText($("venueTemplate").value, "Venue update template copied.")
     );
 
     $("copyReminderTemplate").addEventListener("click", () =>
       copyText($("reminderTemplate").value, "Reminder template copied.")
     );
 
-    $("openNextInvite").addEventListener("click", () => {
-      const guest = guests.find(g => !isSent(g) && phoneForWhatsApp(g.contactNumber));
-      if (!guest) return toast("There are no unsent guests with valid contact numbers.", "error");
-      openWhatsApp(guest, fillTemplate($("inviteTemplate").value, guest));
+    $("openNextVenueUpdate").addEventListener("click", () => {
+      const guest = guests.find(g =>
+        g.rsvpStatus === "Yes" &&
+        !isVenueSent(g) &&
+        phoneForWhatsApp(g.contactNumber)
+      );
+      if (!guest) return toast("There are no accepted guests awaiting a venue update with a valid contact number.", "error");
+      openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
     });
 
     $("openNextReminder").addEventListener("click", () => {
@@ -1541,13 +1681,22 @@ Thank you.</textarea>
         await copyText(rsvpLink(target.dataset.copy), "Personalised RSVP link copied.");
       }
 
-      if (target.dataset.whatsapp || target.dataset.invite) {
-        const guest = getGuest(target.dataset.whatsapp || target.dataset.invite);
-        if (guest) openWhatsApp(guest, fillTemplate($("inviteTemplate").value, guest));
+      if (target.dataset.whatsapp) {
+        const guest = getGuest(target.dataset.whatsapp);
+        if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
       }
 
-      if (target.dataset.markSent) {
-        await markInvitationSent(target.dataset.markSent);
+      if (target.dataset.venueWhatsapp) {
+        const guest = getGuest(target.dataset.venueWhatsapp);
+        if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
+      }
+
+      if (target.dataset.markVenueSent) {
+        await markVenueUpdateSent(target.dataset.markVenueSent);
+      }
+
+      if (target.dataset.attendanceChange) {
+        await setAttendanceChange(target.dataset.attendanceChange);
       }
 
       if (target.dataset.reminder) {
