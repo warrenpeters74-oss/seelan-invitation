@@ -106,30 +106,27 @@
 
     #comments {
       position: absolute;
-      left: 9.5%;
-      top: 81.3%;
-      width: 80.8%;
-      height: 6.0%;
+      left: 8.0%;
+      top: 75.8%;
+      width: 84.0%;
+      height: 5.9%;
       z-index: 6;
       resize: none;
-      border: 1px solid rgba(7,31,74,0.45);
+      border: 0;
       border-radius: 3px;
-      padding: 1.2% 1.6%;
-      background: rgba(255,253,248,0.98);
+      padding: 1.0% 1.4%;
+      background: transparent;
       color: var(--navy);
       font-size: clamp(11px, 2.3vw, 18px);
       line-height: 1.25;
       outline: none;
+      overflow-y: auto;
     }
 
-    #comments::placeholder {
-      color: #746f68;
-      opacity: 0.85;
-    }
-
-    #comments:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 2px rgba(167,109,16,0.10);
+    #comments:focus,
+    #comments.has-value {
+      background: rgba(255,253,248,0.98);
+      box-shadow: inset 0 0 0 1px rgba(167,109,16,0.45);
     }
 
     #ackButton {
@@ -283,7 +280,6 @@
         id="comments"
         maxlength="500"
         aria-label="Comments"
-        placeholder="If you have any questions or need to let us know anything further, or are no longer able to attend, please let us know here."
       ></textarea>
 
       <!-- Real acknowledgement control over the artwork button -->
@@ -533,6 +529,14 @@
         ackButton.disabled = false;
       }
     }
+
+    comments.addEventListener("input", () => {
+      comments.classList.toggle("has-value", comments.value.trim().length > 0);
+    });
+
+    comments.addEventListener("blur", () => {
+      comments.classList.toggle("has-value", comments.value.trim().length > 0);
+    });
 
     submitButton.addEventListener("click", submitVenueUpdate);
 
