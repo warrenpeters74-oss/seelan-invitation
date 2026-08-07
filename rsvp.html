@@ -63,32 +63,33 @@
 
     #accessCode {
       position: absolute;
-      left: 39.2%;
-      top: 50.7%;
-      width: 20.3%;
-      height: 4.7%;
+      left: 39.7%;
+      top: 54.9%;
+      width: 18.5%;
+      height: 4.0%;
       z-index: 5;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 1%;
-      border-radius: 0;
+      padding: 0;
       background: transparent;
-      color: #fff;
+      color: var(--navy);
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(11px, 2.1vw, 18px);
+      font-size: clamp(10px, 2.0vw, 17px);
+      font-weight: 600;
       line-height: 1;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
       white-space: nowrap;
       font-variant-numeric: tabular-nums;
+      pointer-events: none;
     }
 
     #mapsButton {
       position: absolute;
-      left: 54.1%;
-      top: 40.5%;
-      width: 34.3%;
-      height: 4.2%;
+      left: 52.7%;
+      top: 42.8%;
+      width: 35.2%;
+      height: 4.4%;
       z-index: 6;
       border: 0;
       background: transparent;
@@ -106,18 +107,18 @@
 
     #comments {
       position: absolute;
-      left: 8.8%;
-      top: 77.0%;
-      width: 82.8%;
-      height: 5.4%;
+      left: 7.9%;
+      top: 81.7%;
+      width: 84.0%;
+      height: 4.4%;
       z-index: 6;
       resize: none;
       border: 0;
-      border-radius: 3px;
-      padding: 1.0% 1.4%;
+      border-radius: 0;
+      padding: 0.7% 1.1%;
       background: transparent;
       color: var(--navy);
-      font-size: clamp(11px, 2.3vw, 18px);
+      font-size: clamp(10px, 2.0vw, 17px);
       line-height: 1.25;
       outline: none;
       overflow-y: auto;
@@ -126,13 +127,14 @@
     #comments:focus {
       background: transparent;
       box-shadow: none;
+      outline: none;
     }
 
     #ackButton {
       position: absolute;
-      left: 14.0%;
-      top: 86.8%;
-      width: 39.0%;
+      left: 14.3%;
+      top: 90.0%;
+      width: 38.2%;
       height: 4.0%;
       z-index: 6;
       border: 0;
@@ -142,36 +144,29 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    #ackCover {display: none;
-      position: absolute;
-      left: 59.8%;
-      top: 86.8%;
-      width: 27.0%;
-      height: 5.0%;
-      z-index: 5;
-      background: rgba(255,253,248,0.98);
-      border-radius: 4px;
-      pointer-events: none;
+    #ackCover {
+      display: none !important;
     }
 
     #ackStatus {
       position: absolute;
-      left: 59.8%;
-      top: 86.8%;
-      width: 27.0%;
-      height: 5.0%;
+      left: 60.4%;
+      top: 90.0%;
+      width: 25.4%;
+      height: 4.6%;
       z-index: 7;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 0.6% 1%;
+      padding: 0.4% 0.8%;
       text-align: center;
       color: var(--success);
-      background: rgba(255,253,248,0.98);
-      border: 1px solid rgba(35,91,68,0.45);
-      border-radius: 4px;
-      font-size: clamp(9px, 1.65vw, 14px);
-      line-height: 1.1;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      font-size: clamp(8px, 1.5vw, 13px);
+      font-weight: 600;
+      line-height: 1.05;
       pointer-events: none;
     }
 
@@ -180,9 +175,9 @@
     #submitButton {
       position: absolute;
       left: 35.0%;
-      top: 92.8%;
-      width: 27.0%;
-      height: 3.4%;
+      top: 95.1%;
+      width: 29.0%;
+      height: 3.2%;
       z-index: 6;
       border: 0;
       background: transparent;
@@ -436,7 +431,7 @@
         accessCode.textContent = code;
 
         /* If the guest already acknowledged previously, restore that state. */
-        setAcknowledged(yes(guestRecord.venueUpdateAcknowledged));
+        setAcknowledged(false);
 
         /* Do not pre-fill previously submitted comments into the editable field. */
         comments.value = "";
