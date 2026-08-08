@@ -22,7 +22,7 @@ button,textarea{font:inherit}
 /* ---------- INITIAL RSVP OVERLAYS ---------- */
 .rsvp-page{aspect-ratio:3/4}
 .rsvp-artwork{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:0}
-.live-greeting{position:absolute;left:41.2%;top:22.6%;width:47.5%;min-height:3.0%;display:flex;align-items:center;justify-content:flex-start;color:var(--navy);font-size:clamp(11px,1.65vw,16px);font-weight:500;line-height:1.05;white-space:nowrap;overflow:hidden;visibility:hidden;z-index:4}
+.live-greeting{position:absolute;left:41.2%;top:22.6%;width:47.5%;min-height:3.0%;display:flex;align-items:center;justify-content:flex-start;color:var(--navy);font-size:clamp(12px,1.9vw,18px);font-weight:700;line-height:1.05;white-space:nowrap;overflow:hidden;visibility:hidden;z-index:4}
 .hit-button{position:absolute;cursor:pointer;border:2px solid transparent;background:transparent;color:transparent;z-index:4}
 #yesButton{left:7.6%;top:55.0%;width:38.2%;height:7.4%}
 #noButton{left:49.7%;top:55.0%;width:39.7%;height:7.4%}
@@ -127,9 +127,9 @@ async function fetchJson(url,options={}){
 
 function fitGreeting(){
  guestGreeting.style.fontSize="";
- let size=Math.min(16,Math.max(11,window.innerWidth*.0165));
+ let size=Math.min(18,Math.max(12,window.innerWidth*.019));
  guestGreeting.style.fontSize=`${size}px`;
- while(guestGreeting.scrollWidth>guestGreeting.clientWidth&&size>11){size-=.5;guestGreeting.style.fontSize=`${size}px`}
+ while(guestGreeting.scrollWidth>guestGreeting.clientWidth&&size>12){size-=.5;guestGreeting.style.fontSize=`${size}px`}
 }
 
 function renderRsvp(){
