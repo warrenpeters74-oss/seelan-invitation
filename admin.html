@@ -667,6 +667,7 @@
     <div class="brand">RSVP Organiser Panel - Seelan “Seela” Moodley</div>
     <nav class="nav" aria-label="Admin navigation">
       <button class="active" data-view="dashboard">Dashboard</button>
+      <button data-view="invitations">Send Invites</button>
       <button data-view="venueupdate">Venue Update</button>
       <button data-view="guests">Guest Management</button>
       <button data-view="reminders">Reminders</button>
@@ -778,6 +779,58 @@
 
 
 
+
+
+    <section id="invitations" class="view">
+      <div class="panel" style="border-left:5px solid var(--navy);">
+        <h2>Initial RSVP Invitations</h2>
+        <p><strong>Use this section for newly added families who have not yet responded.</strong> Their personalised link opens the current invitation with the new venue and asks them to confirm Yes/No and the number attending.</p>
+        <p>Once a guest accepts, they automatically become eligible for the separate <strong>Venue Update</strong> workflow. Nothing in the venue-update module is removed.</p>
+      </div>
+
+      <div class="stats">
+        <article class="stat"><strong id="initialPending">0</strong><span>Pending RSVP</span></article>
+        <article class="stat green"><strong id="initialSent">0</strong><span>Initial invites sent</span></article>
+        <article class="stat purple"><strong id="initialUnsent">0</strong><span>Initial invites not sent</span></article>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h2>Initial Invitation Message</h2>
+          <label for="initialInviteTemplate">WhatsApp message</label>
+          <textarea id="initialInviteTemplate">Dear {{name}} & Family,
+
+You are warmly invited to Seelan “Seela” Moodley’s 16th Day Prayer.
+
+Please open your personalised invitation below to view the current venue details and confirm whether you will be attending, including the number of people attending:
+
+{{link}}
+
+We look forward to seeing you at the Prayer Service and praying together in remembrance of Seelan.
+
+For any assistance, please contact Shai on 076 588 2192.
+
+Thank you.</textarea>
+          <div class="toolbar">
+            <button id="copyInitialInviteTemplate" class="btn">Copy template</button>
+            <button id="openNextInitialInvite" class="btn green">Open next initial WhatsApp</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Initial RSVP Queue</h2>
+          <div class="filters" style="grid-template-columns:1.5fr 1fr;">
+            <input id="initialInviteSearch" placeholder="Search pending guest">
+            <select id="initialInviteFilter">
+              <option value="unsent">Not sent</option>
+              <option value="sent">Sent</option>
+              <option value="all">All pending</option>
+            </select>
+          </div>
+          <div id="initialInviteQueue" class="queue"></div>
+        </div>
+      </div>
+    </section>
 
     <section id="venueupdate" class="view">
       <div class="panel" style="border-left:5px solid var(--gold);">
@@ -944,6 +997,10 @@ Thank you.</textarea>
               <input id="newExpected" type="number" min="0" value="1">
             </div>
             <div>
+              <label for="newEstateEntryCode">Estate entry code (optional)</label>
+              <input id="newEstateEntryCode" inputmode="numeric" maxlength="8" placeholder="8 digits">
+            </div>
+            <div>
               <label for="newStatus">Current status</label>
               <select id="newStatus">
                 <option value="Pending">Pending</option>
@@ -1000,6 +1057,10 @@ Thank you.</textarea>
                 <option value="Yes">Yes</option>
               </select>
             </div>
+            <div>
+              <label for="editEstateEntryCode">Estate entry code</label>
+              <input id="editEstateEntryCode" inputmode="numeric" maxlength="8">
+            </div>
             <div class="full">
               <label for="editNotes">Notes</label>
               <textarea id="editNotes"></textarea>
@@ -1012,6 +1073,36 @@ Thank you.</textarea>
       </div>
     </section>
     <section id="reminders" class="view">
+      <div class="panel" style="border-left:5px solid var(--navy);">
+        <h2>Initial RSVP Reminders</h2>
+        <p>Use this for guests whose initial invitation has been sent but whose RSVP status is still Pending.</p>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <h2>Initial RSVP Reminder Message</h2>
+          <label for="initialReminderTemplate">WhatsApp reminder</label>
+          <textarea id="initialReminderTemplate">Dear {{name}} & Family,
+
+A gentle reminder to please confirm your attendance for Seelan “Seela” Moodley’s 16th Day Prayer.
+
+Your personalised invitation and RSVP link:
+{{link}}
+
+For any assistance, please contact Shai on 076 588 2192.
+
+Thank you.</textarea>
+          <div class="toolbar">
+            <button id="copyInitialReminderTemplate" class="btn">Copy initial reminder</button>
+            <button id="openNextInitialReminder" class="btn green">Open next initial reminder</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Pending Initial RSVPs</h2>
+          <input id="initialReminderSearch" placeholder="Search pending guest">
+          <div id="initialReminderQueue" class="queue"></div>
+        </div>
+      </div>
+
       <div class="panel" style="border-left:5px solid var(--gold);">
         <h2>Venue Update Reminders</h2>
         <p>Reminders are shown only for accepted guests whose venue update has already been marked as sent but who have not yet acknowledged it.</p>
@@ -1517,6 +1608,40 @@ Thank you.</textarea>
         `<strong>Current status:</strong> ${escapeHtml(sentText)} · ${escapeHtml(ackText)} · ${escapeHtml(attendanceText)}`;
     }
 
+    function renderInitialInviteQueue() {
+      const query = text($("initialInviteSearch").value).toLowerCase();
+      const filter = $("initialInviteFilter").value;
+
+      const queue = guests.filter(g => {
+        if (g.rsvpStatus !== "Pending") return false;
+        const matchesQuery = !query ||
+          g.name.toLowerCase().includes(query) ||
+          g.guestId.toLowerCase().includes(query) ||
+          g.contactNumber.toLowerCase().includes(query);
+        const matchesFilter =
+          filter === "all" ||
+          (filter === "sent" && isSent(g)) ||
+          (filter === "unsent" && !isSent(g));
+        return matchesQuery && matchesFilter;
+      });
+
+      $("initialInviteQueue").innerHTML = queue.length
+        ? queue.map(g => `
+          <div class="queue-item">
+            <div>
+              <strong>${escapeHtml(g.name)}</strong>
+              <small>${escapeHtml(g.contactNumber || "No contact number")} · ${isSent(g) ? "Initial invite sent" : "Initial invite not sent"}</small>
+            </div>
+            <div class="actions">
+              <button class="mini" data-copy="${escapeHtml(g.guestId)}">Copy link</button>
+              <button class="mini whatsapp" data-initial-invite="${escapeHtml(g.guestId)}">WhatsApp</button>
+              ${!isSent(g) ? `<button class="mini" data-mark-initial-sent="${escapeHtml(g.guestId)}">Mark sent</button>` : ""}
+            </div>
+          </div>
+        `).join("")
+        : `<div class="empty">No pending guests match this initial-invitation queue.</div>`;
+    }
+
     function renderVenueQueue() {
       const query = text($("venueSearch").value).toLowerCase();
       const filter = $("venueQueueFilter").value;
@@ -1596,6 +1721,30 @@ Thank you.</textarea>
       `).join("");
     }
 
+    function renderInitialReminderQueue() {
+      const query = text($("initialReminderSearch").value).toLowerCase();
+      const queue = guests.filter(g =>
+        g.rsvpStatus === "Pending" &&
+        isSent(g) &&
+        (!query ||
+          g.name.toLowerCase().includes(query) ||
+          g.guestId.toLowerCase().includes(query) ||
+          g.contactNumber.toLowerCase().includes(query))
+      );
+
+      $("initialReminderQueue").innerHTML = queue.length
+        ? queue.map(g => `
+          <div class="queue-item">
+            <div>
+              <strong>${escapeHtml(g.name)}</strong>
+              <small>${escapeHtml(g.contactNumber || "No contact number")} · ${g.reminderCount} reminder record(s)</small>
+            </div>
+            <button class="mini whatsapp" data-initial-reminder="${escapeHtml(g.guestId)}">Send initial RSVP reminder</button>
+          </div>
+        `).join("")
+        : `<div class="empty">No sent initial invitations are awaiting an RSVP.</div>`;
+    }
+
     function renderReminderQueue() {
       const query = text($("reminderSearch").value).toLowerCase();
 
@@ -1629,8 +1778,10 @@ Thank you.</textarea>
     function renderAll() {
       renderStats();
       applyFilters();
+      renderInitialInviteQueue();
       renderVenueQueue();
       renderVenueTable();
+      renderInitialReminderQueue();
       renderReminderQueue();
     }
 
@@ -1748,6 +1899,7 @@ Thank you.</textarea>
       $("editConfirmed").value = guest.confirmedGuests;
       $("editSent").value = isSent(guest) ? "Yes" : "";
       $("editCheckedIn").value = text(guest.checkedIn).toLowerCase() === "yes" ? "Yes" : "";
+      $("editEstateEntryCode").value = guest.estateEntryCode || "";
       $("editNotes").value = guest.notes;
       showView("guests");
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1759,6 +1911,7 @@ Thank you.</textarea>
 
       const titles = {
         dashboard: "RSVP Dashboard",
+        invitations: "Send Initial RSVP Invitations",
         venueupdate: "Venue Update Control",
         guests: "Guest Management",
         reminders: "Reminders & Follow-ups",
@@ -1785,16 +1938,46 @@ Thank you.</textarea>
       $(id).addEventListener("change", applyFilters);
     });
 
+    ["initialInviteSearch","initialInviteFilter"].forEach(id => {
+      $(id).addEventListener("input", renderInitialInviteQueue);
+      $(id).addEventListener("change", renderInitialInviteQueue);
+    });
+
     ["venueSearch","venueQueueFilter","venueAckFilter"].forEach(id => {
       $(id).addEventListener("input", renderVenueQueue);
       $(id).addEventListener("change", renderVenueQueue);
     });
 
+    $("initialReminderSearch").addEventListener("input", renderInitialReminderQueue);
     $("reminderSearch").addEventListener("input", renderReminderQueue);
+
+    $("copyInitialInviteTemplate").addEventListener("click", () =>
+      copyText($("initialInviteTemplate").value, "Initial invitation template copied.")
+    );
+
+    $("openNextInitialInvite").addEventListener("click", () => {
+      const guest = guests.find(g => g.rsvpStatus === "Pending" && !isSent(g) && phoneForWhatsApp(g.contactNumber));
+      if (!guest) return toast("There are no unsent pending guests with valid contact numbers.", "error");
+      openWhatsApp(guest, fillTemplate($("initialInviteTemplate").value, guest));
+    });
 
     $("copyVenueTemplate").addEventListener("click", () =>
       copyText($("venueTemplate").value, "Venue update template copied.")
     );
+
+    $("copyInitialReminderTemplate").addEventListener("click", () =>
+      copyText($("initialReminderTemplate").value, "Initial RSVP reminder copied.")
+    );
+
+    $("openNextInitialReminder").addEventListener("click", () => {
+      const guest = guests.find(g =>
+        g.rsvpStatus === "Pending" &&
+        isSent(g) &&
+        phoneForWhatsApp(g.contactNumber)
+      );
+      if (!guest) return toast("There are no sent initial invitations awaiting RSVP with a valid contact number.", "error");
+      openWhatsApp(guest, fillTemplate($("initialReminderTemplate").value, guest));
+    });
 
     $("copyReminderTemplate").addEventListener("click", () =>
       copyText($("reminderTemplate").value, "Reminder template copied.")
@@ -1834,6 +2017,15 @@ Thank you.</textarea>
         if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
       }
 
+      if (target.dataset.initialInvite) {
+        const guest = getGuest(target.dataset.initialInvite);
+        if (guest) openWhatsApp(guest, fillTemplate($("initialInviteTemplate").value, guest));
+      }
+
+      if (target.dataset.markInitialSent) {
+        await markInvitationSent(target.dataset.markInitialSent);
+      }
+
       if (target.dataset.venueWhatsapp) {
         const guest = getGuest(target.dataset.venueWhatsapp);
         if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
@@ -1845,6 +2037,14 @@ Thank you.</textarea>
 
       if (target.dataset.attendanceChange) {
         await setAttendanceChange(target.dataset.attendanceChange);
+      }
+
+      if (target.dataset.initialReminder) {
+        const guest = getGuest(target.dataset.initialReminder);
+        if (guest) {
+          openWhatsApp(guest, fillTemplate($("initialReminderTemplate").value, guest));
+          await recordReminder(guest.guestId);
+        }
       }
 
       if (target.dataset.reminder) {
@@ -1931,6 +2131,7 @@ Thank you.</textarea>
           expectedGuests: $("newExpected").value,
           rsvpStatus: $("newStatus").value,
           confirmedGuests: $("newConfirmed").value,
+          estateEntryCode: $("newEstateEntryCode").value,
           notes: $("newNotes").value
         });
 
@@ -1952,6 +2153,7 @@ Thank you.</textarea>
       $("editConfirmed").value = guest.confirmedGuests;
       $("editSent").value = isSent(guest) ? "Yes" : "";
       $("editCheckedIn").value = text(guest.checkedIn).toLowerCase() === "yes" ? "Yes" : "";
+      $("editEstateEntryCode").value = guest.estateEntryCode || "";
       $("editNotes").value = guest.notes;
     });
 
@@ -1966,6 +2168,7 @@ Thank you.</textarea>
           confirmedGuests: $("editConfirmed").value,
           invitationSent: $("editSent").value,
           checkedIn: $("editCheckedIn").value,
+          estateEntryCode: $("editEstateEntryCode").value,
           notes: $("editNotes").value
         });
 
