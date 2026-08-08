@@ -802,9 +802,13 @@
 
 You are warmly invited to Seelan “Seela” Moodley’s 16th Day Prayer.
 
-Please open your personalised invitation below to view the current venue details and confirm whether you will be attending, including the number of people attending:
+Please open your personalised RSVP invitation below and confirm whether you will be attending, together with the total number of people attending under your invitation:
 
 {{link}}
+
+Your response will help us keep the confirmed attendance numbers up to date.
+
+As this invitation is being sent at short notice, a second message will follow with the important venue information, including the Google Maps location and your individual estate access code.
 
 We look forward to seeing you at the Prayer Service and praying together in remembrance of Seelan.
 
@@ -814,6 +818,42 @@ Thank you.</textarea>
           <div class="toolbar">
             <button id="copyInitialInviteTemplate" class="btn">Copy template</button>
             <button id="openNextInitialInvite" class="btn green">Open next initial WhatsApp</button>
+          </div>
+
+          <hr style="margin:22px 0;border:0;border-top:1px solid rgba(167,109,16,.35);">
+
+          <h2>Late Invite — Venue Information Follow-up</h2>
+          <p style="color:var(--muted);line-height:1.5;">
+            Use this as the second message for newly invited families after they confirm attendance.
+          </p>
+          <label for="lateInviteVenueGuest">Accepted guest for second message</label>
+          <select id="lateInviteVenueGuest">
+            <option value="">Choose accepted guest</option>
+          </select>
+
+          <label for="lateInviteVenueTemplate">Second WhatsApp message</label>
+          <textarea id="lateInviteVenueTemplate">Dear {{name}} & Family,
+
+Thank you for confirming your attendance for Seelan “Seela” Moodley’s 16th Day Prayer.
+
+As your invitation is being sent at short notice, we are sending this second message separately to make sure you have all the important venue information for Monday's Prayer Service.
+
+*IMPORTANT VENUE INFORMATION*
+
+Please open your personalised venue information page below. It contains the confirmed venue details, Google Maps location and your individual estate access code:
+
+{{link}}
+
+Please also acknowledge receipt of the venue information on the page so that we know you have received the details.
+
+We apologise for the late notice and appreciate your understanding. We look forward to seeing you and praying together in remembrance of Seelan.
+
+For any assistance, please contact Shai on 076 588 2192.
+
+Thank you.</textarea>
+          <div class="toolbar">
+            <button id="copyLateInviteVenueTemplate" class="btn">Copy second-message template</button>
+            <button id="openLateInviteVenueForSelected" class="btn green">Open venue-info WhatsApp for selected guest</button>
           </div>
         </div>
 
@@ -1321,14 +1361,15 @@ Thank you.</textarea>
       return digits;
     }
 
-    function rsvpLink(guestId) {
-      return RSVP_BASE_URL + encodeURIComponent(text(guestId));
+    function rsvpLink(guestId, mode = "") {
+      const base = RSVP_BASE_URL + encodeURIComponent(text(guestId));
+      return mode ? base + "&mode=" + encodeURIComponent(mode) : base;
     }
 
-    function fillTemplate(template, guest) {
+    function fillTemplate(template, guest, mode = "") {
       return template
         .replaceAll("{{name}}", text(guest.name).replace(/\s*&\s*Family$/i, ""))
-        .replaceAll("{{link}}", rsvpLink(guest.guestId));
+        .replaceAll("{{link}}", rsvpLink(guest.guestId, mode));
     }
 
     function toast(message, type = "") {
@@ -1402,6 +1443,7 @@ Thank you.</textarea>
         populateGroupFilter();
         populateGuestSelect();
         populateManualVenueGuestSelect();
+        populateLateInviteVenueGuestSelect();
         renderAll();
         $("lastUpdated").textContent = "Updated " + new Date().toLocaleString();
         if (showMessage) toast("Live Google Sheet data refreshed.");
@@ -1543,6 +1585,21 @@ Thank you.</textarea>
         guests.slice().sort((a,b) => a.name.localeCompare(b.name))
           .map(g => `<option value="${escapeHtml(g.guestId)}">${escapeHtml(g.name)} (${escapeHtml(g.guestId)})</option>`)
           .join("");
+    }
+
+    function populateLateInviteVenueGuestSelect() {
+      const select = $("lateInviteVenueGuest");
+      if (!select) return;
+      const accepted = guests
+        .filter(g => g.rsvpStatus === "Yes")
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name));
+      const current = select.value;
+      select.innerHTML = `<option value="">Choose accepted guest</option>` +
+        accepted.map(g =>
+          `<option value="${escapeHtml(g.guestId)}">${escapeHtml(g.name)} (${escapeHtml(g.guestId)})</option>`
+        ).join("");
+      if (accepted.some(g => g.guestId === current)) select.value = current;
     }
 
     function populateManualVenueGuestSelect() {
@@ -1951,6 +2008,17 @@ Thank you.</textarea>
     $("initialReminderSearch").addEventListener("input", renderInitialReminderQueue);
     $("reminderSearch").addEventListener("input", renderReminderQueue);
 
+    $("copyLateInviteVenueTemplate").addEventListener("click", () =>
+      copyText($("lateInviteVenueTemplate").value, "Late-invite venue template copied.")
+    );
+
+    $("openLateInviteVenueForSelected").addEventListener("click", () => {
+      const guest = getGuest($("lateInviteVenueGuest").value);
+      if (!guest) return toast("Choose an accepted guest first.", "error");
+      if (!phoneForWhatsApp(guest.contactNumber)) return toast("This guest does not have a valid contact number.", "error");
+      openWhatsApp(guest, fillTemplate($("lateInviteVenueTemplate").value, guest, "venue"));
+    });
+
     $("copyInitialInviteTemplate").addEventListener("click", () =>
       copyText($("initialInviteTemplate").value, "Initial invitation template copied.")
     );
@@ -1958,7 +2026,7 @@ Thank you.</textarea>
     $("openNextInitialInvite").addEventListener("click", () => {
       const guest = guests.find(g => g.rsvpStatus === "Pending" && !isSent(g) && phoneForWhatsApp(g.contactNumber));
       if (!guest) return toast("There are no unsent pending guests with valid contact numbers.", "error");
-      openWhatsApp(guest, fillTemplate($("initialInviteTemplate").value, guest));
+      openWhatsApp(guest, fillTemplate($("initialInviteTemplate").value, guest, "rsvp"));
     });
 
     $("copyVenueTemplate").addEventListener("click", () =>
@@ -1976,7 +2044,7 @@ Thank you.</textarea>
         phoneForWhatsApp(g.contactNumber)
       );
       if (!guest) return toast("There are no sent initial invitations awaiting RSVP with a valid contact number.", "error");
-      openWhatsApp(guest, fillTemplate($("initialReminderTemplate").value, guest));
+      openWhatsApp(guest, fillTemplate($("initialReminderTemplate").value, guest, "rsvp"));
     });
 
     $("copyReminderTemplate").addEventListener("click", () =>
@@ -1990,7 +2058,7 @@ Thank you.</textarea>
         phoneForWhatsApp(g.contactNumber)
       );
       if (!guest) return toast("There are no accepted guests awaiting a venue update with a valid contact number.", "error");
-      openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
+      openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest, "venue"));
     });
 
     $("openNextReminder").addEventListener("click", () => {
@@ -2001,7 +2069,7 @@ Thank you.</textarea>
         phoneForWhatsApp(g.contactNumber)
       );
       if (!guest) return toast("There are no sent venue updates awaiting acknowledgement with a valid contact number.", "error");
-      openWhatsApp(guest, fillTemplate($("reminderTemplate").value, guest));
+      openWhatsApp(guest, fillTemplate($("reminderTemplate").value, guest, "venue"));
     });
 
     document.addEventListener("click", async (event) => {
@@ -2014,12 +2082,12 @@ Thank you.</textarea>
 
       if (target.dataset.whatsapp) {
         const guest = getGuest(target.dataset.whatsapp);
-        if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
+        if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest, "venue"));
       }
 
       if (target.dataset.initialInvite) {
         const guest = getGuest(target.dataset.initialInvite);
-        if (guest) openWhatsApp(guest, fillTemplate($("initialInviteTemplate").value, guest));
+        if (guest) openWhatsApp(guest, fillTemplate($("initialInviteTemplate").value, guest, "rsvp"));
       }
 
       if (target.dataset.markInitialSent) {
@@ -2028,7 +2096,7 @@ Thank you.</textarea>
 
       if (target.dataset.venueWhatsapp) {
         const guest = getGuest(target.dataset.venueWhatsapp);
-        if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest));
+        if (guest) openWhatsApp(guest, fillTemplate($("venueTemplate").value, guest, "venue"));
       }
 
       if (target.dataset.markVenueSent) {
@@ -2042,7 +2110,7 @@ Thank you.</textarea>
       if (target.dataset.initialReminder) {
         const guest = getGuest(target.dataset.initialReminder);
         if (guest) {
-          openWhatsApp(guest, fillTemplate($("initialReminderTemplate").value, guest));
+          openWhatsApp(guest, fillTemplate($("initialReminderTemplate").value, guest, "rsvp"));
           await recordReminder(guest.guestId);
         }
       }
@@ -2050,7 +2118,7 @@ Thank you.</textarea>
       if (target.dataset.reminder) {
         const guest = getGuest(target.dataset.reminder);
         if (guest) {
-          openWhatsApp(guest, fillTemplate($("reminderTemplate").value, guest));
+          openWhatsApp(guest, fillTemplate($("reminderTemplate").value, guest, "venue"));
           await recordReminder(guest.guestId);
         }
       }
