@@ -1,534 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <title>16th Day Prayer – Venue Update</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>16th Day Prayer Invitation</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap");
+:root{--navy:#071f4a;--gold:#a76d10;--cream:#fffaf1;--success:#235b44;--error:#832f2f}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#faf6ee;color:var(--navy);font-family:"Cormorant Garamond",Georgia,serif}
+button,textarea{font:inherit}
+.site{width:min(100%,760px);margin:0 auto;padding:10px 8px 32px}
+.art-page,.rsvp-page{position:relative;width:100%;margin-top:12px;overflow:hidden;isolation:isolate;border:1px solid var(--gold);box-shadow:0 8px 22px rgba(57,38,8,.14);background:var(--cream)}
+.art-page:first-child{margin-top:0}
+.art-page>img,.rsvp-artwork{display:block;width:100%;height:auto;pointer-events:none;user-select:none}
+.hidden{display:none!important}
 
-  <style>
-    :root {
-      --navy: #071f4a;
-      --gold: #a76d10;
-      --cream: #fffaf1;
-      --success: #235b44;
-      --error: #832f2f;
-    }
+/* ---------- INITIAL RSVP OVERLAYS ---------- */
+.rsvp-page{aspect-ratio:3/4}
+.rsvp-artwork{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:0}
+.live-greeting{position:absolute;left:40.9%;top:23.2%;width:50.8%;min-height:4.6%;display:flex;align-items:center;justify-content:flex-start;color:var(--navy);font-size:clamp(14px,2.65vw,29px);font-weight:600;line-height:1.05;white-space:nowrap;overflow:hidden;visibility:hidden;z-index:4}
+.hit-button{position:absolute;cursor:pointer;border:2px solid transparent;background:transparent;color:transparent;z-index:4}
+#yesButton{left:7.6%;top:55.0%;width:38.2%;height:7.4%}
+#noButton{left:49.7%;top:55.0%;width:39.7%;height:7.4%}
+.counter{position:absolute;left:26%;top:68.85%;width:48%;height:7%;display:grid;grid-template-columns:1fr 1.2fr 1fr;align-items:center;text-align:center;z-index:4}
+.counter button{width:clamp(30px,7.6vw,60px);aspect-ratio:1;justify-self:center;border:0;border-radius:50%;background:transparent;color:transparent;cursor:pointer}
+.counter output{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--navy);font-size:clamp(18px,4.2vw,34px);font-weight:600}
+#rsvpMessage{position:absolute;left:8%;top:82.6%;width:82%;height:7.4%;overflow-y:auto;border:0;background:transparent;color:var(--navy);padding:.9% 1.3%;font-size:clamp(12px,2.45vw,18px);line-height:1.3;outline:none;white-space:pre-wrap;word-break:break-word;z-index:4}
+#rsvpSubmit{position:absolute;left:7.7%;top:90.8%;width:82.2%;height:5.8%;cursor:pointer;border:0;background:transparent;color:transparent;z-index:5}
 
-    * { box-sizing: border-box; }
+/* ---------- VENUE UPDATE OVERLAYS ---------- */
+/* Coordinates are aligned to the current blank-box seelan-venue-update.png */
+#accessCode{position:absolute;left:42.7%;top:54.9%;width:18.5%;height:4.0%;z-index:5;display:flex;align-items:center;justify-content:center;padding:0;background:transparent;color:var(--navy);font-family:Georgia,"Times New Roman",serif;font-size:clamp(10px,2vw,17px);font-weight:600;line-height:1;letter-spacing:.01em;white-space:nowrap;font-variant-numeric:tabular-nums;pointer-events:none}
+#mapsButton{position:absolute;left:52.7%;top:42.8%;width:35.2%;height:4.4%;z-index:6;border:0;background:transparent;color:transparent;cursor:pointer}
+#venueComments{position:absolute;left:7.9%;top:81.7%;width:84%;height:4.4%;z-index:6;resize:none;border:0;padding:.7% 1.1%;background:transparent;color:var(--navy);font-size:clamp(10px,2vw,17px);line-height:1.25;outline:none;overflow-y:auto}
+#venueComments:focus{background:transparent;box-shadow:none;outline:none}
+#ackButton{position:absolute;left:14.3%;top:90%;width:38.2%;height:4%;z-index:6;border:0;background:transparent;color:transparent;cursor:pointer}
+#ackStatus{position:absolute;left:60.4%;top:90%;width:25.4%;height:4.6%;z-index:7;display:none;align-items:center;justify-content:center;padding:.4% .8%;text-align:center;color:var(--success);background:transparent;border:0;font-size:clamp(8px,1.5vw,13px);font-weight:600;line-height:1.05;pointer-events:none}
+#ackStatus.show{display:flex}
+#venueSubmit{position:absolute;left:35%;top:95.1%;width:29%;height:3.2%;z-index:6;border:0;background:transparent;color:transparent;cursor:pointer}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #faf6ee;
-      color: var(--navy);
-      font-family: Georgia, "Times New Roman", serif;
-    }
-
-    button, textarea { font: inherit; }
-
-    .site {
-      width: min(100%, 760px);
-      margin: 0 auto;
-      padding: 10px 8px 32px;
-    }
-
-    .art-page {
-      position: relative;
-      width: 100%;
-      margin-top: 12px;
-      overflow: hidden;
-      isolation: isolate;
-      border: 1px solid var(--gold);
-      box-shadow: 0 8px 22px rgba(57, 38, 8, 0.14);
-      background: var(--cream);
-    }
-
-    .art-page:first-child { margin-top: 0; }
-
-    .art-page > img {
-      display: block;
-      width: 100%;
-      height: auto;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    /* PAGE 2 LIVE OVERLAYS
-       The final artwork contains a sample access code and visual controls.
-       These live controls sit over those areas so every guest receives
-       their own Sheet-driven code and real interactive fields/buttons. */
-
-    #accessCode {
-      position: absolute;
-      left: 39.7%;
-      top: 54.9%;
-      width: 18.5%;
-      height: 4.0%;
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      background: transparent;
-      color: var(--navy);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(10px, 2.0vw, 17px);
-      font-weight: 600;
-      line-height: 1;
-      letter-spacing: 0.01em;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-      pointer-events: none;
-    }
-
-    #mapsButton {
-      position: absolute;
-      left: 52.7%;
-      top: 42.8%;
-      width: 35.2%;
-      height: 4.4%;
-      z-index: 6;
-      border: 0;
-      background: transparent;
-      color: transparent;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #mapsButton:focus-visible,
-    #ackButton:focus-visible,
-    #submitButton:focus-visible {
-      outline: 3px solid rgba(167,109,16,0.65);
-      outline-offset: 2px;
-    }
-
-    #comments {
-      position: absolute;
-      left: 7.9%;
-      top: 81.7%;
-      width: 84.0%;
-      height: 4.4%;
-      z-index: 6;
-      resize: none;
-      border: 0;
-      border-radius: 0;
-      padding: 0.7% 1.1%;
-      background: transparent;
-      color: var(--navy);
-      font-size: clamp(10px, 2.0vw, 17px);
-      line-height: 1.25;
-      outline: none;
-      overflow-y: auto;
-    }
-
-    #comments:focus {
-      background: transparent;
-      box-shadow: none;
-      outline: none;
-    }
-
-    #ackButton {
-      position: absolute;
-      left: 14.3%;
-      top: 90.0%;
-      width: 38.2%;
-      height: 4.0%;
-      z-index: 6;
-      border: 0;
-      background: transparent;
-      color: transparent;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #ackCover {
-      display: none !important;
-    }
-
-    #ackStatus {
-      position: absolute;
-      left: 60.4%;
-      top: 90.0%;
-      width: 25.4%;
-      height: 4.6%;
-      z-index: 7;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 0.4% 0.8%;
-      text-align: center;
-      color: var(--success);
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-      font-size: clamp(8px, 1.5vw, 13px);
-      font-weight: 600;
-      line-height: 1.05;
-      pointer-events: none;
-    }
-
-    #ackStatus.show { display: flex; }
-
-    #submitButton {
-      position: absolute;
-      left: 35.0%;
-      top: 95.1%;
-      width: 29.0%;
-      height: 3.2%;
-      z-index: 6;
-      border: 0;
-      background: transparent;
-      color: transparent;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #statusBox {
-      margin: 12px 0 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 14px;
-      border: 1px solid;
-      background: rgba(255,253,248,0.98);
-      text-align: center;
-      font-size: 16px;
-      line-height: 1.35;
-    }
-
-    #statusBox.show { display: flex; }
-    #statusBox.success { color: var(--success); border-color: var(--success); }
-    #statusBox.error { color: var(--error); border-color: var(--error); }
-
-    .loading {
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background: var(--cream);
-    }
-
-    .loading-card {
-      width: min(92vw, 420px);
-      padding: 26px;
-      border: 1px solid var(--gold);
-      text-align: center;
-      background: var(--cream);
-      box-shadow: 0 12px 28px rgba(54,36,8,0.14);
-    }
-
-    .loading-card h2 { margin: 4px 0 6px; font-size: 28px; }
-    .loading-card p { margin: 0; font-size: 16px; }
-    .hidden { display: none !important; }
-
-    @media (max-width: 520px) {
-      .site { padding-left: 4px; padding-right: 4px; }
-      #statusBox { font-size: 14px; }
-    }
-  
-    #ackCover { display: none !important; }
-  
-  </style>
+/* ---------- SHARED STATUS ---------- */
+.status{margin:12px 0 0;display:none;align-items:center;justify-content:center;padding:12px 14px;border:1px solid;background:rgba(255,253,248,.98);text-align:center;font-size:16px;line-height:1.35}
+.status.show{display:flex}.status.success{color:var(--success);border-color:var(--success)}.status.error{color:var(--error);border-color:var(--error)}
+.loading{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:var(--cream)}
+.loading-card{width:min(92vw,420px);padding:26px;border:1px solid var(--gold);text-align:center;background:var(--cream);box-shadow:0 12px 28px rgba(54,36,8,.14)}
+.loading-card h2{margin:4px 0 6px;font-size:28px}.loading-card p{margin:0;font-size:16px}
+.mode-note{margin:12px 0 0;padding:14px;border:1px solid var(--gold);background:var(--cream);text-align:center;line-height:1.4}
+@media(max-width:520px){.site{padding-left:4px;padding-right:4px}.status{font-size:14px}}
+</style>
 </head>
-
 <body>
-  <div id="loading" class="loading">
-    <div class="loading-card">
-      <div style="font-size:38px;color:#a76d10">❦</div>
-      <h2>Loading your invitation</h2>
-      <p id="loadingText">Please wait while we retrieve your personalised venue details.</p>
+<div id="loading" class="loading"><div class="loading-card"><div style="font-size:38px;color:#a76d10">❦</div><h2>Loading your invitation</h2><p id="loadingText">Please wait while we retrieve your personalised details.</p></div></div>
+
+<main id="site" class="site hidden">
+  <!-- PAGE 1: CURRENT / UPDATED INVITATION -->
+  <section class="art-page" aria-label="Updated 16th Day Prayer invitation">
+    <img src="seelan-invitation-venue-update.png?v=20260808" alt="Seelan Moodley 16th Day Prayer invitation with updated venue">
+  </section>
+
+  <!-- MODE A: INITIAL RSVP FOR PENDING/DECLINED GUESTS -->
+  <section id="initialRsvpSection" class="rsvp-page hidden" aria-label="Personalised RSVP form">
+    <img class="rsvp-artwork" src="rsvp-page-v2-final-20260804.png?v=20260808" alt="RSVP confirmation page">
+    <div id="guestGreeting" class="live-greeting"></div>
+    <button id="yesButton" class="hit-button" type="button" aria-label="Yes, we will attend"></button>
+    <button id="noButton" class="hit-button" type="button" aria-label="No, we are not attending"></button>
+    <div class="counter">
+      <button id="minusButton" type="button" aria-label="Reduce number attending">−</button>
+      <output id="guestCount" aria-live="polite">0</output>
+      <button id="plusButton" type="button" aria-label="Increase number attending">+</button>
     </div>
-  </div>
+    <div id="rsvpMessage" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Optional RSVP message" spellcheck="false"></div>
+    <button id="rsvpSubmit" type="button" aria-label="Send my RSVP"></button>
+  </section>
 
-  <main id="site" class="site hidden">
-    <!-- LOCKED PAGE 1 IMAGE -->
-    <section class="art-page" aria-label="Updated 16th Day Prayer invitation">
-      <img
-        src="seelan-invitation-venue-update.png?v=20260807"
-        alt="Seelan Moodley 16th Day Prayer invitation with updated venue"
-      >
-    </section>
+  <!-- MODE B: VENUE UPDATE FOR ACCEPTED GUESTS -->
+  <section id="venueSection" class="art-page hidden" aria-label="Important venue update">
+    <img src="seelan-venue-update.png?v=20260808" alt="Important venue update with access information">
+    <div id="accessCode" aria-label="Your estate access code"></div>
+    <button id="mapsButton" type="button" aria-label="Open the new venue in Google Maps">Open Maps</button>
+    <textarea id="venueComments" maxlength="500" aria-label="Comments"></textarea>
+    <button id="ackButton" type="button" aria-label="I have noted the change of venue">Acknowledge venue change</button>
+    <div id="ackStatus" role="status" aria-live="polite">✓ Thank you! Your acknowledgement has been recorded.</div>
+    <button id="venueSubmit" type="button" aria-label="Submit acknowledgement and comments">Submit</button>
+  </section>
 
-    <!-- LOCKED PAGE 2 IMAGE -->
-    <section id="venuePage" class="art-page" aria-label="Important venue update">
-      <img
-        src="seelan-venue-update.png?v=20260807"
-        alt="Important venue update with access information"
-      >
+  <div id="statusBox" class="status" role="status" aria-live="polite"></div>
+</main>
 
-      <!-- Live personalised 8-digit code from the Google Sheet -->
-      <div id="accessCode" aria-label="Your estate access code">--------</div>
+<script>
+"use strict";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec";
+const MAPS_URL="https://maps.app.goo.gl/b9tPsaP6QeVCFarQ9?g_st=aw";
+const params=new URLSearchParams(window.location.search);
+const guestId=String(params.get("id")||params.get("guestId")||"").trim().toUpperCase();
 
-      <!-- Clickable Google Maps area -->
-      <button
-        id="mapsButton"
-        type="button"
-        aria-label="Open the new venue in Google Maps"
-        title="Open the new venue in Google Maps"
-      >Open Maps</button>
+let guestRecord=null;
+let attendanceChoice="";
+let guestCount=0;
+let acknowledged=false;
+let isSubmitting=false;
 
-      <!-- Real editable comments field; placeholder disappears while typing -->
-      <textarea
-        id="comments"
-        maxlength="500"
-        aria-label="Comments"
-      ></textarea>
+const $=id=>document.getElementById(id);
+const loading=$("loading"),loadingText=$("loadingText"),site=$("site"),initialRsvpSection=$("initialRsvpSection"),venueSection=$("venueSection"),statusBox=$("statusBox");
+const guestGreeting=$("guestGreeting"),yesButton=$("yesButton"),noButton=$("noButton"),minusButton=$("minusButton"),plusButton=$("plusButton"),guestCountOutput=$("guestCount"),rsvpMessage=$("rsvpMessage"),rsvpSubmit=$("rsvpSubmit");
+const accessCode=$("accessCode"),mapsButton=$("mapsButton"),venueComments=$("venueComments"),ackButton=$("ackButton"),ackStatus=$("ackStatus"),venueSubmit=$("venueSubmit");
 
-      <!-- Real acknowledgement control over the artwork button -->
-      <button
-        id="ackButton"
-        type="button"
-        aria-label="I have noted the change of venue"
-      >Acknowledge venue change</button>
+function text(v){return String(v??"").trim()}
+function normaliseStatus(v){const s=text(v).toLowerCase();if(["yes","accepted","attending","confirmed"].includes(s))return"Yes";if(["no","declined","not attending"].includes(s))return"No";return"Pending"}
+function safeInt(v,f=0){const n=parseInt(v,10);return Number.isFinite(n)?n:f}
+function displayName(name){const clean=text(name)||"Guest";return /&\s*family$/i.test(clean)?clean:`${clean} & Family`}
+function showFatal(m){loadingText.textContent=m}
+function showSite(){loading.classList.add("hidden");site.classList.remove("hidden")}
+function showStatus(m,t){statusBox.textContent=m;statusBox.className=`status show ${t}`}
+function clearStatus(){statusBox.textContent="";statusBox.className="status"}
 
-      <!-- Covers the artwork's pre-rendered thank-you box until acknowledgement -->
-      <div id="ackCover" aria-hidden="true"></div>
-      <div id="ackStatus" role="status" aria-live="polite">
-        ✓ Thank you! Your acknowledgement has been recorded.
-      </div>
+async function fetchJson(url,options={}){
+ const r=await fetch(url,{cache:"no-store",redirect:"follow",...options});
+ if(!r.ok)throw new Error(`Server returned ${r.status}.`);
+ const raw=await r.text();try{return JSON.parse(raw)}catch{throw new Error("The server returned an invalid response.")}
+}
 
-      <!-- Real submit control over the artwork submit button -->
-      <button
-        id="submitButton"
-        type="button"
-        aria-label="Submit acknowledgement and comments"
-      >Submit</button>
-    </section>
+function fitGreeting(){
+ guestGreeting.style.fontSize="";
+ let size=Math.min(29,Math.max(14,window.innerWidth*.0265));
+ guestGreeting.style.fontSize=`${size}px`;
+ while(guestGreeting.scrollWidth>guestGreeting.clientWidth&&size>14){size-=.5;guestGreeting.style.fontSize=`${size}px`}
+}
 
-    <div id="statusBox" role="status" aria-live="polite"></div>
-  </main>
+function renderRsvp(){
+ yesButton.classList.toggle("active",attendanceChoice==="Yes");
+ noButton.classList.toggle("active",attendanceChoice==="No");
+ if(attendanceChoice==="No")guestCount=0;
+ if(attendanceChoice==="Yes"&&guestCount<1)guestCount=1;
+ guestCountOutput.textContent=String(guestCount);
+ minusButton.disabled=guestCount<=0;
+}
 
-  <script>
-    "use strict";
+function showInitialRsvp(){
+ venueSection.classList.add("hidden");
+ initialRsvpSection.classList.remove("hidden");
+ guestGreeting.textContent=`Dear ${displayName(guestRecord.name)}`;
+ guestGreeting.style.visibility="visible";
+ const saved=normaliseStatus(guestRecord.rsvpStatus);
+ if(saved==="Yes"){attendanceChoice="Yes";guestCount=Math.max(1,safeInt(guestRecord.confirmedGuests,1))}
+ else if(saved==="No"){attendanceChoice="No";guestCount=0}
+ else{attendanceChoice="";guestCount=0}
+ rsvpMessage.textContent="";
+ renderRsvp();fitGreeting();
+}
 
-    const SCRIPT_URL =
-      "https://script.google.com/macros/s/" +
-      "AKfycbx4MS1iuIbqpfh5_M2Ja6GPWsP7fBHTPLKfQ_" +
-      "wWejIV2N_drqQqeIi7sDU8bBaJWPmkCw/exec";
+function setAcknowledged(value){
+ acknowledged=Boolean(value);
+ ackButton.setAttribute("aria-pressed",acknowledged?"true":"false");
+ ackStatus.classList.toggle("show",acknowledged);
+}
 
-    const MAPS_URL = "https://maps.app.goo.gl/b9tPsaP6QeVCFarQ9?g_st=aw";
+function showVenueUpdate(){
+ initialRsvpSection.classList.add("hidden");
+ venueSection.classList.remove("hidden");
+ const code=text(guestRecord.estateEntryCode);
+ accessCode.textContent=/^\d{8}$/.test(code)?code:"";
+ setAcknowledged(false);
+ venueComments.value="";
+ if(!/^\d{8}$/.test(code)){
+   showStatus("Your attendance is confirmed. Your estate access code has not yet been added. Please contact Shai on 076 588 2192 for assistance.","error");
+ } else {
+   clearStatus();
+ }
+}
 
-    const params = new URLSearchParams(window.location.search);
-    const guestId = String(params.get("id") || params.get("guestId") || "")
-      .trim()
-      .toUpperCase();
+async function reloadGuest(){
+ const data=await fetchJson(`${SCRIPT_URL}?action=getGuest&id=${encodeURIComponent(guestId)}&_=${Date.now()}`);
+ if(data&&data.success===false)throw new Error(data.message||`No invitation record was found for ${guestId}.`);
+ guestRecord=data&&data.guest?data.guest:null;
+ if(!guestRecord)throw new Error(`No invitation record was found for ${guestId}.`);
+ return guestRecord;
+}
 
-    let guestRecord = null;
-    let acknowledged = false;
-    let isSubmitting = false;
+async function loadGuest(){
+ if(!guestId){showFatal("This invitation link is incomplete.");return}
+ try{
+  await reloadGuest();
+  const status=normaliseStatus(guestRecord.rsvpStatus);
+  if(status==="Yes")showVenueUpdate();
+  else showInitialRsvp(); // Pending and No can RSVP/update their response.
+  showSite();
+ }catch(e){console.error(e);showFatal(e instanceof Error?e.message:"The invitation could not be loaded.")}
+}
 
-    const loading = document.getElementById("loading");
-    const loadingText = document.getElementById("loadingText");
-    const site = document.getElementById("site");
-    const accessCode = document.getElementById("accessCode");
-    const mapsButton = document.getElementById("mapsButton");
-    const comments = document.getElementById("comments");
-    const ackButton = document.getElementById("ackButton");
-    const ackCover = document.getElementById("ackCover");
-    const ackStatus = document.getElementById("ackStatus");
-    const submitButton = document.getElementById("submitButton");
-    const statusBox = document.getElementById("statusBox");
+async function submitRsvp(){
+ if(isSubmitting)return;clearStatus();
+ if(!attendanceChoice){showStatus("Please select whether you will be attending.","error");return}
+ const confirmed=attendanceChoice==="Yes"?guestCount:0;
+ const note=rsvpMessage.textContent.trim();
+ isSubmitting=true;rsvpSubmit.disabled=true;showStatus("Submitting your RSVP…","success");
+ const body=new URLSearchParams({action:"submitRSVP",guestId,id:guestId,rsvpStatus:attendanceChoice,attending:attendanceChoice,status:attendanceChoice,confirmedGuests:String(confirmed),guests:String(confirmed),numberAttending:String(confirmed),notes:note,message:note});
+ try{
+  const data=await fetchJson(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});
+  if(data&&data.success===false)throw new Error(data.message||"The RSVP could not be saved.");
+  if(attendanceChoice==="Yes"){
+    showStatus(`Thank you. Attendance has been confirmed for ${guestCount} ${guestCount===1?"person":"people"}.`,"success");
+    await reloadGuest();
+    setTimeout(()=>showVenueUpdate(),700);
+  }else{
+    showStatus("Thank you. Your response has been recorded.","success");
+  }
+ }catch(e){console.error(e);showStatus(e instanceof Error?e.message:"The RSVP could not be saved.","error")}
+ finally{isSubmitting=false;rsvpSubmit.disabled=false}
+}
 
-    function text(value) {
-      return String(value ?? "").trim();
-    }
+async function submitVenueUpdate(){
+ if(isSubmitting)return;clearStatus();
+ if(!acknowledged){showStatus("Please click “I HAVE NOTED THE CHANGE OF VENUE” before submitting.","error");return}
+ const commentText=venueComments.value.trim();
+ isSubmitting=true;venueSubmit.disabled=true;ackButton.disabled=true;showStatus("Saving your acknowledgement…","success");
+ const body=new URLSearchParams({action:"submitVenueUpdate",guestId,id:guestId,acknowledged:"Yes",venueUpdateAcknowledged:"Yes",comments:commentText,venueUpdateComments:commentText});
+ try{
+  const data=await fetchJson(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});
+  if(data&&data.success===false)throw new Error(data.message||"The venue acknowledgement could not be saved.");
+  setAcknowledged(true);
+  showStatus(commentText?"Thank you. Your acknowledgement and comments have been recorded.":"Thank you. Your acknowledgement has been recorded.","success");
+ }catch(e){console.error(e);showStatus(e instanceof Error?e.message:"The venue acknowledgement could not be saved.","error")}
+ finally{isSubmitting=false;venueSubmit.disabled=false;ackButton.disabled=false}
+}
 
-    function yes(value) {
-      return ["yes", "true", "acknowledged", "sent"].includes(text(value).toLowerCase());
-    }
-
-    function showSite() {
-      loading.classList.add("hidden");
-      site.classList.remove("hidden");
-    }
-
-    function showFatal(message) {
-      loadingText.textContent = message;
-    }
-
-    function showStatus(message, type) {
-      statusBox.textContent = message;
-      statusBox.className = `show ${type}`;
-    }
-
-    function clearStatus() {
-      statusBox.textContent = "";
-      statusBox.className = "";
-    }
-
-    function setAcknowledged(value) {
-      acknowledged = Boolean(value);
-      ackButton.setAttribute("aria-pressed", acknowledged ? "true" : "false");
-
-      if (acknowledged) {
-        
-        ackStatus.classList.add("show");
-      } else {
-        
-        ackStatus.classList.remove("show");
-      }
-    }
-
-    async function fetchJson(url, options = {}) {
-      const response = await fetch(url, {
-        cache: "no-store",
-        redirect: "follow",
-        ...options
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}.`);
-      }
-
-      const raw = await response.text();
-
-      try {
-        return JSON.parse(raw);
-      } catch {
-        throw new Error("The server returned an invalid response.");
-      }
-    }
-
-    async function loadGuest() {
-      if (!guestId) {
-        showFatal("This invitation link is incomplete.");
-        return;
-      }
-
-      try {
-        const data = await fetchJson(
-          `${SCRIPT_URL}?action=getGuest&id=${encodeURIComponent(guestId)}&_=${Date.now()}`
-        );
-
-        if (data && data.success === false) {
-          throw new Error(data.message || `No invitation record was found for ${guestId}.`);
-        }
-
-        guestRecord = data && data.guest ? data.guest : null;
-
-        if (!guestRecord) {
-          throw new Error(`No invitation record was found for ${guestId}.`);
-        }
-
-        /* The venue update is intended for guests who previously accepted. */
-        if (text(guestRecord.rsvpStatus).toLowerCase() !== "yes") {
-          throw new Error("This venue-update link is not active for this invitation.");
-        }
-
-        const code = text(guestRecord.estateEntryCode);
-
-        if (!/^\d{8}$/.test(code)) {
-          throw new Error(
-            "Your 8-digit estate access code is not available yet. Please contact Shai for assistance."
-          );
-        }
-
-        accessCode.textContent = code;
-
-        /* If the guest already acknowledged previously, restore that state. */
-        setAcknowledged(false);
-
-        /* Do not pre-fill previously submitted comments into the editable field. */
-        comments.value = "";
-
-        showSite();
-      } catch (error) {
-        console.error(error);
-        showFatal(
-          error instanceof Error
-            ? error.message
-            : "The invitation could not be loaded."
-        );
-      }
-    }
-
-    mapsButton.addEventListener("click", () => {
-      window.open(MAPS_URL, "_blank", "noopener,noreferrer");
-    });
-
-    ackButton.addEventListener("click", () => {
-      clearStatus();
-      setAcknowledged(true);
-      showStatus(
-        "Venue change noted. Please click Submit below to save your acknowledgement.",
-        "success"
-      );
-    });
-
-    async function submitVenueUpdate() {
-      if (isSubmitting) return;
-
-      clearStatus();
-
-      if (!acknowledged) {
-        showStatus(
-          "Please click “I HAVE NOTED THE CHANGE OF VENUE” before submitting.",
-          "error"
-        );
-        return;
-      }
-
-      const commentText = comments.value.trim();
-
-      isSubmitting = true;
-      submitButton.disabled = true;
-      ackButton.disabled = true;
-
-      showStatus("Saving your acknowledgement…", "success");
-
-      const body = new URLSearchParams({
-        action: "submitVenueUpdate",
-        guestId,
-        id: guestId,
-        acknowledged: "Yes",
-        venueUpdateAcknowledged: "Yes",
-        comments: commentText,
-        venueUpdateComments: commentText
-      });
-
-      try {
-        const data = await fetchJson(SCRIPT_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-          },
-          body: body.toString()
-        });
-
-        if (data && data.success === false) {
-          throw new Error(data.message || "The venue acknowledgement could not be saved.");
-        }
-
-        setAcknowledged(true);
-
-        showStatus(
-          commentText
-            ? "Thank you. Your acknowledgement and comments have been recorded."
-            : "Thank you. Your acknowledgement has been recorded.",
-          "success"
-        );
-      } catch (error) {
-        console.error(error);
-        showStatus(
-          error instanceof Error
-            ? error.message
-            : "The venue acknowledgement could not be saved.",
-          "error"
-        );
-      } finally {
-        isSubmitting = false;
-        submitButton.disabled = false;
-        ackButton.disabled = false;
-      }
-    }
-submitButton.addEventListener("click", submitVenueUpdate);
-
-    loadGuest();
-  </script>
+yesButton.addEventListener("click",()=>{attendanceChoice="Yes";if(guestCount<1)guestCount=1;clearStatus();renderRsvp()});
+noButton.addEventListener("click",()=>{attendanceChoice="No";guestCount=0;clearStatus();renderRsvp()});
+minusButton.addEventListener("click",()=>{if(guestCount>0){guestCount--;if(guestCount===0)attendanceChoice="";clearStatus();renderRsvp()}});
+plusButton.addEventListener("click",()=>{attendanceChoice="Yes";guestCount++;clearStatus();renderRsvp()});
+rsvpMessage.addEventListener("input",()=>{if(rsvpMessage.textContent.length>500)rsvpMessage.textContent=rsvpMessage.textContent.slice(0,500)});
+rsvpSubmit.addEventListener("click",submitRsvp);
+mapsButton.addEventListener("click",()=>window.open(MAPS_URL,"_blank","noopener,noreferrer"));
+ackButton.addEventListener("click",()=>{clearStatus();setAcknowledged(true);showStatus("Venue change noted. Please click Submit below to save your acknowledgement.","success")});
+venueSubmit.addEventListener("click",submitVenueUpdate);
+window.addEventListener("resize",fitGreeting);
+loadGuest();
+</script>
 </body>
 </html>
