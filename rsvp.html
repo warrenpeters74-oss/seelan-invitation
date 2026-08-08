@@ -22,7 +22,7 @@ button,textarea{font:inherit}
 /* ---------- INITIAL RSVP OVERLAYS ---------- */
 .rsvp-page{aspect-ratio:3/4}
 .rsvp-artwork{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:0}
-.live-greeting{position:absolute;left:40.9%;top:23.2%;width:50.8%;min-height:4.6%;display:flex;align-items:center;justify-content:flex-start;color:var(--navy);font-size:clamp(14px,2.65vw,29px);font-weight:600;line-height:1.05;white-space:nowrap;overflow:hidden;visibility:hidden;z-index:4}
+.live-greeting{position:absolute;left:41.2%;top:26.0%;width:47.5%;min-height:3.6%;display:flex;align-items:center;justify-content:flex-start;color:var(--navy);font-size:clamp(12px,2.1vw,20px);font-weight:500;line-height:1.08;white-space:nowrap;overflow:hidden;visibility:hidden;z-index:4}
 .hit-button{position:absolute;cursor:pointer;border:2px solid transparent;background:transparent;color:transparent;z-index:4}
 #yesButton{left:7.6%;top:55.0%;width:38.2%;height:7.4%}
 #noButton{left:49.7%;top:55.0%;width:39.7%;height:7.4%}
@@ -59,18 +59,18 @@ button,textarea{font:inherit}
 <main id="site" class="site hidden">
   <!-- PAGE 1: CURRENT / UPDATED INVITATION -->
   <section class="art-page" aria-label="Updated 16th Day Prayer invitation">
-    <img src="seelan-invitation-venue-update.png?v=20260808" alt="Seelan Moodley 16th Day Prayer invitation with updated venue">
+    <img src="seelan-invitation.jpg?v=20260808" alt="Seelan Moodley 16th Day Prayer invitation with updated venue">
   </section>
 
   <!-- MODE A: INITIAL RSVP FOR PENDING/DECLINED GUESTS -->
   <section id="initialRsvpSection" class="rsvp-page hidden" aria-label="Personalised RSVP form">
-    <img class="rsvp-artwork" src="rsvp-page-v2-final-20260804.png?v=20260808" alt="RSVP confirmation page">
+    <img class="rsvp-artwork" src="rsvp-page-template.png?v=20260808" alt="RSVP confirmation page">
     <div id="guestGreeting" class="live-greeting"></div>
     <button id="yesButton" class="hit-button" type="button" aria-label="Yes, we will attend"></button>
     <button id="noButton" class="hit-button" type="button" aria-label="No, we are not attending"></button>
     <div class="counter">
       <button id="minusButton" type="button" aria-label="Reduce number attending">−</button>
-      <output id="guestCount" aria-live="polite">0</output>
+      <output id="guestCount" aria-live="polite"></output>
       <button id="plusButton" type="button" aria-label="Increase number attending">+</button>
     </div>
     <div id="rsvpMessage" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Optional RSVP message" spellcheck="false"></div>
@@ -97,6 +97,7 @@ const SCRIPT_URL="https://script.google.com/macros/s/AKfycbx4MS1iuIbqpfh5_M2Ja6G
 const MAPS_URL="https://maps.app.goo.gl/b9tPsaP6QeVCFarQ9?g_st=aw";
 const params=new URLSearchParams(window.location.search);
 const guestId=String(params.get("id")||params.get("guestId")||"").trim().toUpperCase();
+const mode=String(params.get("mode")||"").trim().toLowerCase();
 
 let guestRecord=null;
 let attendanceChoice="";
@@ -126,9 +127,9 @@ async function fetchJson(url,options={}){
 
 function fitGreeting(){
  guestGreeting.style.fontSize="";
- let size=Math.min(29,Math.max(14,window.innerWidth*.0265));
+ let size=Math.min(20,Math.max(12,window.innerWidth*.021));
  guestGreeting.style.fontSize=`${size}px`;
- while(guestGreeting.scrollWidth>guestGreeting.clientWidth&&size>14){size-=.5;guestGreeting.style.fontSize=`${size}px`}
+ while(guestGreeting.scrollWidth>guestGreeting.clientWidth&&size>12){size-=.5;guestGreeting.style.fontSize=`${size}px`}
 }
 
 function renderRsvp(){
@@ -136,7 +137,7 @@ function renderRsvp(){
  noButton.classList.toggle("active",attendanceChoice==="No");
  if(attendanceChoice==="No")guestCount=0;
  if(attendanceChoice==="Yes"&&guestCount<1)guestCount=1;
- guestCountOutput.textContent=String(guestCount);
+ guestCountOutput.textContent=attendanceChoice==="Yes"?String(guestCount):"";
  minusButton.disabled=guestCount<=0;
 }
 
@@ -186,8 +187,21 @@ async function loadGuest(){
  try{
   await reloadGuest();
   const status=normaliseStatus(guestRecord.rsvpStatus);
-  if(status==="Yes")showVenueUpdate();
-  else showInitialRsvp(); // Pending and No can RSVP/update their response.
+
+  if(mode==="rsvp"){
+    showInitialRsvp();
+  }else if(mode==="venue"){
+    if(status!=="Yes"){
+      showFatal("This venue-update link is only active for guests who have accepted the invitation.");
+      return;
+    }
+    showVenueUpdate();
+  }else{
+    // Backwards compatibility for older links without an explicit mode.
+    if(status==="Yes") showVenueUpdate();
+    else showInitialRsvp();
+  }
+
   showSite();
  }catch(e){console.error(e);showFatal(e instanceof Error?e.message:"The invitation could not be loaded.")}
 }
@@ -203,9 +217,8 @@ async function submitRsvp(){
   const data=await fetchJson(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:body.toString()});
   if(data&&data.success===false)throw new Error(data.message||"The RSVP could not be saved.");
   if(attendanceChoice==="Yes"){
-    showStatus(`Thank you. Attendance has been confirmed for ${guestCount} ${guestCount===1?"person":"people"}.`,"success");
+    showStatus(`Thank you. Attendance has been confirmed for ${guestCount} ${guestCount===1?"person":"people"}. A separate venue information message will follow with the updated venue details, estate access code and Google Maps link.`,"success");
     await reloadGuest();
-    setTimeout(()=>showVenueUpdate(),700);
   }else{
     showStatus("Thank you. Your response has been recorded.","success");
   }
